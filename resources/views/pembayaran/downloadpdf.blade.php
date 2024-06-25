@@ -19,7 +19,14 @@
 </head>
 <body>
     <h1>History Pembayaran</h1>
-    <table>
+    @if($temuan)
+        <h4>No LHP : {{ $temuan->no_lhp }}</h4>
+        <h4>Nama Dinas ODP : {{ $temuan->opd->opd_name }}</h4>
+    @else
+        <h4>No LHP : Tidak Ditemukan</h4>
+        <h4>Nama Dinas ODP : Tidak Ditemukan</h4>
+    @endif
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">Jumlah Pembayaran</th>
@@ -31,23 +38,17 @@
             @foreach ($pembayarans as $pembayaran)
                 <tr>
                     <td>Rp.{{ number_format($pembayaran->jumlah_pembayaran, 2, ',', '.') }}</td>
-                    <td>Rp.{{ $pembayaran->tgl_pembayaran }}</td>
+                    <td>{{ $pembayaran->tgl_pembayaran }}</td>
                     <td>
                         @if ($pembayaran->bukti_pembayaran)
                             <a href="{{ asset($pembayaran->bukti_pembayaran) }}" target="_blank">View</a>
                         @else
-                            N/A
+                            Tidak Ada
                         @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    <footer id="footer" class="footer">
-        <div class="copyright">
-            &copy; Copyright <strong><span>SITGAR</span></strong> Apps
-        </div>
-
-    </footer><!-- End Footer -->
 </body>
 </html>

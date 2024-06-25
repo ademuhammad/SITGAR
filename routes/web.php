@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\PegawaiController;
@@ -11,38 +12,11 @@ use App\Http\Controllers\TemuanController;
 use App\Http\Controllers\TgrController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-Route::get('/pegawai', function () {
-    return view('Master.pegawai');
-});
-Route::get('/opd', function () {
-    return view('Master.opd');
-});
-Route::get('/penyedia', function () {
-    return view('Master.penyedia');
-});
-Route::get('/data-temuan', function () {
-    return view('Laporan.data-temuan');
-});
-Route::get('/informasi', function () {
-    return view('Master.informasi');
-});
-Route::get('/status', function () {
-    return view('Master.status');
-});
-Route::get('/tgr', function () {
-    return view('Master.tgr');
-});
+// dashboard
 
+Route::resource('dashboard', DashboardController::class);
+Route::get('/', [DashboardController::class, 'index']);
 // OPD
-Route::get('/data_opd', [OpdController::class, 'index'])->name('opds.index');
-Route::get('opds/create', [OpdController::class, 'create'])->name('opds.create');
-Route::post('opds/save', [OpdController::class, 'store'])->name('opds.store');
 Route::resource('opds', OpdController::class);
 
 // Informasi
@@ -59,12 +33,22 @@ Route::resource('tgr', TgrController::class);
 Route::resource('penyedia', PenyediaController::class);
 // pembayaran temuan
 Route::resource('pembayaran', PembayaranTemuanController::class);
-Route::get('temuan/{temuan}/pembayaran/create', [PembayaranTemuanController::class, 'create'])->name('pembayaran.create');
-Route::post('temuan/{temuan}/pembayaran', [PembayaranTemuanController::class, 'store'])->name('pembayaran.store');
-Route::get('temuan/{temuan}/pembayaran', [PembayaranTemuanController::class, 'index'])->name('pembayaran.index');
+// Route::get('pembayaran/{temuan}/pembayaran/create', [PembayaranTemuanController::class, 'create'])->name('pembayaran.create');
+// Route::post('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'store'])->name('pembayaran.store');
+// Route::get('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'index'])->name('pembayaran.index');
 // laporan
+// Rute resource
 Route::resource('temuan', TemuanController::class);
+// Rute khusus untuk download PDF
+Route::get('/temuan/pdf', [TemuanController::class, 'downloadPdf'])->name('temuan.downloadPdf');
 //
 Route::get('/pembayaran-history/pdf', [PembayaranTemuanController::class, 'downloadPdf'])->name('pembayaran-history.pdf');
-// dashboard
-Route::resource('dashboard', DashboardController::class);
+
+// all data mentah
+Route::get('data', [DataController::class, 'index'])->name('data.index');
+Route::resource('data', DataController::class);
+Route::get('/data/{no_lhp}', [DataController::class, 'show'])->name('data.show');
+
+
+// Route::get('data', [DataController::class,'data'])->name('laporan.data');
+// Route::get('data-mentah', [DataController::class,'getDataMentah'])->name('laporan.data-mentah');

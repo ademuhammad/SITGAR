@@ -162,8 +162,13 @@
                 </a>
                 <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
+                        <a href="{{route('data.index')}}">
+                            <i class="bi bi-circle"></i><span>Data</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{route('temuan.index')}}">
-                            <i class="bi bi-circle"></i><span>Data Temuan</span>
+                            <i class="bi bi-circle"></i><span> Temuan</span>
                         </a>
                     </li>
 

@@ -6,6 +6,8 @@
         <div class="card">
             <div class="card-body">
                 <h1>History Pembayaran</h1>
+                <h4>No LHP : {{ $temuan->no_lhp }} </h4>
+                <h4>Nama Dinas ODP : {{ $temuan->opd->opd_name }} </h4>
                 <a href="{{ route('pembayaran-history.pdf') }}" class="btn btn-primary mb-3">Download PDF</a>
                 <table class="table table-bordered">
                     <thead>

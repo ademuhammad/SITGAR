@@ -2,30 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Temuan;
-use App\Models\Informasi;
+use PDF;
 use App\Models\Opd;
 use App\Models\Status;
-use App\Models\Statustgr;
+use App\Models\Temuan;
 use App\Models\Pegawai;
 use App\Models\Penyedia;
+use App\Models\Informasi;
+use App\Models\Statustgr;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 
 class TemuanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $temuans = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])->whereHas('statustgr', function ($query) {
-            $query->where('tgr_name', 'SKTJM');
-        })->get();
-        $temuans2 = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])->whereHas('statustgr', function ($query) {
-            $query->where('tgr_name', 'SKP2KS');
-        })->get();
-        $temuans3 = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])->whereHas('statustgr', function ($query) {
-            $query->where('tgr_name', 'SKP2K');
-        })->get();
-        return view('Laporan.test', compact('temuans','temuans2','temuans3'));
+        $search = $request->input('search');
+
+        $temuans = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])
+            ->whereHas('statustgr', function ($query) {
+                $query->where('tgr_name', 'SKTJM');
+            })
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->where('no_lhp', 'like', '%' . $search . '%')
+                        ->orWhereHas('opd', function ($q) use ($search) {
+                            $q->where('opd_name', 'like', '%' . $search . '%');
+                        });
+                }
+            })
+            ->get();
+
+        $temuans2 = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])
+            ->whereHas('statustgr', function ($query) {
+                $query->where('tgr_name', 'SKP2KS');
+            })
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->where('no_lhp', 'like', '%' . $search . '%')
+                        ->orWhereHas('opd', function ($q) use ($search) {
+                            $q->where('opd_name', 'like', '%' . $search . '%');
+                        });
+                }
+            })
+            ->get();
+
+        $temuans3 = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])
+            ->whereHas('statustgr', function ($query) {
+                $query->where('tgr_name', 'SKP2K');
+            })
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->where('no_lhp', 'like', '%' . $search . '%')
+                        ->orWhereHas('opd', function ($q) use ($search) {
+                            $q->where('opd_name', 'like', '%' . $search . '%');
+                        });
+                }
+            })
+            ->get();
+
+        return view('Laporan.test', compact('temuans', 'temuans2', 'temuans3'));
     }
+
+
+
+
     public function create()
     {
         $informasis = Informasi::all();

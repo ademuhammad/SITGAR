@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('informasis_id'); // Sumber informasi dari tabel informasi
             $table->unsignedBigInteger('opd_id'); // Nama OPD dari tabel opd
             $table->unsignedBigInteger('status_id'); // Status dari tabel status
-            $table->unsignedBigInteger('statustgr_id'); // Status dari tabel status tgr
+            $table->unsignedBigInteger('statustgr_id')->nullable(); // Status dari tabel status tgr
             $table->unsignedBigInteger('pegawai_id'); // Nama PPK dari tabel pegawai
             $table->unsignedBigInteger('penyedia_id'); // Nama penyedia dari tabel penyedia
 

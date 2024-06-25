@@ -89,9 +89,14 @@ class PembayaranTemuanController extends Controller
     }
     public function downloadPdf()
     {
-        $pembayarans = Pembayaran::all(); // Adjust as needed to get the specific payments
+        // Ambil semua pembayaran dengan temuan yang terkait
+        $pembayarans = Pembayaran::with('temuan.opd')->get();
 
-        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans'));
+        // Ambil temuan dari pembayaran pertama (asumsi semua pembayaran terkait dengan satu temuan)
+        $temuan = $pembayarans->first()->temuan ?? null;
+
+        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan'));
         return $pdf->download('history_pembayaran.pdf');
     }
+
 }
