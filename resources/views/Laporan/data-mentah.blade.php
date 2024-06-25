@@ -1,80 +1,6 @@
 @extends('template.header-footer')
 
 @section('content')
-    <style>
-        .th-width {
-            width: 150px;
-            text-align: center;
-        }
-
-        .th-width2 {
-            width: 200px;
-        }
-
-        th,
-        td {
-
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-        }
-
-        th {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter,
-        .dataTables_wrapper .dataTables_info,
-        .dataTables_wrapper .dataTables_paginate {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            border-radius: 5px;
-            padding: 10px;
-        }
-
-        #status_id,
-        #no_lhp,
-        #start_date,
-        #end_date {
-            max-width: 300px;
-        }
-
-        .dt-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .dt-button:hover {
-            background-color: #45a049;
-        }
-
-        .card-body {
-            overflow-x: auto;
-        }
-
-        .dataTables_wrapper .dataTables_filter input {
-            border-radius: 5px;
-            padding: 5px;
-            margin-left: 0.5em;
-        }
-        a {
-            text-decoration: none;
-        }
-    </style>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
@@ -122,25 +48,26 @@
 
                         $(document).ready(function() {
                             var table = $('#data-table').DataTable({
-                                processing: true,
-                                serverSide: true,
-                                ajax: {
-                                    url: '{{ route('data.index') }}',
-                                    data: function(d) {
-                                        d.status_id = $('#status_id').val();
-                                        d.no_lhp = $('#no_lhp').val();
-                                        d.start_date = $('#start_date').val();
-                                        d.end_date = $('#end_date').val();
-                                    }
-                                },
-                                columns: [{
+                                    processing: true,
+                                    serverSide: true,
+                                    ajax: {
+                                        url: '{{ route('data.index') }}',
+                                        data: function(d) {
+                                            d.status_id = $('#status_id').val();
+                                            d.no_lhp = $('#no_lhp').val();
+                                            d.start_date = $('#start_date').val();
+                                            d.end_date = $('#end_date').val();
+                                        }
+                                    },
+                                    columns: [{
                                         data: 'no_lhp',
                                         name: 'no_lhp',
                                         render: function(data, type, row) {
-                                            return '<a href="/data/' + encodeURIComponent(data) + '">' + data +
+                                            return '<a class="a-none" href="/data/' + row.id + '">' + data +
                                                 '</a>';
                                         }
                                     },
+
                                     {
                                         data: 'dinas_name',
                                         name: 'dinas_name'
@@ -153,14 +80,14 @@
                                         data: 'status',
                                         name: 'status'
                                     },
-                                    {
-                                        data: 'pegawai_name',
-                                        name: 'pegawai_name'
-                                    },
-                                    {
-                                        data: 'penyedia_name',
-                                        name: 'penyedia_name'
-                                    },
+                                    // {
+                                    //     data: 'pegawai_name',
+                                    //     name: 'pegawai_name'
+                                    // },
+                                    // {
+                                    //     data: 'penyedia_name',
+                                    //     name: 'penyedia_name'
+                                    // },
                                     {
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
@@ -182,6 +109,27 @@
                                         name: 'nilai_rekomendasi',
                                         render: function(data, type, row) {
                                             return formatRupiah(data, 'Rp. ');
+                                        }
+                                    },
+                                    {
+                                        data: 'action',
+                                        name: 'action',
+                                        orderable: false,
+                                        searchable: false,
+                                        render: function(data, type, row) {
+                                            var editButton = '<a href="/data/' + row.id +
+                                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
+
+                                            var deleteForm = '<form action="/data/' + row.id +
+                                                '" method="post" style="display:inline">';
+                                            deleteForm += '@csrf';
+                                            deleteForm += '@method('DELETE')';
+                                            deleteForm +=
+                                                '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
+                                            deleteForm += '</form>';
+
+                                            return '<div class="d-flex " style="padding:5px">' + editButton + deleteForm +
+                                                '</div>';
                                         }
                                     }
                                 ],
@@ -209,9 +157,9 @@
                                 ]
                             });
 
-                            $('#status_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
-                                table.draw();
-                            });
+                        $('#status_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
+                            table.draw();
+                        });
                         });
                     </script>
 
@@ -265,13 +213,14 @@
                                     <th>Sumber Informasi</th>
                                     <th>Nama OPD</th>
                                     <th>Status</th>
-                                    <th>Nama Pegawai</th>
-                                    <th>Nama Penyedia</th>
+                                    {{-- <th>Nama Pegawai</th> --}}
+                                    {{-- <th>Nama Penyedia</th> --}}
                                     <th>Tgl LHP</th>
                                     <th>Obrik Pemeriksaan</th>
                                     <th>Temuan</th>
                                     <th>Rekomendasi</th>
                                     <th>Nilai Rekomendasi</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>

@@ -47,7 +47,7 @@ Route::get('/pembayaran-history/pdf', [PembayaranTemuanController::class, 'downl
 // all data mentah
 Route::get('data', [DataController::class, 'index'])->name('data.index');
 Route::resource('data', DataController::class);
-Route::get('/data/{no_lhp}', [DataController::class, 'show'])->name('data.show');
+Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
 
 
 // Route::get('data', [DataController::class,'data'])->name('laporan.data');

@@ -18,14 +18,84 @@ body {
   background: #f6f9ff;
   color: #444444;
 }
+.th-width {
+    width: 150px;
+    text-align: center;
+}
 
+.th-width2 {
+    width: 200px;
+}
+
+th,
+td {
+    font-family: "Open Sans", sans-serif;
+    font-size: 11px;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#status_id,
+#no_lhp,
+#start_date,
+#end_date {
+    max-width: 300px;
+}
+
+.dt-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.dt-button:hover {
+    background-color: #45a049;
+}
+
+.card-body {
+    overflow-x: auto;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 0.5em;
+}
+.a-none {
+    text-decoration: none;
+    color:none !important;
+}
 a {
-  color: #4154f1;
+  color: #000;
   text-decoration: none;
 }
 
 a:hover {
-  color: #717ff5;
+  color: #1b2dd7;
   text-decoration: none;
 }
 

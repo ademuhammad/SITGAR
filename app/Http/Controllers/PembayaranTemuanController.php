@@ -56,6 +56,7 @@ class PembayaranTemuanController extends Controller
          return redirect()->route('temuan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
      }
 
+
     /**
      * Display the specified resource.
      */

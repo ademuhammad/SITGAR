@@ -146,7 +146,7 @@ class TemuanController extends Controller
             'penyedia_id' => 'required|exists:penyedias,id',
             'no_lhp' => 'required|string|max:255',
             'tgl_lhp' => 'required|date',
-            'obrik_pemeriksaan' => 'required|string|max:255',
+            'obrik_pemeriksaan' => 'required|string',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
             'nilai_rekomendasi' => 'required|numeric',

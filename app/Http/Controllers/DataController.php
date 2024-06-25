@@ -165,37 +165,47 @@ class DataController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($no_lhp)
+    public function show($id)
     {
-        // Decode the URL-encoded parameter
-        $no_lhp = urldecode($no_lhp);
-        $data = Temuan::where('no_lhp', $no_lhp)->firstOrFail();
+        // Temukan Temuan berdasarkan ID
+        $data = Temuan::findOrFail($id);
         return view('show.show-data-lhp', compact('data'));
     }
-
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data = Temuan::findOrFail($id);
+        $informasis = Informasi::all();
+        $opds = Opd::all();
+        $statuses = Status::all();
+        $statustgrs = Statustgr::all();
+        $pegawais = Pegawai::all();
+        $penyedias = Penyedia::all();
+        // Tampilkan view edit atau form edit sesuai kebutuhan Anda
+        return view('crud.edit-data', compact('data','opds','statustgrs','pegawais','penyedias','informasis','statuses'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Temuan::findOrFail($id);
+        // Lakukan validasi data jika diperlukan
+        $data->update($request->all());
+        return redirect()->route('data.index')->with('success', 'Data updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        $data = Temuan::findOrFail($id);
+        $data->delete();
+        return redirect()->route('data.index')->with('success', 'Data deleted successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+
 }

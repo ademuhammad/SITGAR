@@ -94,7 +94,7 @@
                                     <tbody>
                                         @foreach ($temuans as $temuan)
                                             <tr>
-                                                <td>{{ $temuan->no_lhp }}</td>
+                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>
@@ -168,7 +168,7 @@
                                     <tbody>
                                         @foreach ($temuans2 as $temuan)
                                             <tr>
-                                                <td>{{ $temuan->no_lhp }}</td>
+                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>
@@ -243,7 +243,7 @@
                                     <tbody>
                                         @foreach ($temuans3 as $temuan)
                                             <tr>
-                                                <td>{{ $temuan->no_lhp }}</td>
+                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>

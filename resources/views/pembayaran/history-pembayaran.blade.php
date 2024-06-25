@@ -1,13 +1,18 @@
 @extends('template.header-footer')
 
 @section('content')
+<style>
+    td , th{
+        font-size: 14px;
+    }
+</style>
 <main id="main" class="main">
     <section class="section">
-        <div class="card">
-            <div class="card-body">
+        <div class="card" style="padding: 10px">
+            <div class="card-body" >
                 <h1>History Pembayaran</h1>
-                <h4>No LHP : {{ $temuan->no_lhp }} </h4>
-                <h4>Nama Dinas ODP : {{ $temuan->opd->opd_name }} </h4>
+                <h5>No LHP : {{ $temuan->no_lhp }} </h5>
+                {{-- <h4>Nama Dinas ODP : {{ $temuan->opd->opd_name }} </h4> --}}
                 <a href="{{ route('pembayaran-history.pdf') }}" class="btn btn-primary mb-3">Download PDF</a>
                 <table class="table table-bordered">
                     <thead>
