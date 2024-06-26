@@ -11,8 +11,10 @@ use App\Models\Penyedia;
 use App\Models\Informasi;
 use App\Models\Statustgr;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Html\Builder;
+use Yajra\DataTables\Facades\DataTables;
 use App\Http\Controllers\Controller;
+
 
 class TemuanController extends Controller
 {
@@ -168,5 +170,206 @@ class TemuanController extends Controller
     {
         $temuan->delete();
         return redirect()->route('temuan.index')->with('success', 'Temuan deleted successfully.');
+    }
+    public function datasktjm(Request $request, Builder $builder)
+    {
+        $statuses = Status::all();
+
+        $html = $builder->columns([
+            ['data' => 'dinas_name', 'name' => 'dinas_name', 'title' => 'Sumber Informasi'],
+            ['data' => 'opd_name', 'name' => 'opd_name', 'title' => 'Nama OPD'],
+            ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
+            ['data' => 'tgr_name', 'name' => 'tgr_name', 'title' => 'Statustgr ID'],
+            ['data' => 'pegawai_name', 'name' => 'pegawai_name', 'title' => 'Nama Pegawai'],
+            ['data' => 'penyedia_name', 'name' => 'penyedia_name', 'title' => 'Nama Penyedia'],
+            ['data' => 'no_lhp', 'name' => 'no_lhp', 'title' => 'No LHP'],
+            ['data' => 'tgl_lhp', 'name' => 'tgl_lhp', 'title' => 'Tgl LHP'],
+            ['data' => 'obrik_pemeriksaan', 'name' => 'obrik_pemeriksaan', 'title' => 'Obrik Pemeriksaan'],
+            ['data' => 'temuan', 'name' => 'temuan', 'title' => 'Temuan'],
+            ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
+            ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
+            ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+        ])
+        ->parameters([
+            'dom' => 'Bfrtip',
+            'buttons' => ['csv', 'excel', 'pdf', 'print'],
+        ]);
+
+        return view('Laporan.data-sktjm', compact('html', 'statuses'));
+    }
+
+    public function getDatasktjm(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia'])
+                ->whereHas('statustgr', function ($query) {
+                    $query->where('tgr_name', 'SKTJM');
+                });
+
+            if ($request->has('status_id') && $request->status_id != '') {
+                $query->where('status_id', $request->status_id);
+            }
+            if ($request->has('no_lhp') && $request->no_lhp != '') {
+                $query->where('no_lhp', 'like', '%' . $request->no_lhp . '%');
+            }
+            if ($request->has('start_date') && $request->has('end_date') && $request->start_date != '' && $request->end_date != '') {
+                $query->whereBetween('tgl_lhp', [$request->start_date, $request->end_date]);
+            }
+
+            $data = $query->get();
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    return $row->status ? $row->status->status : '-';
+                })
+                ->addColumn('opd_name', function ($row) {
+                    return $row->opd ? $row->opd->opd_name : '-';
+                })
+                ->addColumn('dinas_name', function ($row) {
+                    return $row->informasi ? $row->informasi->dinas_name : '-';
+                })
+                ->addColumn('pegawai_name', function ($row) {
+                    return $row->pegawai ? $row->pegawai->name : '-';
+                })
+                ->addColumn('penyedia_name', function ($row) {
+                    return $row->penyedia ? $row->penyedia->penyedia_name : '-';
+                })
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
+    public function dataskp2ks(Request $request, Builder $builder)
+    {
+        $statuses = Status::all();
+
+        $html = $builder->columns([
+            ['data' => 'dinas_name', 'name' => 'dinas_name', 'title' => 'Sumber Informasi'],
+            ['data' => 'opd_name', 'name' => 'opd_name', 'title' => 'Nama OPD'],
+            ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
+            ['data' => 'tgr_name', 'name' => 'tgr_name', 'title' => 'Statustgr ID'],
+            ['data' => 'pegawai_name', 'name' => 'pegawai_name', 'title' => 'Nama Pegawai'],
+            ['data' => 'penyedia_name', 'name' => 'penyedia_name', 'title' => 'Nama Penyedia'],
+            ['data' => 'no_lhp', 'name' => 'no_lhp', 'title' => 'No LHP'],
+            ['data' => 'tgl_lhp', 'name' => 'tgl_lhp', 'title' => 'Tgl LHP'],
+            ['data' => 'obrik_pemeriksaan', 'name' => 'obrik_pemeriksaan', 'title' => 'Obrik Pemeriksaan'],
+            ['data' => 'temuan', 'name' => 'temuan', 'title' => 'Temuan'],
+            ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
+            ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
+            ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+        ])
+        ->parameters([
+            'dom' => 'Bfrtip',
+            'buttons' => ['csv', 'excel', 'pdf', 'print'],
+        ]);
+
+        return view('Laporan.data-skp2ks', compact('html', 'statuses'));
+    }
+
+    public function getDataskp2ks(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia'])
+                ->whereHas('statustgr', function ($query) {
+                    $query->where('tgr_name', 'SKP2KS');
+                });
+
+            if ($request->has('status_id') && $request->status_id != '') {
+                $query->where('status_id', $request->status_id);
+            }
+            if ($request->has('no_lhp') && $request->no_lhp != '') {
+                $query->where('no_lhp', 'like', '%' . $request->no_lhp . '%');
+            }
+            if ($request->has('start_date') && $request->has('end_date') && $request->start_date != '' && $request->end_date != '') {
+                $query->whereBetween('tgl_lhp', [$request->start_date, $request->end_date]);
+            }
+
+            $data = $query->get();
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    return $row->status ? $row->status->status : '-';
+                })
+                ->addColumn('opd_name', function ($row) {
+                    return $row->opd ? $row->opd->opd_name : '-';
+                })
+                ->addColumn('dinas_name', function ($row) {
+                    return $row->informasi ? $row->informasi->dinas_name : '-';
+                })
+                ->addColumn('pegawai_name', function ($row) {
+                    return $row->pegawai ? $row->pegawai->name : '-';
+                })
+                ->addColumn('penyedia_name', function ($row) {
+                    return $row->penyedia ? $row->penyedia->penyedia_name : '-';
+                })
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
+    public function dataskp2k(Request $request, Builder $builder)
+    {
+        $statuses = Status::all();
+
+        $html = $builder->columns([
+            ['data' => 'dinas_name', 'name' => 'dinas_name', 'title' => 'Sumber Informasi'],
+            ['data' => 'opd_name', 'name' => 'opd_name', 'title' => 'Nama OPD'],
+            ['data' => 'status', 'name' => 'status', 'title' => 'Status'],
+            ['data' => 'tgr_name', 'name' => 'tgr_name', 'title' => 'Statustgr ID'],
+            ['data' => 'pegawai_name', 'name' => 'pegawai_name', 'title' => 'Nama Pegawai'],
+            ['data' => 'penyedia_name', 'name' => 'penyedia_name', 'title' => 'Nama Penyedia'],
+            ['data' => 'no_lhp', 'name' => 'no_lhp', 'title' => 'No LHP'],
+            ['data' => 'tgl_lhp', 'name' => 'tgl_lhp', 'title' => 'Tgl LHP'],
+            ['data' => 'obrik_pemeriksaan', 'name' => 'obrik_pemeriksaan', 'title' => 'Obrik Pemeriksaan'],
+            ['data' => 'temuan', 'name' => 'temuan', 'title' => 'Temuan'],
+            ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
+            ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
+            ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+        ])
+        ->parameters([
+            'dom' => 'Bfrtip',
+            'buttons' => ['csv', 'excel', 'pdf', 'print'],
+        ]);
+
+        return view('Laporan.data-skp2k', compact('html', 'statuses'));
+    }
+
+    public function getDataskp2k(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia'])
+                ->whereHas('statustgr', function ($query) {
+                    $query->where('tgr_name', 'SKP2K');
+                });
+
+            if ($request->has('status_id') && $request->status_id != '') {
+                $query->where('status_id', $request->status_id);
+            }
+            if ($request->has('no_lhp') && $request->no_lhp != '') {
+                $query->where('no_lhp', 'like', '%' . $request->no_lhp . '%');
+            }
+            if ($request->has('start_date') && $request->has('end_date') && $request->start_date != '' && $request->end_date != '') {
+                $query->whereBetween('tgl_lhp', [$request->start_date, $request->end_date]);
+            }
+
+            $data = $query->get();
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    return $row->status ? $row->status->status : '-';
+                })
+                ->addColumn('opd_name', function ($row) {
+                    return $row->opd ? $row->opd->opd_name : '-';
+                })
+                ->addColumn('dinas_name', function ($row) {
+                    return $row->informasi ? $row->informasi->dinas_name : '-';
+                })
+                ->addColumn('pegawai_name', function ($row) {
+                    return $row->pegawai ? $row->pegawai->name : '-';
+                })
+                ->addColumn('penyedia_name', function ($row) {
+                    return $row->penyedia ? $row->penyedia->penyedia_name : '-';
+                })
+                ->addIndexColumn()
+                ->make(true);
+        }
     }
 }

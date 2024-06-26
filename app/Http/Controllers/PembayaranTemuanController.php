@@ -27,7 +27,6 @@ class PembayaranTemuanController extends Controller
      {
          return view('pembayaran.create-pembayaran', compact('temuan'));
      }
-
      public function store(Request $request, Temuan $temuan)
      {
          $request->validate([
@@ -55,7 +54,6 @@ class PembayaranTemuanController extends Controller
 
          return redirect()->route('temuan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
      }
-
 
     /**
      * Display the specified resource.

@@ -32,13 +32,20 @@ Route::resource('tgr', TgrController::class);
 // penyedia
 Route::resource('penyedia', PenyediaController::class);
 // pembayaran temuan
-Route::resource('pembayaran', PembayaranTemuanController::class);
-// Route::get('pembayaran/{temuan}/pembayaran/create', [PembayaranTemuanController::class, 'create'])->name('pembayaran.create');
-// Route::post('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'store'])->name('pembayaran.store');
-// Route::get('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'index'])->name('pembayaran.index');
+// Route::resource('pembayaran', PembayaranTemuanController::class);
+Route::get('pembayaran/{temuan}/pembayaran/create', [PembayaranTemuanController::class, 'create'])->name('pembayaran.create');
+Route::post('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'store'])->name('pembayaran.store');
+Route::get('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class, 'index'])->name('pembayaran.index');
 // laporan
 // Rute resource
 Route::resource('temuan', TemuanController::class);
+Route::get('temuans/data-sktjm', [TemuanController::class, 'datasktjm'])->name('temuans.datasktjm');
+// Route for handling the AJAX request for data
+Route::get('temuans/get-datasktjm', [TemuanController::class, 'getDatasktjm'])->name('temuans.getDatasktjm');
+Route::get('temuans/data-skp2ks', [TemuanController::class, 'dataskp2ks'])->name('temuans.dataskp2ks');
+Route::get('temuans/get-dataskp2ks', [TemuanController::class, 'getDataskp2ks'])->name('temuans.getDataskp2ks');
+Route::get('temuans/data-skp2k', [TemuanController::class, 'dataskp2k'])->name('temuans.dataskp2k');
+Route::get('temuans/get-dataskp2k', [TemuanController::class, 'getDataskp2k'])->name('temuans.getDataskp2k');
 // Rute khusus untuk download PDF
 Route::get('/temuan/pdf', [TemuanController::class, 'downloadPdf'])->name('temuan.downloadPdf');
 //

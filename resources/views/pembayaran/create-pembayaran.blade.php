@@ -16,8 +16,8 @@
                         </ul>
                     </div>
                 @endif
-                <form action="{{ route('pembayaran.store', $temuan->id) }}" method="POST" enctype="multipart/form-data">
 
+                <form action="{{ route('pembayaran.store', $temuan->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="jumlah_pembayaran">Jumlah Pembayaran</label>

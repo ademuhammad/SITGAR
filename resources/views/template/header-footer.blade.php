@@ -171,6 +171,21 @@
                             <i class="bi bi-circle"></i><span> Temuan</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{route('temuans.datasktjm')}}">
+                            <i class="bi bi-circle"></i><span> SKTJM</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('temuans.dataskp2ks')}}">
+                            <i class="bi bi-circle"></i><span> SKP2KS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('temuans.dataskp2k')}}">
+                            <i class="bi bi-circle"></i><span> SKP2K</span>
+                        </a>
+                    </li>
 
                 </ul>
             </li><!-- End Tables Nav -->
