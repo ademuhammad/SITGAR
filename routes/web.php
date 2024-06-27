@@ -12,8 +12,10 @@ use App\Http\Controllers\PenyediaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranTemuanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 // dashboard
 
@@ -68,4 +70,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('user', UserController::class);
+Route::get('/my-profile', [ProfileController::class, 'index'])->name('user.myprofile');
+Route::resource('profile', ProfileController::class);
 Route::resource('role', RoleController::class);
+
+// profile
+// Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+

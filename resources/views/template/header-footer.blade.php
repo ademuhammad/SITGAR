@@ -66,9 +66,15 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="">
+                            <a class="dropdown-item d-flex align-items-center" href="{{route('user.myprofile')}}">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person"></i>
+                                <span>Edit Profile</span>
                             </a>
                         </li>
                         <li>
