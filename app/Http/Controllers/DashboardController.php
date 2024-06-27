@@ -12,6 +12,12 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:dashboard-list|dashboard-create|dashboard-edit|dashboard-delete', ['only' => ['index','show']]);
+
+    }
+
     public function index(Request $request)
     {
         $year = $request->input('year', date('Y')); // Ambil tahun dari request atau gunakan tahun saat ini

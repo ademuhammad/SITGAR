@@ -18,6 +18,13 @@ use App\Http\Controllers\Controller;
 
 class TemuanController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:temuan-list|temuan-create|temuan-edit|temuan-delete', ['only' => ['index','show','datasktjm','dataskp2ks','dataskp2k']]);
+         $this->middleware('permission:temuan-create', ['only' => ['create','store']]);
+         $this->middleware('permission:temuan-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:temuan-delete', ['only' => ['destroy']]);
+    }
     public function index(Request $request)
     {
         $search = $request->input('search');

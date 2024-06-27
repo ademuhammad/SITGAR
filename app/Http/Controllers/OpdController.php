@@ -10,6 +10,13 @@ class OpdController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:opd-list|opd-create|opd-edit|opd-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:opd-create', ['only' => ['create','store']]);
+         $this->middleware('permission:opd-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:opd-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Opd::all();

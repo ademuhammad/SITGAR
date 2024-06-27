@@ -11,6 +11,13 @@ class PegawaiController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:pegawai-list|pegawai-create|pegawai-edit|pegawai-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:pegawai-create', ['only' => ['create','store']]);
+         $this->middleware('permission:pegawai-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:pegawai-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Pegawai::with('opd')->get();

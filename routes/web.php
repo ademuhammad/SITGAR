@@ -1,21 +1,25 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DataController;
-use App\Http\Controllers\InformasiController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpdController;
-use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\PembayaranTemuanController;
-use App\Http\Controllers\PenyediaController;
+use App\Http\Controllers\TgrController;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TemuanController;
-use App\Http\Controllers\TgrController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PenyediaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\PembayaranTemuanController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 // dashboard
 
+Route::group(['middleware' => ['auth']], function() {
 Route::resource('dashboard', DashboardController::class);
-Route::get('/', [DashboardController::class, 'index']);
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 // OPD
 Route::resource('opds', OpdController::class);
 
@@ -54,8 +58,14 @@ Route::get('/pembayaran-history/pdf', [PembayaranTemuanController::class, 'downl
 // all data mentah
 Route::get('data', [DataController::class, 'index'])->name('data.index');
 Route::resource('data', DataController::class);
-Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
+// Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
 
-
+});
 // Route::get('data', [DataController::class,'data'])->name('laporan.data');
 // Route::get('data-mentah', [DataController::class,'getDataMentah'])->name('laporan.data-mentah');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('user', UserController::class);
+Route::resource('role', RoleController::class);

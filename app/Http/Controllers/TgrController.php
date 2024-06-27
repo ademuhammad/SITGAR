@@ -10,6 +10,13 @@ class TgrController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:tgr-list|tgr-create|tgr-edit|tgr-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:tgr-create', ['only' => ['create','store']]);
+         $this->middleware('permission:tgr-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:tgr-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $data = Statustgr::all();

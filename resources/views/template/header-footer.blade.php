@@ -37,7 +37,6 @@
 
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
-
         <div class="d-flex align-items-center justify-content-between">
             <a href="index.html" class="logo d-flex align-items-center">
                 <img src="{{ asset('NiceAdmin/assets/img/logo.png') }}" alt="">
@@ -49,25 +48,25 @@
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
                 <li class="nav-item dropdown pe-3">
-
+                    @auth
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                         data-bs-toggle="dropdown">
                         <img src="{{ asset('NiceAdmin/assets/img/profile-img.jpg') }}" alt="Profile"
                             class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>Kevin Anderson</h6>
-                            <span>Web Designer</span>
+                            <h6>{{ Auth::user()->name }}</h6>
+                            <span>{{ Auth::user()->role }}</span> <!-- Ganti dengan cara mengambil role user jika perlu -->
                         </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <a class="dropdown-item d-flex align-items-center" href="">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -77,7 +76,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <a class="dropdown-item d-flex align-items-center" href="">
                                 <i class="bi bi-gear"></i>
                                 <span>Account Settings</span>
                             </a>
@@ -87,112 +86,144 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                <i class="bi bi-question-circle"></i>
-                                <span>Need Help?</span>
-                            </a>
-                        </li>
-                        <li>
                             <hr class="dropdown-divider">
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
                                 <i class="bi bi-box-arrow-right"></i>
-                                <span>Sign Out</span>
+                                <span>{{ __('Logout') }}</span>
                             </a>
                         </li>
-
                     </ul><!-- End Profile Dropdown Items -->
+                    @endauth
                 </li><!-- End Profile Nav -->
-
             </ul>
         </nav><!-- End Icons Navigation -->
-
     </header><!-- End Header -->
 
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
 
-        <ul class="sidebar-nav" id="sidebar-nav">
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
 
-            <li class="nav-item">
-                <a class="nav-link " href="/dashboard">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
+        <li class="nav-item">
+            <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-menu-button-wide"></i><span>Master Data</span><i
-                        class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse"
+                href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Master Data</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav"
+                class="nav-content collapse {{ Request::is('opds', 'informasi', 'pegawai', 'status', 'tgr', 'penyedia') ? 'show' : '' }}"
+                data-bs-parent="#sidebar-nav">
 
-                    <li>
-                        <a href="{{route('opds.index')}}">
-                            <i class="bi bi-circle"></i><span>Nama OPD</span>
-                        </a>
-                        <a href="{{route('informasi.index')}}">
-                            <i class="bi bi-circle"></i><span> Sumber Informasi</span>
-                        </a>
-                        <a href="{{route('pegawai.index')}}">
-                            <i class="bi bi-circle"></i><span> Pegawai</span>
-                        </a>
-                        <a href="{{route('status.index')}}">
-                            <i class="bi bi-circle"></i><span>  Status Proses</span>
-                        </a>
-                        <a href="{{route('tgr.index')}}">
-                            <i class="bi bi-circle"></i><span>  Status TGR
-                                (Tuntutan Ganti Rugi)</span>
-                        </a>
-                        <a href="{{route('penyedia.index')}}">
-                            <i class="bi bi-circle"></i><span> Penyedia</span>
-                        </a>
-                    </li>
+                <li>
+                    <a href="{{ route('opds.index') }}" class="{{ Request::is('opds') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Nama OPD</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('informasi.index') }}" class="{{ Request::is('informasi') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Sumber Informasi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('pegawai.index') }}" class="{{ Request::is('pegawai') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Pegawai</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('status.index') }}" class="{{ Request::is('status') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Status Proses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('tgr.index') }}" class="{{ Request::is('tgr') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Status TGR (Tuntutan Ganti Rugi)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('penyedia.index') }}" class="{{ Request::is('penyedia') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Penyedia</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Components Nav -->
 
-                </ul>
-            </li><!-- End Components Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse"
+                href="#">
+                <i class="bi bi-layout-text-window-reverse"></i><span>Laporan Temuan</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="tables-nav"
+                class="nav-content collapse {{ Request::is('data', 'temuan', 'temuans*') ? 'show' : '' }}"
+                data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('data.index') }}" class="{{ Request::is('data') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Data</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('temuan.index') }}" class="{{ Request::is('temuan') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Temuan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('temuans.datasktjm') }}" class="{{ Request::is('temuans/datasktjm') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> SKTJM</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('temuans.dataskp2ks') }}" class="{{ Request::is('temuans/dataskp2ks') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> SKP2KS</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('temuans.dataskp2k') }}" class="{{ Request::is('temuans/dataskp2k') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> SKP2K</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Tables Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-layout-text-window-reverse"></i><span>Laporan Temuan</span><i
-                        class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{route('data.index')}}">
-                            <i class="bi bi-circle"></i><span>Data</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('temuan.index')}}">
-                            <i class="bi bi-circle"></i><span> Temuan</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('temuans.datasktjm')}}">
-                            <i class="bi bi-circle"></i><span> SKTJM</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('temuans.dataskp2ks')}}">
-                            <i class="bi bi-circle"></i><span> SKP2KS</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('temuans.dataskp2k')}}">
-                            <i class="bi bi-circle"></i><span> SKP2K</span>
-                        </a>
-                    </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse"
+                href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Management User</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="user-nav"
+                class="nav-content collapse {{ Request::is('user', 'role') ? 'show' : '' }}"
+                data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('user.index') }}" class="{{ Request::is('user') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>User</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('role.index') }}" class="{{ Request::is('role') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span> Role</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                </ul>
-            </li><!-- End Tables Nav -->
-
-        </ul>
-
-    </aside><!-- End Sidebar-->
+    </ul>
+</aside><!-- End Sidebar-->
 
     @yield('content')
     <!-- ======= Footer ======= -->

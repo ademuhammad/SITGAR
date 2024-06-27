@@ -10,6 +10,16 @@ class InformasiController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     function __construct()
+     {
+          $this->middleware('permission:informasi-list|informasi-create|informasi-edit|informasi-delete', ['only' => ['index','show',]]);
+          $this->middleware('permission:informasi-create', ['only' => ['create','store']]);
+          $this->middleware('permission:informasi-edit', ['only' => ['edit','update']]);
+          $this->middleware('permission:informasi-delete', ['only' => ['destroy']]);
+     }
+
     public function index()
     {
         //

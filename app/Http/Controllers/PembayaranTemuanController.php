@@ -13,6 +13,15 @@ class PembayaranTemuanController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:pembayaran-list|pembayaran-create|pembayaran-edit|pembayaran-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:pembayaran-create', ['only' => ['create','store']]);
+         $this->middleware('permission:pembayaran-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:pembayaran-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:pembayaran-download', ['only' => ['downloadPdf']]);
+    }
+
     public function index(Temuan $temuan)
     {
         $pembayarans = $temuan->pembayarans;

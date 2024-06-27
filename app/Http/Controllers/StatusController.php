@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class StatusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     function __construct()
+     {
+          $this->middleware('permission:status-list|status-create|status-edit|status-delete', ['only' => ['index','show']]);
+          $this->middleware('permission:status-create', ['only' => ['create','store']]);
+          $this->middleware('permission:status-edit', ['only' => ['edit','update']]);
+          $this->middleware('permission:status-delete', ['only' => ['destroy']]);
+     }
     public function index()
     {
         //
@@ -31,18 +40,18 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $request->validate([
-            'status' => 'required|string|max:255',
-            'description' => 'nullable|string',
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required|array',
         ]);
 
-        Status::create([
-            'status' => $request->status,
-            'description' => $request->description,
-        ]);
+        $role = Role::create(['name' => $request->input('name')]);
 
-        return redirect()->route('status.index')->with('success', 'Status created successfully.');
+        // Sync permissions by name
+        $role->syncPermissions($request->input('permission'));
+
+        return redirect()->route('roles.index')
+            ->with('success', 'Role created successfully');
     }
 
     /**

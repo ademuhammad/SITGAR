@@ -10,6 +10,14 @@ class PenyediaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:penyedia-list|penyedia-create|penyedia-edit|penyedia-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:penyedia-create', ['only' => ['create','store']]);
+         $this->middleware('permission:penyedia-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:penyedia-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         //
