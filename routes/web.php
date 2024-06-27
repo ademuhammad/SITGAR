@@ -66,7 +66,7 @@ Route::resource('data', DataController::class);
 // Route::get('data', [DataController::class,'data'])->name('laporan.data');
 // Route::get('data-mentah', [DataController::class,'getDataMentah'])->name('laporan.data-mentah');
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('user', UserController::class);
