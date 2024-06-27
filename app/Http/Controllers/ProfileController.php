@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -55,7 +56,7 @@ class ProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(User $user)
     {
         $user = Auth::user();
         return view('profile.edit', compact('user'));
@@ -65,7 +66,7 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, User $user)
     {
         $user = Auth::user();
 
@@ -75,13 +76,9 @@ class ProfileController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($user->photo) {
-                Storage::delete($user->photo);
-            }
+        if ($request->hasFile('photos')) {
 
-            // Store new photo
+            // Store new photos
             $path = $request->file('photo')->store('photos');
             $user->photo = $path;
         }

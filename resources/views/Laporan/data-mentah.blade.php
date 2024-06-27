@@ -48,18 +48,18 @@
 
                         $(document).ready(function() {
                             var table = $('#data-table').DataTable({
-                                    processing: true,
-                                    serverSide: true,
-                                    ajax: {
-                                        url: '{{ route('data.index') }}',
-                                        data: function(d) {
-                                            d.status_id = $('#status_id').val();
-                                            d.no_lhp = $('#no_lhp').val();
-                                            d.start_date = $('#start_date').val();
-                                            d.end_date = $('#end_date').val();
-                                        }
-                                    },
-                                    columns: [{
+                                processing: true,
+                                serverSide: true,
+                                ajax: {
+                                    url: '{{ route('data.index') }}',
+                                    data: function(d) {
+                                        d.status_id = $('#status_id').val();
+                                        d.no_lhp = $('#no_lhp').val();
+                                        d.start_date = $('#start_date').val();
+                                        d.end_date = $('#end_date').val();
+                                    }
+                                },
+                                columns: [{
                                         data: 'no_lhp',
                                         name: 'no_lhp',
                                         render: function(data, type, row) {
@@ -80,14 +80,7 @@
                                         data: 'status',
                                         name: 'status'
                                     },
-                                    // {
-                                    //     data: 'pegawai_name',
-                                    //     name: 'pegawai_name'
-                                    // },
-                                    // {
-                                    //     data: 'penyedia_name',
-                                    //     name: 'penyedia_name'
-                                    // },
+
                                     {
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
@@ -128,10 +121,17 @@
                                                 '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
                                             deleteForm += '</form>';
 
-                                            return '<div class="d-flex " style="padding:5px">' + editButton + deleteForm +
+
+                                            var pembayaranCreateButton = '<a href="' + '{{ route("pembayaran.create", ":id") }}'.replace(':id', row.id) + '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
+        var pembayaranIndexButton = '<a href="' + '{{ route("pembayaran.index", ":id") }}'.replace(':id', row.id) + '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
+
+
+                                            return '<div class="d-flex" style="padding:5px">' + editButton +
+                                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
                                                 '</div>';
                                         }
                                     }
+
                                 ],
                                 dom: 'Bfrtip',
                                 buttons: [{
@@ -157,9 +157,9 @@
                                 ]
                             });
 
-                        $('#status_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
-                            table.draw();
-                        });
+                            $('#status_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
+                                table.draw();
+                            });
                         });
                     </script>
 

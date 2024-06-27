@@ -72,6 +72,12 @@
                             </a>
                         </li>
 
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit', Auth::user()->id) }}">
+                            <i class="bi bi-person"></i>
+                            <span>Edit Profile</span>
+                        </a>
+
+
                         <li>
                             <hr class="dropdown-divider">
                         </li>

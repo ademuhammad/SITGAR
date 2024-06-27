@@ -49,8 +49,8 @@ class PembayaranTemuanController extends Controller
          $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
          $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
 
-         if ($request->hasFile('bukti_pembayaran')) {
-             $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran');
+         if ($request->hasFile('bukti_surat')) {
+             $path = $request->file('bukti_surat')->store('bukti_surat');
              $pembayaran->bukti_pembayaran = $path;
          }
 
