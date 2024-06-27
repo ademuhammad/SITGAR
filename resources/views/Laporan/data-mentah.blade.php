@@ -120,10 +120,12 @@
                                             deleteForm +=
                                                 '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
                                             deleteForm += '</form>';
-
-
-                                            var pembayaranCreateButton = '<a href="' + '{{ route("pembayaran.create", ":id") }}'.replace(':id', row.id) + '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
-        var pembayaranIndexButton = '<a href="' + '{{ route("pembayaran.index", ":id") }}'.replace(':id', row.id) + '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
+                                            var pembayaranCreateButton = '<a href="' +
+                                                '{{ route('pembayaran.create', ':id') }}'.replace(':id', row.id) +
+                                                '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
+                                            var pembayaranIndexButton = '<a href="' +
+                                                '{{ route('pembayaran.index', ':id') }}'.replace(':id', row.id) +
+                                                '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
 
 
                                             return '<div class="d-flex" style="padding:5px">' + editButton +

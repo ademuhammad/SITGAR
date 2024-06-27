@@ -94,7 +94,9 @@
                                     <tbody>
                                         @foreach ($temuans as $temuan)
                                             <tr>
-                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
+                                                <td> <a
+                                                        href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a>
+                                                </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>
@@ -109,12 +111,13 @@
                                                 <td>{{ $temuan->tgl_lhp }}</td>
                                                 <td>
                                                     @if ($temuan->bukti_surat)
-                                                        <a href="{{ asset($temuan->bukti_surat) }}"
+                                                        <a href="{{ asset('bukti_temuan/' . $temuan->bukti_surat) }}"
                                                             target="_blank">View</a>
                                                     @else
                                                         N/A
                                                     @endif
                                                 </td>
+
                                                 <td>
                                                     <div class="d-flex " style="gap: 5px">
                                                         <a href="{{ route('temuan.edit', $temuan) }}"
@@ -168,7 +171,9 @@
                                     <tbody>
                                         @foreach ($temuans2 as $temuan)
                                             <tr>
-                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
+                                                <td> <a
+                                                        href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a>
+                                                </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>
@@ -182,12 +187,15 @@
                                                 <td>{{ $temuan->penyedia->penyedia_name }}</td>
                                                 <td>{{ $temuan->tgl_lhp }}</td>
                                                 <td>
+                                                <td>
                                                     @if ($temuan->bukti_surat)
-                                                        <a href="{{ asset($temuan->bukti_surat) }}"
+                                                        <a href="{{ asset('bukti_temuan/' . $temuan->bukti_surat) }}"
                                                             target="_blank">View</a>
                                                     @else
                                                         N/A
                                                     @endif
+                                                </td>
+
                                                 </td>
                                                 <td>
                                                     <div class="d-flex">
@@ -243,7 +251,9 @@
                                     <tbody>
                                         @foreach ($temuans3 as $temuan)
                                             <tr>
-                                                <td> <a href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a> </td>
+                                                <td> <a
+                                                        href="{{ route('data.show', $temuan->id) }}">{{ $temuan->no_lhp }}</a>
+                                                </td>
                                                 <td>{{ $temuan->informasi->dinas_name }}</td>
                                                 <td>{{ $temuan->obrik_pemeriksaan }}</td>
                                                 <td>{{ $temuan->opd->opd_name }}</td>
@@ -259,18 +269,20 @@
                                                 <td>{{ $temuan->penyedia->penyedia_name }}</td>
                                                 <td>{{ $temuan->tgl_lhp }}</td>
                                                 <td>
+                                                <td>
                                                     @if ($temuan->bukti_surat)
-                                                        <a href="{{ asset($temuan->bukti_surat) }}"
+                                                        <a href="{{ asset('bukti_temuan/' . $temuan->bukti_surat) }}"
                                                             target="_blank">View</a>
                                                     @else
                                                         N/A
                                                     @endif
                                                 </td>
+
+                                                </td>
                                                 <td>
                                                     <div class="d-flex" style="gap: 5px">
                                                         <a href="{{ route('temuan.edit', $temuan) }}"
-                                                            class="btn btn-light"><i
-                                                                class="bi bi-pencil-square"></i></a>
+                                                            class="btn btn-light"><i class="bi bi-pencil-square"></i></a>
                                                         <form action="{{ route('temuan.destroy', $temuan) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf

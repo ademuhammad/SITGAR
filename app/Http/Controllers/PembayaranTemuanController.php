@@ -15,11 +15,11 @@ class PembayaranTemuanController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:pembayaran-list|pembayaran-create|pembayaran-edit|pembayaran-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:pembayaran-create', ['only' => ['create','store']]);
-         $this->middleware('permission:pembayaran-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:pembayaran-delete', ['only' => ['destroy']]);
-         $this->middleware('permission:pembayaran-download', ['only' => ['downloadPdf']]);
+        $this->middleware('permission:pembayaran-list|pembayaran-create|pembayaran-edit|pembayaran-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:pembayaran-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:pembayaran-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:pembayaran-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:pembayaran-download', ['only' => ['downloadPdf']]);
     }
 
     public function index(Temuan $temuan)
@@ -32,37 +32,38 @@ class PembayaranTemuanController extends Controller
      * Show the form for creating a new resource.
      */
 
-     public function create(Temuan $temuan)
-     {
-         return view('pembayaran.create-pembayaran', compact('temuan'));
-     }
-     public function store(Request $request, Temuan $temuan)
-     {
-         $request->validate([
-             'jumlah_pembayaran' => 'required|numeric',
-             'tgl_pembayaran' => 'required|date',
-             'bukti_pembayaran' => 'nullable|file|mimes:pdf|max:2048'
-         ]);
+    public function create(Temuan $temuan)
+    {
+        return view('pembayaran.create-pembayaran', compact('temuan'));
+    }
 
-         $pembayaran = new Pembayaran();
-         $pembayaran->temuan_id = $temuan->id;
-         $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
-         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
+    public function store(Request $request, Temuan $temuan)
+    {
+        $request->validate([
+            'jumlah_pembayaran' => 'required|numeric',
+            'tgl_pembayaran' => 'required|date',
+            'bukti_pembayaran' => 'nullable|file|mimes:pdf|max:2048'
+        ]);
 
-         if ($request->hasFile('bukti_surat')) {
-             $path = $request->file('bukti_surat')->store('bukti_surat');
-             $pembayaran->bukti_pembayaran = $path;
-         }
+        $pembayaran = new Pembayaran();
+        $pembayaran->temuan_id = $temuan->id;
+        $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
+        $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
 
-         $pembayaran->save();
+        if ($request->hasFile('bukti_surat')) {
+            $path = $request->file('bukti_surat')->store('bukti_surat');
+            $pembayaran->bukti_surat = $path;
+        }
+        $pembayaran->save();
 
-         // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
-         $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
-         $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
-         $temuan->save();
+        // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
+        $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
+        $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
+        $temuan->save();
 
-         return redirect()->route('temuan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
-     }
+        return redirect()->route('temuan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
+    }
+
 
     /**
      * Display the specified resource.
@@ -106,5 +107,4 @@ class PembayaranTemuanController extends Controller
         $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan'));
         return $pdf->download('history_pembayaran.pdf');
     }
-
 }

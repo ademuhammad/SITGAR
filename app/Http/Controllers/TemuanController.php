@@ -12,18 +12,19 @@ use App\Models\Informasi;
 use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
-use Yajra\DataTables\Facades\DataTables;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class TemuanController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:temuan-list|temuan-create|temuan-edit|temuan-delete', ['only' => ['index','show','datasktjm','dataskp2ks','dataskp2k']]);
-         $this->middleware('permission:temuan-create', ['only' => ['create','store']]);
-         $this->middleware('permission:temuan-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:temuan-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:temuan-list|temuan-create|temuan-edit|temuan-delete', ['only' => ['index', 'show', 'datasktjm', 'dataskp2ks', 'dataskp2k']]);
+        $this->middleware('permission:temuan-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:temuan-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:temuan-delete', ['only' => ['destroy']]);
     }
     public function index(Request $request)
     {
@@ -73,10 +74,6 @@ class TemuanController extends Controller
 
         return view('Laporan.test', compact('temuans', 'temuans2', 'temuans3'));
     }
-
-
-
-
     public function create()
     {
         $informasis = Informasi::all();
@@ -103,21 +100,31 @@ class TemuanController extends Controller
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_surat' => 'nullable|file|mimes:pdf|max:2048'
+            'bukti_surat' => 'nullable|file'
         ]);
 
-        $temuan = new Temuan($request->all());
+        $temuan = new Temuan();
+        $temuan->informasis_id = $request->input('informasis_id');
+        $temuan->opd_id = $request->input('opd_id');
+        $temuan->status_id = $request->input('status_id');
+        $temuan->statustgr_id = $request->input('statustgr_id');
+        $temuan->pegawai_id = $request->input('pegawai_id');
+        $temuan->penyedia_id = $request->input('penyedia_id');
+        $temuan->no_lhp = $request->input('no_lhp');
+        $temuan->tgl_lhp = $request->input('tgl_lhp');
+        $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
+        $temuan->temuan = $request->input('temuan');
+        $temuan->rekomendasi = $request->input('rekomendasi');
+        $temuan->nilai_rekomendasi = $request->input('nilai_rekomendasi');
 
-        // if ($request->hasFile('bukti_surat')) {
-        //     $path = $request->file('bukti_surat')->store('bukti_surat');
-        //     $temuan->bukti_surat = $path;
-        // }
-        if ($request->hasFile('bukti_pembayaran')) {
-            $file = $request->file('bukti_pembayaran');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('bukti_pembayaran', $filename);
-            $temuan->bukti_pembayaran = $path;
+        if ($request->hasFile('bukti_surat')) {
+            $file = $request->file('bukti_surat');
+            $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
+            $gambarPath = public_path('bukti_temuan');
+            $file->move($gambarPath, $file_temuan);
+            $temuan->bukti_surat = $file_temuan;
         }
+
         // Initialize payment fields
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
@@ -126,7 +133,6 @@ class TemuanController extends Controller
 
         return redirect()->route('temuan.index')->with('success', 'Temuan created successfully.');
     }
-
     public function show(Temuan $temuan)
     {
         return view('Laporan.show-temuan', compact('temuan'));
@@ -155,7 +161,7 @@ class TemuanController extends Controller
             'penyedia_id' => 'required|exists:penyedias,id',
             'no_lhp' => 'required|string|max:255',
             'tgl_lhp' => 'required|date',
-            'obrik_pemeriksaan' => 'required|string',
+            'obrik_pemeriksaan' => 'required|string|max:255',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
             'nilai_rekomendasi' => 'required|numeric',
@@ -165,13 +171,18 @@ class TemuanController extends Controller
         $temuan->fill($request->all());
 
         if ($request->hasFile('bukti_surat')) {
-            $path = $request->file('bukti_surat')->store('bukti_surat');
-            $temuan->bukti_surat = $path;
+            $file = $request->file('bukti_surat');
+            $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
+            $gambarPath = public_path('bukti_temuan');
+            $file->move($gambarPath, $file_temuan);
+            $temuan->bukti_surat = $file_temuan;
         }
+
+
 
         $temuan->save();
 
-        return redirect()->route('temuan.index')->with('success', 'Temuan updated successfully.');
+        return redirect()->route('data.index')->with('success', 'Temuan updated successfully.');
     }
     public function destroy(Temuan $temuan)
     {
@@ -196,11 +207,13 @@ class TemuanController extends Controller
             ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
             ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
             ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+            ['data' => 'nilai_telah_dibayar', 'name' => 'nilai_telah_dibayar', 'title' => 'Nilai Telah Dibayar'],
+            ['data' => 'sisa_nilai_uang', 'name' => 'sisa_nilai_uang', 'title' => 'Nilai Sisa'],
         ])
-        ->parameters([
-            'dom' => 'Bfrtip',
-            'buttons' => ['csv', 'excel', 'pdf', 'print'],
-        ]);
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+            ]);
 
         return view('Laporan.data-sktjm', compact('html', 'statuses'));
     }
@@ -263,11 +276,14 @@ class TemuanController extends Controller
             ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
             ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
             ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+            ['data' => 'nilai_telah_dibayar', 'name' => 'nilai_telah_dibayar', 'title' => 'Nilai Telah Dibayar'],
+            ['data' => 'sisa_nilai_uang', 'name' => 'sisa_nilai_uang', 'title' => 'Nilai Sisa'],
+
         ])
-        ->parameters([
-            'dom' => 'Bfrtip',
-            'buttons' => ['csv', 'excel', 'pdf', 'print'],
-        ]);
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+            ]);
 
         return view('Laporan.data-skp2ks', compact('html', 'statuses'));
     }
@@ -330,11 +346,14 @@ class TemuanController extends Controller
             ['data' => 'rekomendasi', 'name' => 'rekomendasi', 'title' => 'Rekomendasi'],
             ['data' => 'nilai_rekomendasi', 'name' => 'nilai_rekomendasi', 'title' => 'Nilai Rekomendasi'],
             ['data' => 'bukti_surat', 'name' => 'bukti_surat', 'title' => 'Bukti Surat'],
+            ['data' => 'nilai_telah_dibayar', 'name' => 'nilai_telah_dibayar', 'title' => 'Nilai Telah Dibayar'],
+            ['data' => 'sisa_nilai_uang', 'name' => 'sisa_nilai_uang', 'title' => 'Nilai Sisa'],
+
         ])
-        ->parameters([
-            'dom' => 'Bfrtip',
-            'buttons' => ['csv', 'excel', 'pdf', 'print'],
-        ]);
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+            ]);
 
         return view('Laporan.data-skp2k', compact('html', 'statuses'));
     }

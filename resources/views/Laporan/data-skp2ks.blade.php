@@ -59,32 +59,111 @@
                                         d.end_date = $('#end_date').val();
                                     }
                                 },
-                                columns: [
-                                    { data: 'no_lhp', name: 'no_lhp', render: function(data, type, row) {
-                                        return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
-                                    }},
-                                    { data: 'dinas_name', name: 'dinas_name' },
-                                    { data: 'opd_name', name: 'opd_name' },
-                                    { data: 'status', name: 'status' },
-                                    { data: 'tgl_lhp', name: 'tgl_lhp' },
-                                    { data: 'obrik_pemeriksaan', name: 'obrik_pemeriksaan' },
-                                    { data: 'temuan', name: 'temuan' },
-                                    { data: 'rekomendasi', name: 'rekomendasi' },
-                                    { data: 'nilai_rekomendasi', name: 'nilai_rekomendasi', render: function(data, type, row) {
-                                        return formatRupiah(data, 'Rp. ');
-                                    }},
-                                    { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
-                                        var editButton = '<a href="/data/' + row.id + '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
-                                        var deleteForm = '<form action="/data/' + row.id + '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
-                                        return '<div class="d-flex " style="padding:5px">' + editButton + deleteForm + '</div>';
-                                    }}
+                                columns: [{
+                                        data: 'no_lhp',
+                                        name: 'no_lhp',
+                                        render: function(data, type, row) {
+                                            return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
+                                        }
+                                    },
+                                    {
+                                        data: 'dinas_name',
+                                        name: 'dinas_name'
+                                    },
+                                    {
+                                        data: 'opd_name',
+                                        name: 'opd_name'
+                                    },
+                                    {
+                                        data: 'status',
+                                        name: 'status'
+                                    },
+                                    {
+                                        data: 'tgl_lhp',
+                                        name: 'tgl_lhp'
+                                    },
+                                    {
+                                        data: 'obrik_pemeriksaan',
+                                        name: 'obrik_pemeriksaan'
+                                    },
+                                    {
+                                        data: 'temuan',
+                                        name: 'temuan'
+                                    },
+                                    {
+                                        data: 'rekomendasi',
+                                        name: 'rekomendasi'
+                                    },
+                                    {
+                                        data: 'nilai_rekomendasi',
+                                        name: 'nilai_rekomendasi',
+                                        render: function(data, type, row) {
+                                            return formatRupiah(data, 'Rp. ');
+                                        }
+                                    },
+                                    {
+                                        data: 'nilai_telah_dibayar',
+                                        name: 'nilai_telah_dibayar',
+                                        render: function(data, type, row) {
+                                            return formatRupiah(data, 'Rp. ');
+                                        }
+                                    },
+                                    {
+                                        data: 'sisa_nilai_uang',
+                                        name: 'sisa_nilai_uang',
+                                        render: function(data, type, row) {
+                                            return formatRupiah(data, 'Rp. ');
+                                        }
+                                    },
+                                    {
+                                        data: 'action',
+                                        name: 'action',
+                                        orderable: false,
+                                        searchable: false,
+                                        render: function(data, type, row) {
+                                            var editButton = '<a href="/data/' + row.id +
+                                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
+
+                                            var deleteForm = '<form action="/data/' + row.id +
+                                                '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
+
+                                            var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
+                                                .replace(':id', row.id);
+                                            var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
+                                                '" class="btn btn-sm btn-light mr-1" title="Create Pembayaran"><i class="bi bi-currency-dollar"></i></a>';
+
+                                            var pembayaranIndexUrl = '{{ route('pembayaran.index', ':id') }}'
+                                                .replace(':id', row.id);
+                                            var pembayaranIndexButton = '<a href="' + pembayaranIndexUrl +
+                                                '" class="btn btn-sm btn-light" title="View Pembayaran"><i class="bi bi-hourglass-split"></i></a>';
+
+                                            return '<div class="d-flex" style="padding:5px">' + editButton +
+                                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
+                                                '</div>';
+                                        }
+                                    }
                                 ],
                                 dom: 'Bfrtip',
-                                buttons: [
-                                    { extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV', className: 'btn btn-success' },
-                                    { extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel', className: 'btn btn-success' },
-                                    { extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF', className: 'btn btn-danger' },
-                                    { extend: 'print', text: '<i class="fas fa-print"></i> Print', className: 'btn btn-primary' }
+                                buttons: [{
+                                        extend: 'csv',
+                                        text: '<i class="fas fa-file-csv"></i> CSV',
+                                        className: 'btn btn-success'
+                                    },
+                                    {
+                                        extend: 'excel',
+                                        text: '<i class="fas fa-file-excel"></i> Excel',
+                                        className: 'btn btn-success'
+                                    },
+                                    {
+                                        extend: 'pdf',
+                                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                                        className: 'btn btn-danger'
+                                    },
+                                    {
+                                        extend: 'print',
+                                        text: '<i class="fas fa-print"></i> Print',
+                                        className: 'btn btn-primary'
+                                    }
                                 ]
                             });
 
@@ -111,7 +190,8 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="no_lhp">Filter No LHP:</label>
-                                        <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
+                                        <input type="text" id="no_lhp" class="form-control"
+                                            placeholder="Search No LHP">
                                     </div>
                                 </div>
                             </div>
@@ -144,6 +224,8 @@
                                     <th>Temuan</th>
                                     <th>Rekomendasi</th>
                                     <th>Nilai Rekomendasi</th>
+                                    <th>Telah Dibayar</th>
+                                    <th>Sisa Nilai Uang</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
