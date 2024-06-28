@@ -51,8 +51,15 @@
                     @auth
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                             data-bs-toggle="dropdown">
+
+                            @if ( Auth::user()->photo)
+                                <img src="{{ asset('photos/' . Auth::user()->photo) }}" alt="Profile" class="rounded-circle">
+                            @else
                             <img src="{{ asset('NiceAdmin/assets/img/profile-img.jpg') }}" alt="Profile"
                                 class="rounded-circle">
+                            @endif
+
+
                             <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
                         </a><!-- End Profile Iamge Icon -->
 

@@ -76,19 +76,20 @@ class ProfileController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if ($request->hasFile('photos')) {
+        $user->fill($request->all());
 
-            // Store new photos
-            $path = $request->file('photo')->store('photos');
-            $user->photo = $path;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
+            $gambarPath = public_path('photos');
+            $file->move($gambarPath, $file_temuan);
+            $user->photo = $file_temuan;
         }
-
-        $user->name = $request->name;
-        $user->email = $request->email;
         $user->save();
 
-        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully');
+        return redirect()->route('profile.index')->with('success', 'Profile updated successfully');
     }
+
     /**
      * Remove the specified resource from storage.
      */
