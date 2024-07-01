@@ -1,5 +1,6 @@
 @extends('template.header-footer')
 @section('content')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <main id="main" class="main">
 
         <div class="pagetitle">
@@ -285,7 +286,7 @@
                                             data: Object.values(dataPerYear[defaultYear])
                                         }],
                                         chart: {
-                                            height: 350,
+                                            height: 200,
                                             type: 'line',
                                             zoom: {
                                                 enabled: false
@@ -337,56 +338,41 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Jumlah Temuan berdasarkan OPD</h5>
+                            <h1>Temuan Per Bulan - Tahun {{ $year }}</h1>
 
-                            <!-- Bar Chart -->
-                            <canvas id="barChart" style="max-height: 400px;"></canvas>
+                            <form method="GET" action="{{ route('dashboard.index') }}">
+                                <select name="year" onchange="this.form.submit()">
+                                    @for ($i = 2020; $i <= date('Y'); $i++)
+                                        <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
+                                            {{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </form>
+
+                            <canvas id="temuanChart" width="400" height="200"></canvas>
                             <script>
-                                document.addEventListener("DOMContentLoaded", () => {
-                                    new Chart(document.querySelector('#barChart'), {
-                                        type: 'bar',
-                                        data: {
-                                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                                            datasets: [{
-                                                data: [65, 59, 80, 81, 56, 55, 40],
-                                                backgroundColor: [
-                                                    'rgba(255, 99, 132, 0.2)',
-                                                    'rgba(255, 159, 64, 0.2)',
-                                                    'rgba(255, 205, 86, 0.2)',
-                                                    'rgba(75, 192, 192, 0.2)',
-                                                    'rgba(54, 162, 235, 0.2)',
-                                                    'rgba(153, 102, 255, 0.2)',
-                                                    'rgba(201, 203, 207, 0.2)'
-                                                ],
-                                                borderColor: [
-                                                    'rgb(255, 99, 132)',
-                                                    'rgb(255, 159, 64)',
-                                                    'rgb(255, 205, 86)',
-                                                    'rgb(75, 192, 192)',
-                                                    'rgb(54, 162, 235)',
-                                                    'rgb(153, 102, 255)',
-                                                    'rgb(201, 203, 207)'
-                                                ],
-                                                borderWidth: 1
-                                            }]
-                                        },
-                                        options: {
-                                            plugins: {
-                                                legend: {
-                                                    display: false // Menghilangkan legend
-                                                }
-                                            },
-                                            scales: {
-                                                y: {
-                                                    beginAtZero: true
-                                                }
+                                const ctx = document.getElementById('temuanChart').getContext('2d');
+                                const temuanChart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: @json($months),
+                                        datasets: [{
+                                            label: 'Jumlah Temuan',
+                                            data: @json($counts),
+                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
                                             }
                                         }
-                                    });
+                                    }
                                 });
                             </script>
-                            <!-- End Bar Chart -->
-
                         </div>
                     </div>
                 </div>

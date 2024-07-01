@@ -57,6 +57,7 @@
                                         d.no_lhp = $('#no_lhp').val();
                                         d.start_date = $('#start_date').val();
                                         d.end_date = $('#end_date').val();
+                                        d.opd_id = $('#opd_id').val(); // Added this line
                                     }
                                 },
                                 columns: [{
@@ -167,7 +168,7 @@
                                 ]
                             });
 
-                            $('#status_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
+                            $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
                                 table.draw();
                             });
                         });
@@ -192,6 +193,21 @@
                                         <label for="no_lhp">Filter No LHP:</label>
                                         <input type="text" id="no_lhp" class="form-control"
                                             placeholder="Search No LHP">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="opd_id">Filter OPD:</label>
+                                            <select id="opd_id" class="form-control">
+                                                <option value="">All</option>
+                                                @foreach ($opds as $opd)
+                                                    <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

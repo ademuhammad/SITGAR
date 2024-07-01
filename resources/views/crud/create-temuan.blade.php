@@ -63,7 +63,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="pegawai_id">Pegawai</label>
+                            <label for="pegawai_id">PPK</label>
                             <select class="form-control" id="pegawai_id" name="pegawai_id">
                                 @foreach ($pegawais as $pegawai)
                                     <option value="{{ $pegawai->id }}"

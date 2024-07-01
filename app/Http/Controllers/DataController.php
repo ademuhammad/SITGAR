@@ -33,6 +33,10 @@ class DataController extends Controller
                 ->whereNull('statustgr_id');
 
             // Tambahkan filter di sini
+            if ($request->has('opd_id') && $request->opd_id != '') {
+                $query->where('opd_id', $request->opd_id);
+            }
+
             if ($request->has('status_id') && $request->status_id != '') {
                 $query->where('status_id', $request->status_id);
             }
@@ -66,6 +70,7 @@ class DataController extends Controller
         }
 
         $statuses = Status::all();
+        $opds = Opd::all();
 
         $html = $builder->columns([
             ['data' => 'dinas_name', 'name' => 'dinas_name', 'title' => 'Sumber Informasi'],
@@ -87,7 +92,7 @@ class DataController extends Controller
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
 
-        return view('Laporan.data-mentah', compact('html', 'statuses'));
+        return view('Laporan.data-mentah', compact('html', 'statuses','opds'));
     }
 
 

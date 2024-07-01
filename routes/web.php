@@ -45,6 +45,9 @@ Route::get('pembayaran/{temuan}/pembayaran', [PembayaranTemuanController::class,
 // laporan
 // Rute resource
 Route::resource('temuan', TemuanController::class);
+Route::get('temuans/selesai', [TemuanController::class, 'selesai'])->name('temuans.selesai');
+Route::get('temuans/get-selesai', [TemuanController::class, 'getselesai'])->name('temuans.getselesai');
+
 Route::get('temuans/data-sktjm', [TemuanController::class, 'datasktjm'])->name('temuans.datasktjm');
 // Route for handling the AJAX request for data
 Route::get('temuans/get-datasktjm', [TemuanController::class, 'getDatasktjm'])->name('temuans.getDatasktjm');

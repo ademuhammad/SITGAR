@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Temuan;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -20,7 +21,22 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        $year = $request->input('year', date('Y')); // Ambil tahun dari request atau gunakan tahun saat ini
+        $year = $request->input('year', Carbon::now()->year); // default to current year
+        $temuan = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
+            ->whereYear('tgl_lhp', $year)
+            ->groupBy('month')
+            ->get();
+
+        $months = [];
+        $counts = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthData = $temuan->firstWhere('month', $i);
+            $months[] = $i;
+            $counts[] = $monthData ? $monthData->count : 0;
+        }
+
+        // $year = $request->input('year', date('Y')); // Ambil tahun dari request atau gunakan tahun saat ini
 
         // Ambil tahun yang ada di data temuan
         $availableYears = Temuan::selectRaw('YEAR(tgl_lhp) as year')
@@ -66,7 +82,8 @@ class DashboardController extends Controller
             'availableYears',
             'jumlahTemuanStatus',
             'jumlahTemuanTahun',
-            'temuanPerYearMonth'
+            'temuanPerYearMonth',
+            'months', 'counts',
         ));
     }
 

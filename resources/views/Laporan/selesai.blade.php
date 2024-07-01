@@ -5,12 +5,12 @@
 
     <main id="main" class="main">
         <div class="pagetitle">
-            <h1>Data Temuan</h1>
+            <h1>Data Selesai</h1>
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">SITGAR</a></li>
-                    <li class="breadcrumb-item">Temuan</li>
-                    <li class="breadcrumb-item active">SKTJM</li>
+                    <li class="breadcrumb-item"><a href="index.html">SITEGAR</a></li>
+                    <li class="breadcrumb-item">Tables</li>
+                    <li class="breadcrumb-item active">Selesai</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -18,8 +18,7 @@
         <section class="section">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Data SKTJM</h5>
-                    {{-- <a href="{{ route('data.create') }}" class="btn btn-primary mb-3">Tambah Data</a> --}}
+                    <h5 class="card-title">Data Selesai</h5>
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -47,27 +46,28 @@
                         }
 
                         $(document).ready(function() {
-                            var table = $('#data-table').DataTable({
+                            var table = $('#data-table2').DataTable({
                                 processing: true,
                                 serverSide: true,
                                 ajax: {
-                                    url: '{{ route('temuans.getDatasktjm') }}',
+                                    url: '{{ route('temuans.selesai') }}',
                                     data: function(d) {
-                                        d.opd_id = $('#opd_id').val();
                                         d.status_id = $('#status_id').val();
                                         d.no_lhp = $('#no_lhp').val();
                                         d.start_date = $('#start_date').val();
                                         d.end_date = $('#end_date').val();
+                                        d.opd_id = $('#opd_id').val(); // Added this line
                                     }
                                 },
-                                columns: [
-                                    {
+                                columns: [{
                                         data: 'no_lhp',
                                         name: 'no_lhp',
                                         render: function(data, type, row) {
-                                            return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
+                                            return '<a class="a-none" href="/data/' + row.id + '">' + data +
+                                                '</a>';
                                         }
                                     },
+
                                     {
                                         data: 'dinas_name',
                                         name: 'dinas_name'
@@ -76,10 +76,11 @@
                                         data: 'opd_name',
                                         name: 'opd_name'
                                     },
-                                    {
-                                        data: 'status',
-                                        name: 'status'
-                                    },
+                                    // {
+                                    //     data: 'status',
+                                    //     name: 'status'
+                                    // },
+
                                     {
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
@@ -92,31 +93,17 @@
                                         data: 'temuan',
                                         name: 'temuan'
                                     },
-                                    {
-                                        data: 'rekomendasi',
-                                        name: 'rekomendasi'
-                                    },
-                                    {
-                                        data: 'nilai_rekomendasi',
-                                        name: 'nilai_rekomendasi',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
-                                    },
-                                    {
-                                        data: 'nilai_telah_dibayar',
-                                        name: 'nilai_telah_dibayar',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
-                                    },
-                                    {
-                                        data: 'sisa_nilai_uang',
-                                        name: 'sisa_nilai_uang',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
-                                    },
+                                    // {
+                                    //     data: 'rekomendasi',
+                                    //     name: 'rekomendasi'
+                                    // },
+                                    // {
+                                    //     data: 'nilai_rekomendasi',
+                                    //     name: 'nilai_rekomendasi',
+                                    //     render: function(data, type, row) {
+                                    //         return formatRupiah(data, 'Rp. ');
+                                    //     }
+                                    // },
                                     {
                                         data: 'action',
                                         name: 'action',
@@ -127,27 +114,29 @@
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
                                             var deleteForm = '<form action="/data/' + row.id +
-                                                '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
+                                                '" method="post" style="display:inline">';
+                                            deleteForm += '@csrf';
+                                            deleteForm += '@method('DELETE')';
+                                            deleteForm +=
+                                                '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
+                                            deleteForm += '</form>';
+                                            var pembayaranCreateButton = '<a href="' +
+                                                '{{ route('pembayaran.create', ':id') }}'.replace(':id', row.id) +
+                                                '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
+                                            var pembayaranIndexButton = '<a href="' +
+                                                '{{ route('pembayaran.index', ':id') }}'.replace(':id', row.id) +
+                                                '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
 
-                                            var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
-                                                .replace(':id', row.id);
-                                            var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
-                                                '" class="btn btn-sm btn-light mr-1" title="Create Pembayaran"><i class="bi bi-currency-dollar"></i></a>';
-
-                                            var pembayaranIndexUrl = '{{ route('pembayaran.index', ':id') }}'
-                                                .replace(':id', row.id);
-                                            var pembayaranIndexButton = '<a href="' + pembayaranIndexUrl +
-                                                '" class="btn btn-sm btn-light" title="View Pembayaran"><i class="bi bi-hourglass-split"></i></a>';
 
                                             return '<div class="d-flex" style="padding:5px">' + editButton +
                                                 deleteForm + pembayaranCreateButton + pembayaranIndexButton +
                                                 '</div>';
                                         }
                                     }
+
                                 ],
                                 dom: 'Bfrtip',
-                                buttons: [
-                                    {
+                                buttons: [{
                                         extend: 'csv',
                                         text: '<i class="fas fa-file-csv"></i> CSV',
                                         className: 'btn btn-success'
@@ -170,23 +159,21 @@
                                 ]
                             });
 
-                            $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
+                            $('#opd_id, #no_lhp, #start_date, #end_date').on('change keyup', function() {
                                 table.draw();
                             });
                         });
                     </script>
-
-
                     <div class="container">
-                        <div class="card" style="padding: 10px; background: #c6dff6">
+                        <div class="card" style="padding: 10px; background: #739c7e">
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <label for="status_id">Filter Status:</label>
-                                        <select id="status_id" class="form-control">
+                                        <label for="opd_id">Filter OPD:</label>
+                                        <select id="opd_id" class="form-control">
                                             <option value="">All</option>
-                                            @foreach ($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                            @foreach ($opds as $opd)
+                                                <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -199,21 +186,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="opd_id">Filter OPD:</label>
-                                            <select id="opd_id" class="form-control">
-                                                <option value="">All</option>
-                                                @foreach ($opds as $opd)
-                                                    <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
@@ -228,22 +201,21 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
-                        <table id="data-table" class="display" style="width:100%">
+                        <table id="data-table2" class="display" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>No LHP</th>
                                     <th>Sumber Informasi</th>
                                     <th>Nama OPD</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>Tgl LHP</th>
                                     <th>Obrik Pemeriksaan</th>
                                     <th>Temuan</th>
-                                    <th>Rekomendasi</th>
-                                    <th>Nilai Rekomendasi</th>
-                                    <th>Telah Dibayar</th>
-                                    <th>Sisa Nilai Uang</th>
+                                    {{-- <th>Rekomendasi</th> --}}
+                                    {{-- <th>Nilai Rekomendasi</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
