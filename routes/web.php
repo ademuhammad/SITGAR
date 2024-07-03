@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('dashboard', DashboardController::class);
     Route::get('/dashboard/get-temuan-data', [DashboardController::class, 'getTemuanData'])->name('dashboard.getTemuanData');
+    Route::get('/temuan-per-bulan', [DashboardController::class, 'getTemuanPerBulan'])->name('temuan.perbulan');
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // OPD
@@ -66,18 +67,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('data', [DataController::class, 'index'])->name('data.index');
     Route::resource('data', DataController::class);
     // Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
-
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('user', UserController::class);
+    Route::get('/my-profile', [ProfileController::class, 'index'])->name('user.myprofile');
+    Route::resource('profile', ProfileController::class);
+    Route::resource('role', RoleController::class);
 });
 // Route::get('data', [DataController::class,'data'])->name('laporan.data');
 // Route::get('data-mentah', [DataController::class,'getDataMentah'])->name('laporan.data-mentah');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('user', UserController::class);
-Route::get('/my-profile', [ProfileController::class, 'index'])->name('user.myprofile');
-Route::resource('profile', ProfileController::class);
-Route::resource('role', RoleController::class);
 
 // profile
 // Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

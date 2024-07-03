@@ -107,23 +107,17 @@
                                     {
                                         data: 'nilai_rekomendasi',
                                         name: 'nilai_rekomendasi',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
+
                                     },
                                     {
                                         data: 'nilai_telah_dibayar',
                                         name: 'nilai_telah_dibayar',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
+
                                     },
                                     {
                                         data: 'sisa_nilai_uang',
                                         name: 'sisa_nilai_uang',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
+
                                     },
                                     {
                                         data: 'action',

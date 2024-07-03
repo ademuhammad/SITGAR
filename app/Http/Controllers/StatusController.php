@@ -40,17 +40,22 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required|array',
+        $request->validate([
+            'status' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
+        // Buat instance Status dan simpan ke database
+        Status::create([
+            'status' => $request->input('status'),
+            'description' => $request->input('description'),
+        ]);
 
-        // Sync permissions by name
-        $role->syncPermissions($request->input('permission'));
 
-        return redirect()->route('roles.index')
+
+
+
+        return redirect()->route('status.index')
             ->with('success', 'Role created successfully');
     }
 

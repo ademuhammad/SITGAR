@@ -30,21 +30,7 @@
                     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
                     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
                     <script>
-                        function formatRupiah(angka, prefix) {
-                            var number_string = angka.toString().replace(/[^,\d]/g, ''),
-                                split = number_string.split(','),
-                                sisa = split[0].length % 3,
-                                rupiah = split[0].substr(0, sisa),
-                                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-                            if (ribuan) {
-                                separator = sisa ? '.' : '';
-                                rupiah += separator + ribuan.join('.');
-                            }
-
-                            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-                        }
 
                         $(document).ready(function() {
                             var table = $('#data-table').DataTable({
@@ -101,9 +87,7 @@
                                     {
                                         data: 'nilai_rekomendasi',
                                         name: 'nilai_rekomendasi',
-                                        render: function(data, type, row) {
-                                            return formatRupiah(data, 'Rp. ');
-                                        }
+
                                     },
                                     {
                                         data: 'action',

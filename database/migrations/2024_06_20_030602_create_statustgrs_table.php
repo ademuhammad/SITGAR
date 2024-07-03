@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('statustgrs', function (Blueprint $table) {
             $table->id();
             $table->string('tgr_name');
+            $table->string('tgr_code')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ class DashboardController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:dashboard-list|dashboard-create|dashboard-edit|dashboard-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:dashboard-list', ['only' => ['index', 'show', 'getTemuanPerBulan']]);
     }
     public function index(Request $request)
     {
@@ -67,6 +67,14 @@ class DashboardController extends Controller
             ->get()
             ->groupBy('year');
 
+        // chart opd
+        $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi - jumlah_pembayaran) as sisa_pembayaran'))
+            ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+            ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
+            ->whereYear('tgl_lhp', $year)
+            ->groupBy('opds.opd_name')
+            ->pluck('sisa_pembayaran', 'opds.opd_name');
+
         return view('dashboard', compact(
             'temuans',
             'jumlahTemuan',
@@ -79,9 +87,34 @@ class DashboardController extends Controller
             'temuanPerYearMonth',
             'months',
             'counts',
-            'sisaBayar'
+            'sisaBayar',
+            'sisaPembayaranPerOpd'
         ));
     }
+    public function getTemuanPerBulan(Request $request)
+    {
+        $year = $request->input('year', Carbon::now()->year);
+
+        $temuan = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
+            ->whereYear('tgl_lhp', $year)
+            ->groupBy('month')
+            ->get();
+
+        $months = [];
+        $counts = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthData = $temuan->firstWhere('month', $i);
+            $months[] = Carbon::create()->month($i)->format('F');
+            $counts[] = $monthData ? $monthData->count : 0;
+        }
+
+        return response()->json([
+            'months' => $months,
+            'counts' => $counts,
+        ]);
+    }
+
 
 
     /**

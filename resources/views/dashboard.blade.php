@@ -334,10 +334,10 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <h1>Temuan Per Bulan - Tahun {{ $year }}</h1>
+                            <h5 class="card-title">Jumlah Temuan Per Bulan - Tahun <span id="year-label">{{ $year }}</span></h5>
 
-                            <form method="GET" action="{{ route('dashboard.index') }}">
-                                <select name="year" onchange="this.form.submit()">
+                            <form id="yearForm">
+                                <select name="year" id="yearSelect">
                                     @for ($i = 2020; $i <= date('Y'); $i++)
                                         <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
                                             {{ $i }}
@@ -348,66 +348,103 @@
 
                             <canvas id="temuanChart" width="400" height="200"></canvas>
                             <script>
-                                const ctx = document.getElementById('temuanChart').getContext('2d');
-                                const temuanChart = new Chart(ctx, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: @json($months),
-                                        datasets: [{
-                                            label: 'Jumlah Temuan',
-                                            data: @json($counts),
-                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                            borderColor: 'rgba(75, 192, 192, 1)',
-                                            borderWidth: 1
-                                        }]
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    const ctx = document.getElementById('temuanChart').getContext('2d');
+                                    let temuanChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: @json($months),
+                                            datasets: [{
+                                                label: 'Jumlah Temuan',
+                                                data: @json($counts),
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderColor: 'rgba(75, 192, 192, 1)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
                                             }
                                         }
-                                    }
+                                    });
+
+                                    document.getElementById('yearSelect').addEventListener('change', function() {
+                                        const selectedYear = this.value;
+                                        console.log(`Selected year: ${selectedYear}`);
+                                        fetch(`{{ route('temuan.perbulan') }}?year=${selectedYear}`)
+                                            .then(response => {
+                                                console.log('Fetching data...');
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                return response.json();
+                                            })
+                                            .then(data => {
+                                                console.log('Data received:', data);
+
+                                                // Destroy existing chart before creating a new one
+                                                if (temuanChart) {
+                                                    temuanChart.destroy();
+                                                }
+
+                                                // Create new chart with the fetched data
+                                                temuanChart = new Chart(ctx, {
+                                                    type: 'bar',
+                                                    data: {
+                                                        labels: data.months,
+                                                        datasets: [{
+                                                            label: 'Jumlah Temuan',
+                                                            data: data.counts,
+                                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                                            borderWidth: 1
+                                                        }]
+                                                    },
+                                                    options: {
+                                                        scales: {
+                                                            y: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+                                                document.getElementById('year-label').textContent = selectedYear;
+                                            })
+                                            .catch(error => {
+                                                console.error('There was a problem with the fetch operation:', error);
+                                            });
+                                    });
                                 });
                             </script>
                         </div>
                     </div>
                 </div>
 
-
+                {{-- chart sisa bayar per odp  --}}
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Jumlah nilai (Rp) berdasarkan OPD</h5>
+                            <h5 class="card-title">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
 
                             <!-- Bar Chart -->
                             <canvas id="barChart2" style="max-height: 400px;"></canvas>
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
+                                    const labels = @json($sisaPembayaranPerOpd->keys());
+                                    const data = @json($sisaPembayaranPerOpd->values());
+
                                     new Chart(document.querySelector('#barChart2'), {
                                         type: 'bar',
                                         data: {
-                                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                                            labels: labels,
                                             datasets: [{
-                                                data: [65, 59, 80, 81, 56, 55, 40],
-                                                backgroundColor: [
-                                                    'rgba(255, 99, 132, 0.2)',
-                                                    'rgba(255, 159, 64, 0.2)',
-                                                    'rgba(255, 205, 86, 0.2)',
-                                                    'rgba(75, 192, 192, 0.2)',
-                                                    'rgba(54, 162, 235, 0.2)',
-                                                    'rgba(153, 102, 255, 0.2)',
-                                                    'rgba(201, 203, 207, 0.2)'
-                                                ],
-                                                borderColor: [
-                                                    'rgb(255, 99, 132)',
-                                                    'rgb(255, 159, 64)',
-                                                    'rgb(255, 205, 86)',
-                                                    'rgb(75, 192, 192)',
-                                                    'rgb(54, 162, 235)',
-                                                    'rgb(153, 102, 255)',
-                                                    'rgb(201, 203, 207)'
-                                                ],
+                                                data: data,
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderColor: 'rgb(75, 192, 192)',
                                                 borderWidth: 1
                                             }]
                                         },
@@ -432,11 +469,59 @@
                     </div>
                 </div>
 
+
             </div>
         </section>
 
     </main><!-- End #main -->
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    const ctx = document.getElementById('temuanChart').getContext('2d');
+    const temuanChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @json($months),
+            datasets: [{
+                label: 'Jumlah Temuan',
+                data: @json($counts),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    document.getElementById('yearSelect').addEventListener('change', function() {
+        const selectedYear = this.value;
+        console.log(`Selected year: ${selectedYear}`);
+        fetch(`{{ route('temuan.perbulan') }}?year=${selectedYear}`)
+            .then(response => {
+                console.log('Fetching data...');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                temuanChart.data.labels = data.months;
+                temuanChart.data.datasets[0].data = data.counts;
+                temuanChart.update();
+                document.getElementById('year-label').textContent = selectedYear;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+});
+
         function updateTemuanCount(tgl_lhp, count) {
             document.getElementById('tgl-lhp-label').innerText = '| ' + tgl_lhp;
             document.getElementById('tgl-lhp-number').innerText = count;

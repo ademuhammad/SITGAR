@@ -22,13 +22,16 @@ return new class extends Migration
 
             $table->string('no_lhp');
             $table->date('tgl_lhp');
-            $table->string('obrik_pemeriksaan');
+            $table->text('obrik_pemeriksaan');
             $table->text('temuan');
             $table->text('rekomendasi');
             $table->decimal('nilai_rekomendasi', 15, 2);
             $table->string('bukti_surat')->nullable();
             $table->decimal('nilai_telah_dibayar', 15, 2)->default(0);
             $table->decimal('sisa_nilai_uang', 15, 2)->default(0);
+            $table->integer('jumlah_jaminan')->nullable();
+            $table->text('jenis_jaminan')->nullable();
+
 
             // Define foreign keys
             $table->foreign('opd_id')->references('id')->on('opds')->onDelete('cascade');
