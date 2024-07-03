@@ -6,13 +6,13 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Login SITGAR APPS</title>
+  <title>Login SITEGAR APPS</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('NiceAdmin/assets/img/favicon.png') }}" rel="icon">
-    <link href="{{ asset('NiceAdmin/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" rel="icon">
+    <link href="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -59,8 +59,8 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <span class="d-none d-lg-block">SITGAR</span>
+                  <img src="{{asset('NiceAdmin/assets/img/sitegarapss.png')}}" alt="">
+                  <span class="d-none d-lg-block">SITEGAR</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -106,7 +106,7 @@
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <button class="btn btn-success w-100" type="submit">Login</button>
                     </div>
 
                   </form>

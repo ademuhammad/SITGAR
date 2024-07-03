@@ -15,13 +15,12 @@ class DashboardController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:dashboard-list|dashboard-create|dashboard-edit|dashboard-delete', ['only' => ['index','show']]);
-
+        $this->middleware('permission:dashboard-list|dashboard-create|dashboard-edit|dashboard-delete', ['only' => ['index', 'show']]);
     }
-
     public function index(Request $request)
     {
         $year = $request->input('year', Carbon::now()->year); // default to current year
+
         $temuan = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
             ->whereYear('tgl_lhp', $year)
             ->groupBy('month')
@@ -32,19 +31,15 @@ class DashboardController extends Controller
 
         for ($i = 1; $i <= 12; $i++) {
             $monthData = $temuan->firstWhere('month', $i);
-            $months[] = $i;
+            $months[] = Carbon::create()->month($i)->format('F');
             $counts[] = $monthData ? $monthData->count : 0;
         }
 
-        // $year = $request->input('year', date('Y')); // Ambil tahun dari request atau gunakan tahun saat ini
-
-        // Ambil tahun yang ada di data temuan
         $availableYears = Temuan::selectRaw('YEAR(tgl_lhp) as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        // Filter data temuan berdasarkan tahun
         $temuans = Temuan::with(['informasi', 'opd', 'status', 'statustgr', 'pegawai', 'penyedia'])
             ->whereYear('created_at', $year)
             ->get();
@@ -53,8 +48,7 @@ class DashboardController extends Controller
             ->groupBy(DB::raw('YEAR(tgl_lhp)'))
             ->pluck('total', 'year');
 
-
-        $jumlahTemuan = $temuans->count();
+        $jumlahTemuan = Temuan::all()->count();
         $jumlahRekomendasi = $temuans->sum('nilai_rekomendasi');
 
         $jumlahTemuanStatus = Temuan::join('statuses', 'temuans.status_id', '=', 'statuses.id')
@@ -62,16 +56,16 @@ class DashboardController extends Controller
             ->groupBy('statuses.status')
             ->pluck('total', 'status');
 
-        // Ambil semua pembayaran
         $dibayar = Pembayaran::all();
         $jumlahDibayar = $dibayar->sum('jumlah_pembayaran');
 
-        // grafik
-        $temuanPerYearMonth = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('MONTH(tgl_lhp) as month'), DB::raw('count(*) as total'))
-        ->groupBy(DB::raw('YEAR(tgl_lhp)'), DB::raw('MONTH(tgl_lhp)'))
-        ->get()
-        ->groupBy('year');
+        // Calculate the remaining amount to be paid
+        $sisaBayar = $jumlahRekomendasi - $jumlahDibayar;
 
+        $temuanPerYearMonth = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('MONTH(tgl_lhp) as month'), DB::raw('count(*) as total'))
+            ->groupBy(DB::raw('YEAR(tgl_lhp)'), DB::raw('MONTH(tgl_lhp)'))
+            ->get()
+            ->groupBy('year');
 
         return view('dashboard', compact(
             'temuans',
@@ -83,7 +77,9 @@ class DashboardController extends Controller
             'jumlahTemuanStatus',
             'jumlahTemuanTahun',
             'temuanPerYearMonth',
-            'months', 'counts',
+            'months',
+            'counts',
+            'sisaBayar'
         ));
     }
 

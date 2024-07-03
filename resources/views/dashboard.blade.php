@@ -21,69 +21,41 @@
                     <div class="row">
                         <div class="col-xxl-3 col-md-3">
                             <div class="card info-card buy-card">
-                                <div class="filter">
-                                    <a class="icon" href="#" data-bs-toggle="dropdown"><i
-                                            class="bi bi-three-dots"></i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                        <li class="dropdown-header text-start">
-                                            <h6>Filter</h6>
-                                        </li>
-                                        @foreach ($jumlahTemuanTahun as $tgl_lhp => $count)
-                                            <li>
-                                                <a class="dropdown-item" href="#"
-                                                    onclick="updateTemuanCount('{{ $tgl_lhp }}', {{ $count }})">
-                                                    {{ $tgl_lhp }}
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+
                                 <div class="card-body">
-                                    @php
-                                        $firstTglLhp = $jumlahTemuanTahun->keys()->first();
-                                        $firstCount = $jumlahTemuanTahun->first();
-                                    @endphp
-                                    <h5 class="card-title">Temuan Keseluruhan <span id="tgl-lhp-label">|
-                                            {{ $firstTglLhp }}</span></h5>
+
+                                    <h5 class="card-title">Temuan Keseluruhan <span id="tgl-lhp-label">| </span></h5>
                                     <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-building"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 id="tgl-lhp-number">{{ $firstCount }}</h6>
+                                            <h6 id="tgl-lhp-number">{{ $jumlahTemuan }}</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sales Card -->
                         <div class="col-xxl-3 col-md-3">
                             <div class="card info-card sales-card">
-
                                 <div class="card-body">
                                     <h5 class="card-title">Jumlah Nilai Rekomendasi</h5>
-
                                     <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-currency-dollar"></i>
                                         </div>
                                         <div class="ps-3">
                                             <h6 class="tes" style="font-size: 16px">
                                                 Rp.{{ number_format($jumlahRekomendasi, 2, ',', '.') }}
                                             </h6>
-
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div><!-- End Sales Card -->
-
-                        <!-- Revenue Card -->
-                        <div class="col-xxl-3 col-md-3">
+                           <!-- Revenue Card -->
+                           <div class="col-xxl-3 col-md-3">
                             <div class="card info-card revenue-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Jumlah Nilai Telah Dibayar </h5>
@@ -104,6 +76,30 @@
 
                             </div>
                         </div><!-- End Revenue Card -->
+
+                        <!-- New Card for Remaining Amount to be Paid -->
+                        <div class="col-xxl-3 col-md-3">
+                            <div class="card info-card sales-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Sisa Yang Belum Dibayar</h5>
+                                    <br>
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-currency-dollar"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="tes" style="font-size: 16px">
+                                                Rp.{{ number_format($sisaBayar, 2, ',', '.') }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Sisa Bayar Card -->
+
+
+
+
 
                         <div class="col-xxl-3 col-md-3">
                             <div class="card info-card customers-card">
@@ -344,7 +340,8 @@
                                 <select name="year" onchange="this.form.submit()">
                                     @for ($i = 2020; $i <= date('Y'); $i++)
                                         <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
-                                            {{ $i }}</option>
+                                            {{ $i }}
+                                        </option>
                                     @endfor
                                 </select>
                             </form>
@@ -376,6 +373,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div class="col-lg-6">
                     <div class="card">

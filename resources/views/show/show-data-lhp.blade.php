@@ -134,8 +134,8 @@
                             <span class="info-box-icon"><i class="bi bi-file-earmark-check"></i></span>
                             <span class="info-box-text">Rekomendasi :</span>
                             <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->rekomendasi }}</span>
+                                <span class="info-box-number">    {!! str_replace('pola_pencarian', 'pengganti', $data->rekomendasi) !!}
+                                </span>
                             </div>
                         </div>
                     </div>

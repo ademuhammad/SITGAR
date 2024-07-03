@@ -60,8 +60,7 @@
                                         d.end_date = $('#end_date').val();
                                     }
                                 },
-                                columns: [
-                                    {
+                                columns: [{
                                         data: 'no_lhp',
                                         name: 'no_lhp',
                                         render: function(data, type, row) {
@@ -78,7 +77,16 @@
                                     },
                                     {
                                         data: 'status',
-                                        name: 'status'
+                                        name: 'status',
+                                        render: function(data, type, row) {
+                                            let badgeClass = 'badge bg-secondary';
+                                            if (data.toLowerCase() === 'selesai') {
+                                                badgeClass = 'badge bg-success';
+                                            } else if (data.toLowerCase() === 'dalam proses') {
+                                                badgeClass = 'badge bg-warning';
+                                            }
+                                            return '<span class="' + badgeClass + '">' + data + '</span>';
+                                        }
                                     },
                                     {
                                         data: 'tgl_lhp',
@@ -146,8 +154,7 @@
                                     }
                                 ],
                                 dom: 'Bfrtip',
-                                buttons: [
-                                    {
+                                buttons: [{
                                         extend: 'csv',
                                         text: '<i class="fas fa-file-csv"></i> CSV',
                                         className: 'btn btn-success'
@@ -241,9 +248,9 @@
                                     <th>Obrik Pemeriksaan</th>
                                     <th>Temuan</th>
                                     <th>Rekomendasi</th>
-                                    <th>Nilai Rekomendasi</th>
+                                    <th>Jumlah Kerugian</th>
                                     <th>Telah Dibayar</th>
-                                    <th>Sisa Nilai Uang</th>
+                                    <th>Sisa Kerugian</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
