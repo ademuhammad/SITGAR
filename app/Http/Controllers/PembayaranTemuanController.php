@@ -15,7 +15,7 @@ class PembayaranTemuanController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:pembayaran-list|pembayaran-create|pembayaran-edit|pembayaran-delete', ['only' => ['index', 'show','downloadPdf']]);
+        $this->middleware('permission:pembayaran-list|pembayaran-create|pembayaran-edit|pembayaran-delete', ['only' => ['index', 'show', 'downloadPdf']]);
         $this->middleware('permission:pembayaran-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:pembayaran-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:pembayaran-delete', ['only' => ['destroy']]);
@@ -25,7 +25,12 @@ class PembayaranTemuanController extends Controller
     public function index(Temuan $temuan)
     {
         $pembayarans = $temuan->pembayarans;
-        return view('pembayaran.history-pembayaran', compact('temuan', 'pembayarans'));
+
+        // Calculate total paid and remaining amount
+        $totalPaid = $pembayarans->sum('jumlah_pembayaran');
+        $remainingAmount = $temuan->sisa_nilai_uang;
+
+        return view('pembayaran.history-pembayaran', compact('temuan', 'pembayarans', 'totalPaid', 'remainingAmount'));
     }
 
     /**
@@ -42,7 +47,7 @@ class PembayaranTemuanController extends Controller
         $request->validate([
             'jumlah_pembayaran' => 'required|numeric',
             'tgl_pembayaran' => 'required|date',
-            'bukti_pembayaran' => 'nullable|file|mimes:pdf|max:2048'
+            'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $pembayaran = new Pembayaran();
@@ -50,10 +55,13 @@ class PembayaranTemuanController extends Controller
         $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
 
-        if ($request->hasFile('bukti_surat')) {
-            $path = $request->file('bukti_surat')->store('bukti_surat');
-            $pembayaran->bukti_surat = $path;
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = time() . '_bukti_pembayaran.' . $file->getClientOriginalExtension();
+            $file->move(public_path('bukti_pembayaran'), $fileName);
+            $pembayaran->bukti_pembayaran = $fileName;
         }
+
         $pembayaran->save();
 
         // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
@@ -61,7 +69,7 @@ class PembayaranTemuanController extends Controller
         $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
         $temuan->save();
 
-        return redirect()->route('temuan.index')->with('success', 'Pembayaran berhasil ditambahkan.');
+        return redirect()->route('data.index')->with('success', 'Pembayaran berhasil ditambahkan.');
     }
 
 
@@ -104,7 +112,33 @@ class PembayaranTemuanController extends Controller
         // Ambil temuan dari pembayaran pertama (asumsi semua pembayaran terkait dengan satu temuan)
         $temuan = $pembayarans->first()->temuan ?? null;
 
-        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan'));
-        return $pdf->download('history_pembayaran.pdf');
+        // Hitung total pembayaran
+        $totalPembayaran = $pembayarans->sum('jumlah_pembayaran');
+
+        // Hitung total bayar dari temuan, jika temuan ada
+        $totalBayar = $temuan ? $temuan->total_bayar : 0;
+
+        // Hitung sisa yang harus dibayar
+        $sisaYangHarusDibayar = $totalBayar - $totalPembayaran;
+
+        // Buat nama file dengan timestamp
+        $filename = 'history_pembayaran_' . now()->format('Ymd_His') . '.pdf';
+
+        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan', 'totalPembayaran', 'sisaYangHarusDibayar'));
+        return $pdf->download($filename);
+    }
+
+
+
+    public function download($id)
+    {
+        $pembayaran = Pembayaran::findOrFail($id);
+
+        if ($pembayaran->bukti_pembayaran) {
+            $pathToFile = storage_path('app/' . $pembayaran->bukti_pembayaran);
+            return response()->download($pathToFile);
+        }
+
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
 }

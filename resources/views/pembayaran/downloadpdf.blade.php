@@ -50,5 +50,10 @@
             @endforeach
         </tbody>
     </table>
+    <div>
+        <h3>Total Pembayaran: Rp.{{ number_format($totalPembayaran, 2, ',', '.') }}</h3>
+        <h3>Total yang Harus Dibayar: Rp.{{ number_format($totalBayar, 2, ',', '.') }}</h3>
+        <h3>Sisa yang Harus Dibayar: Rp.{{ number_format($sisaYangHarusDibayar, 2, ',', '.') }}</h3>
+    </div>
 </body>
 </html>

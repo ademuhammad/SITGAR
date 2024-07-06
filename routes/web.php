@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/temuan/pdf', [TemuanController::class, 'downloadPdf'])->name('temuan.downloadPdf');
     //
     Route::get('/pembayaran-history/pdf', [PembayaranTemuanController::class, 'downloadPdf'])->name('pembayaran-history.pdf');
+    // Route::get('/pembayaran/download/{id}', [PembayaranTemuanController::class, 'download'])->name('pembayaran.download');
+
 
     // all data mentah
     Route::get('data', [DataController::class, 'index'])->name('data.index');

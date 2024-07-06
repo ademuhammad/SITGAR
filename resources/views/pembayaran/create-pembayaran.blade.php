@@ -28,7 +28,7 @@
                         <input type="date" class="form-control" id="tgl_pembayaran" name="tgl_pembayaran" value="{{ old('tgl_pembayaran') }}">
                     </div>
                     <div class="form-group">
-                        <label for="bukti_pembayaran">Bukti Pembayaran (PDF)</label>
+                        <label for="bukti_pembayaran">Bukti Pembayaran (PDF/Image)</label>
                         <input type="file" class="form-control-file" id="bukti_pembayaran" name="bukti_pembayaran">
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
