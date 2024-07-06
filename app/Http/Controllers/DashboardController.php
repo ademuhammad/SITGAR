@@ -78,6 +78,15 @@ class DashboardController extends Controller
                 return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
             });
 
+        $TemuanPerOpd = Temuan::select('opds.opd_name', DB::raw('COUNT(*) as total_temuan'))
+            ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+            ->whereYear('tgl_lhp', $year)
+            ->groupBy('opds.opd_name')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->opd_name => $item->total_temuan];
+            });
+
         return view('dashboard', compact(
             'temuans',
             'jumlahTemuan',
@@ -91,9 +100,11 @@ class DashboardController extends Controller
             'months',
             'counts',
             'sisaBayar',
-            'sisaPembayaranPerOpd'
+            'sisaPembayaranPerOpd',
+            'TemuanPerOpd' // Ensure this is passed to the view
         ));
     }
+
 
     public function getTemuanPerBulan(Request $request)
     {

@@ -215,7 +215,6 @@
             </div>
 
             <div class="row">
-
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
@@ -258,6 +257,60 @@
                     </div>
 
             </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Jumlah Temuan per OPD (Jumlah Temuan)</h5>
+
+                        <!-- Bar Chart -->
+                        <canvas id="barChartTemuanPerOpd" style="max-height: 400px;"></canvas>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                const labels = @json($TemuanPerOpd->keys());
+                                const data = @json($TemuanPerOpd->values());
+
+                                new Chart(document.querySelector('#barChartTemuanPerOpd'), {
+                                    type: 'bar',
+                                    data: {
+                                        labels: labels,
+                                        datasets: [{
+                                            data: data,
+                                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                            borderColor: 'rgba(153, 102, 255, 1)',
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        plugins: {
+                                            legend: {
+                                                display: false // Hide legend
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        return context.label + ': ' + context.raw + ' Temuan';
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                title: {
+                                                    display: true,
+                                                    text: 'Jumlah Temuan'
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
+                        <!-- End Bar Chart -->
+                    </div>
+                </div>
+            </div>
+
 
         </section>
 
