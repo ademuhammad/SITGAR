@@ -19,6 +19,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data SKP2KS</h5>
+                    <a href="{{ route('skp2ks.create') }}" class="btn btn-primary mb-3">Tambah Data SKP2KS</a>
                     {{-- <a href="{{ route('data.create') }}" class="btn btn-primary mb-3">Tambah Data</a> --}}
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">

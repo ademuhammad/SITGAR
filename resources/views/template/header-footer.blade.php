@@ -253,7 +253,7 @@
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
-            &copy; Copyright <strong><span>SITGAR</span></strong> Apps
+            &copy; Copyright <strong><span>SITEGAR</span></strong> Apps
         </div>
 
     </footer><!-- End Footer -->

@@ -5,7 +5,7 @@
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <h1>Buat SKTJM</h1>
+                <h1>Buat SKP2K</h1>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="no_sktjm">No SKTJM</label>
+                                <label for="no_sktjm">No SKP2K</label>
                                 <input type="text" class="form-control" id="no_sktjm" name="no_sktjm"
                                     value="{{ old('no_sktjm') }}">
                             </div>

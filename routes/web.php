@@ -5,18 +5,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\TgrController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Skp2kController;
+use App\Http\Controllers\SktjmController;
+use App\Http\Controllers\Skp2ksController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TemuanController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PenyediaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InformasiController;
-use App\Http\Controllers\PembayaranTemuanController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SktjmController;
-use App\Http\Controllers\UserController;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use App\Http\Controllers\PembayaranTemuanController;
 
 // dashboard
 
@@ -53,6 +55,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('temuans/get-selesai', [TemuanController::class, 'getselesai'])->name('temuans.getselesai');
     // sktjm
     Route::resource('sktjm', SktjmController::class);
+    Route::resource('skp2k', Skp2kController::class);
+    Route::resource('skp2ks', Skp2ksController::class);
     Route::get('temuans/data-sktjm', [TemuanController::class, 'datasktjm'])->name('temuans.datasktjm');
     // Route for handling the AJAX request for data
     Route::get('temuans/get-datasktjm', [TemuanController::class, 'getDatasktjm'])->name('temuans.getDatasktjm');

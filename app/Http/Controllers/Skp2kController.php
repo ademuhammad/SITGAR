@@ -12,14 +12,13 @@ use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 
-class SktjmController extends Controller
+class Skp2kController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request, Builder $builder)
     {
-        //
         $statuses = Status::all();
         $opds = Opd::all();
 
@@ -45,7 +44,8 @@ class SktjmController extends Controller
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
 
-        return view('Laporan.data-sktjm', compact('html', 'statuses', 'opds'));
+        return view('Laporan.data-skp2k', compact('html', 'statuses', 'opds'));
+
     }
 
     /**
@@ -53,15 +53,15 @@ class SktjmController extends Controller
      */
     public function create()
     {
-
+        //
         $informasis = Informasi::all();
         $opds = Opd::all();
         $statuses = Status::all();
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
-        $defaultStatustgr = Statustgr::where('tgr_name', 'SKTJM')->first();
-        return view('crud.create-sktjm', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
+        $defaultStatustgr = Statustgr::where('tgr_name', 'SKP2K')->first();
+        return view('crud.create-skp2k', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
     }
 
     /**
@@ -69,7 +69,11 @@ class SktjmController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Ambil status_id dan cek apakah status adalah "selesai"
+        $statusSelesaiId = 1; // Gantilah 1 dengan id status "selesai" yang sesuai
+
+        // Validasi umum
+        $rules = [
             'informasis_id' => 'required|exists:informasis,id',
             'opd_id' => 'required|exists:opds,id',
             'status_id' => 'required|exists:statuses,id',
@@ -85,9 +89,18 @@ class SktjmController extends Controller
             'jumlah_jaminan' => 'nullable|numeric',
             'jenis_jaminan' => 'nullable|string|max:255',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_surat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
-        ]);
+        ];
 
+        // Tambahkan validasi untuk 'bukti_surat' jika status adalah "selesai"
+        if ($request->input('status_id') == $statusSelesaiId) {
+            $rules['bukti_surat'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        } else {
+            $rules['bukti_surat'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        }
+
+        $request->validate($rules);
+
+        // Buat instance dari model Temuan
         $temuan = new Temuan();
         $temuan->informasis_id = $request->input('informasis_id');
         $temuan->opd_id = $request->input('opd_id');
@@ -105,6 +118,7 @@ class SktjmController extends Controller
         $temuan->jenis_jaminan = $request->input('jenis_jaminan');
         $temuan->nilai_rekomendasi = $request->input('nilai_rekomendasi');
 
+        // Proses upload file
         if ($request->hasFile('bukti_surat')) {
             $file = $request->file('bukti_surat');
             $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
@@ -113,15 +127,15 @@ class SktjmController extends Controller
             $temuan->bukti_surat = $file_temuan;
         }
 
-        // Initialize payment fields
+        // Inisialisasi field pembayaran
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
 
+        // Simpan data
         $temuan->save();
-        return redirect()->route('sktjm.index')->with('success', 'Data berhasil disimpan');
+
+        return redirect()->route('skp2k.index')->with('success', 'Data berhasil disimpan');
     }
-
-
 
     /**
      * Display the specified resource.
