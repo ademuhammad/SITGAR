@@ -21,6 +21,10 @@ return new class extends Migration
             $table->unsignedBigInteger('penyedia_id'); // Nama penyedia dari tabel penyedia
 
             $table->string('no_lhp');
+            $table->string('no_sktjm')->nullable();
+            $table->string('no_skp2ks')->nullable();
+            $table->string('no_skp2k')->nullable();
+
             $table->date('tgl_lhp');
             $table->text('obrik_pemeriksaan');
             $table->text('temuan');

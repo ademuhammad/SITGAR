@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Temuan Dalam Tahun -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="row">
                 <!-- Temuan Per Bulan - Tahun -->
                 <div class="col-lg-6">
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Jumlah nilai (Rp) berdasarkan OPD -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -213,7 +213,52 @@
                     </div>
                 </div>
             </div>
-        
+
+            <div class="row">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
+
+                            <!-- Bar Chart -->
+                            <canvas id="barChartopd" style="max-height: 400px;"></canvas>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    const labels = @json($sisaPembayaranPerOpd->keys());
+                                    const data = @json($sisaPembayaranPerOpd->values());
+
+                                    new Chart(document.querySelector('#barChartopd'), {
+                                        type: 'bar',
+                                        data: {
+                                            labels: labels,
+                                            datasets: [{
+                                                data: data,
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderColor: 'rgb(75, 192, 192)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                legend: {
+                                                    display: false // Menghilangkan legend
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                            <!-- End Bar Chart -->
+                        </div>
+                    </div>
+
+            </div>
+
         </section>
 
     </main><!-- End #main -->

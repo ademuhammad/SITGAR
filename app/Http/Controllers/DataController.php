@@ -21,7 +21,7 @@ class DataController extends Controller
     function __construct()
     {
          $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:data-create', ['only' => ['create','store']]);
+         $this->middleware('permission:data-create', ['only' => ['create','store','']]);
          $this->middleware('permission:data-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:data-delete', ['only' => ['destroy']]);
     }

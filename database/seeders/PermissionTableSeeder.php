@@ -47,6 +47,7 @@ class PermissionTableSeeder extends Seeder
             'pembayaran-create',
             'pembayaran-edit',
             'pembayaran-delete',
+            'pembayaran-download',
 
             'temuan-list',
             'temuan-create',

@@ -68,12 +68,15 @@ class DashboardController extends Controller
             ->groupBy('year');
 
         // chart opd
-        $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi - jumlah_pembayaran) as sisa_pembayaran'))
+        $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
             ->join('opds', 'temuans.opd_id', '=', 'opds.id')
             ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
             ->whereYear('tgl_lhp', $year)
             ->groupBy('opds.opd_name')
-            ->pluck('sisa_pembayaran', 'opds.opd_name');
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
+            });
 
         return view('dashboard', compact(
             'temuans',
@@ -91,6 +94,7 @@ class DashboardController extends Controller
             'sisaPembayaranPerOpd'
         ));
     }
+
     public function getTemuanPerBulan(Request $request)
     {
         $year = $request->input('year', Carbon::now()->year);

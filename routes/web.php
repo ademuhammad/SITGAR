@@ -14,6 +14,7 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranTemuanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SktjmController;
 use App\Http\Controllers\UserController;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -50,7 +51,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('temuan', TemuanController::class);
     Route::get('temuans/selesai', [TemuanController::class, 'selesai'])->name('temuans.selesai');
     Route::get('temuans/get-selesai', [TemuanController::class, 'getselesai'])->name('temuans.getselesai');
-
+    // sktjm
+    Route::resource('sktjm', SktjmController::class);
     Route::get('temuans/data-sktjm', [TemuanController::class, 'datasktjm'])->name('temuans.datasktjm');
     // Route for handling the AJAX request for data
     Route::get('temuans/get-datasktjm', [TemuanController::class, 'getDatasktjm'])->name('temuans.getDatasktjm');
