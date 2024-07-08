@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Temuan;
 use App\Models\Pembayaran;
 use App\Models\Opd;
+use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -102,12 +103,6 @@ class DashboardController extends Controller
             ->groupBy('date')
             ->get();
 
-        // Ambil data temuan per bulan dalam tahun ini
-        $temuanPerMonthInYear = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
-            ->whereYear('tgl_lhp', $currentYear)
-            ->groupBy('month')
-            ->get();
-
         // Ambil data temuan per bulan dalam tahun tertentu
         $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
             ->groupBy('year', 'month')
@@ -127,6 +122,14 @@ class DashboardController extends Controller
             ->groupBy('year')
             ->get();
 
+        // Ambil data temuan per status_tgr_id
+        $temuanPerStatusTGR = Temuan::selectRaw('statustgr_id, COUNT(*) as count')
+            ->groupBy('statustgr_id')
+            ->get();
+
+        // Ambil nama status TGR berdasarkan status_tgr_id
+        $statusTGRs = Statustgr::all()->pluck('tgr_name', 'id');
+
 
         return view('dashboard', compact(
             'temuans',
@@ -144,11 +147,12 @@ class DashboardController extends Controller
             'sisaPembayaranPerOpd',
             'years',
             'temuanPerDayInMonth',
-            'temuanPerMonthInYear',
             'temuanPerMonth',
             'temuanPerOPD',
             'opds',
-            'temuanStatusSelesai'
+            'temuanStatusSelesai',
+            'temuanPerStatusTGR', 
+            'statusTGRs'
         ));
     }
 

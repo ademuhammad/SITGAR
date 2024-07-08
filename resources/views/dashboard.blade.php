@@ -143,7 +143,7 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Temuan Dalam Bulan</h5>
+                            <h5 class="card-title text-center">Temuan Dalam Bulan</h5>
                             <div class="row">
                                 <div class="form-group col-6">
                                     <label for="yearSelect">Pilih Tahun:</label>
@@ -180,7 +180,7 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Temuan Per Bulan - Tahun</h5>
+                            <h5 class="card-title text-center">Temuan Per Tahun</h5>
                             <label for="yearMonthlySelect">Pilih Tahun:</label>
                             <select id="yearMonthlySelect" class="form-control" onchange="updateMonthlyFindingsChart()">
                                 @foreach ($years as $year)
@@ -198,7 +198,7 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Temuan Selesai per Tahun</h5>
+                            <h5 class="card-title text-center">Temuan Selesai Per Tahun</h5>
                             <canvas id="statusSelesaiChart" height="200"></canvas>
                         </div>
                     </div>
@@ -208,8 +208,20 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Jumlah Temuan Berdasarkan OPD</h5>
+                            <h5 class="card-title text-center">Temuan Berdasarkan OPD</h5>
                             <canvas id="opdValueChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Temuan per Jenis Status TGR -->
+                <div class="col-lg-6">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Temuan Per Status TGR</h5>
+                            <canvas id="statusTGRChart" height="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -218,7 +230,7 @@
             <div class="row">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
+                        <h5 class="card-title text-center">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
 
                         <!-- Bar Chart -->
                         <canvas id="barChartopd" style="max-height: 400px;"></canvas>
@@ -323,6 +335,7 @@
         let monthlyFindingsChart;
         let opdValueChart;
         let statusSelesaiChart;
+        let statusTGRChart;
 
         // Fungsi untuk memperbarui grafik Temuan Dalam Bulan
         function updateMonthChart() {
@@ -485,12 +498,68 @@
             });
         }
 
+         // Inisialisasi grafik Temuan per Jenis Status TGR
+    function initializeStatusTGRChart() {
+        const data = @json($temuanPerStatusTGR);
+        const statusTGRNames = @json($statusTGRs);
+        const labels = data.map(item => statusTGRNames[item.statustgr_id] || 'Belum Ada Status');
+        const counts = data.map(item => item.count);
+
+        const ctx = document.getElementById('statusTGRChart').getContext('2d');
+        statusTGRChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Temuan',
+                    data: counts,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const label = tooltipItem.label || '';
+                                const value = tooltipItem.raw || 0;
+                                return `${label}: ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
         // Inisialisasi semua grafik pada saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
             updateMonthChart();
             updateMonthlyFindingsChart();
             initializeOpdValueChart();
             initializeStatusSelesaiChart();
+            initializeStatusTGRChart();
         });
     </script>
 @endsection
