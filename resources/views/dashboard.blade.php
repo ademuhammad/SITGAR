@@ -144,22 +144,32 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="card-title">Temuan Dalam Bulan</h5>
-                            <div class="form-group">
-                                <label for="monthSelect">Pilih Bulan:</label>
-                                <select class="form-control" id="monthSelect" onchange="updateMonthChart()">
-                                    <option value="1">Januari</option>
-                                    <option value="2">Februari</option>
-                                    <option value="3">Maret</option>
-                                    <option value="4">April</option>
-                                    <option value="5">Mei</option>
-                                    <option value="6">Juni</option>
-                                    <option value="7">Juli</option>
-                                    <option value="8">Agustus</option>
-                                    <option value="9">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
-                                </select>
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="yearSelect">Pilih Tahun:</label>
+                                    <select class="form-control" id="yearSelect" onchange="updateMonthChart()">
+                                        @foreach ($years as $year)
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="monthSelect">Pilih Bulan:</label>
+                                    <select class="form-control" id="monthSelect" onchange="updateMonthChart()">
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maret</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Agustus</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
                             </div>
                             <canvas id="monthChart" height="200"></canvas>
                         </div>
@@ -210,21 +220,21 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
-            
+
                         <!-- Bar Chart -->
                         <canvas id="barChartopd" style="max-height: 400px;"></canvas>
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
                                 const labels = @json($sisaPembayaranPerOpd->keys());
                                 const data = @json($sisaPembayaranPerOpd->values());
-            
+
                                 // Fungsi untuk memecah nama panjang menjadi beberapa baris
                                 function splitLabel(label) {
                                     return label.split(" ");
                                 }
-            
+
                                 const formattedLabels = labels.map(label => splitLabel(label));
-            
+
                                 new Chart(document.querySelector('#barChartopd'), {
                                     type: 'bar',
                                     data: {
@@ -254,7 +264,8 @@
                                             x: {
                                                 ticks: {
                                                     callback: function(value, index, values) {
-                                                        return formattedLabels[index]; // Menampilkan label dengan format baru
+                                                        return formattedLabels[
+                                                        index]; // Menampilkan label dengan format baru
                                                     }
                                                 }
                                             },
@@ -316,12 +327,14 @@
 
         // Fungsi untuk memperbarui grafik Temuan Dalam Bulan
         function updateMonthChart() {
+            const selectedYear = document.getElementById('yearSelect').value;
             const selectedMonth = document.getElementById('monthSelect').value;
             const data = @json($temuanPerDayInMonth);
-            const filteredData = data.filter(item => new Date(item.date).getMonth() + 1 == selectedMonth);
+            const filteredData = data.filter(item => new Date(item.date).getFullYear() == selectedYear && new Date(item
+                .date).getMonth() + 1 == selectedMonth);
 
             const labels = Array.from({
-                length: new Date(new Date().getFullYear(), selectedMonth, 0).getDate()
+                length: new Date(selectedYear, selectedMonth, 0).getDate()
             }, (_, i) => i + 1);
             const counts = labels.map(day => {
                 const found = filteredData.find(item => new Date(item.date).getDate() == day);
