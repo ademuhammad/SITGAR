@@ -88,38 +88,45 @@ class DashboardController extends Controller
                 return [$item->opd_name => $item->total_temuan];
             });
 
-            $currentYear = date('Y');
+        $currentYear = date('Y');
 
-            // Ambil semua tahun yang ada dalam data temuan
-            $years = Temuan::selectRaw('YEAR(tgl_lhp) as year')
-                ->distinct()
-                ->pluck('year')
-                ->toArray();
-    
-            // Ambil data temuan per hari dalam bulan tertentu pada tahun ini
-            $temuanPerDayInMonth = Temuan::selectRaw('DATE(tgl_lhp) as date, COUNT(*) as count')
-                ->whereYear('tgl_lhp', $currentYear)
-                ->groupBy('date')
-                ->get();
-    
-            // Ambil data temuan per bulan dalam tahun ini
-            $temuanPerMonthInYear = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
-                ->whereYear('tgl_lhp', $currentYear)
-                ->groupBy('month')
-                ->get();
-    
-            // Ambil data temuan per bulan dalam tahun tertentu
-            $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
-                ->groupBy('year', 'month')
-                ->get();
-    
-            // Ambil data jumlah temuan per OPD
-            $temuanPerOPD = Temuan::selectRaw('opd_id, COUNT(*) as count')
-                ->groupBy('opd_id')
-                ->get();
-    
-            // Ambil nama OPD berdasarkan opd_id
-            $opds = OPD::all()->pluck('opd_name', 'id');
+        // Ambil semua tahun yang ada dalam data temuan
+        $years = Temuan::selectRaw('YEAR(tgl_lhp) as year')
+            ->distinct()
+            ->pluck('year')
+            ->toArray();
+
+        // Ambil data temuan per hari dalam bulan tertentu pada tahun ini
+        $temuanPerDayInMonth = Temuan::selectRaw('DATE(tgl_lhp) as date, COUNT(*) as count')
+            ->whereYear('tgl_lhp', $currentYear)
+            ->groupBy('date')
+            ->get();
+
+        // Ambil data temuan per bulan dalam tahun ini
+        $temuanPerMonthInYear = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
+            ->whereYear('tgl_lhp', $currentYear)
+            ->groupBy('month')
+            ->get();
+
+        // Ambil data temuan per bulan dalam tahun tertentu
+        $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
+            ->groupBy('year', 'month')
+            ->get();
+
+        // Ambil data jumlah temuan per OPD
+        $temuanPerOPD = Temuan::selectRaw('opd_id, COUNT(*) as count')
+            ->groupBy('opd_id')
+            ->get();
+
+        // Ambil nama OPD berdasarkan opd_id
+        $opds = OPD::all()->pluck('opd_name', 'id');
+
+        // Ambil data temuan dengan status_id = 3 per tahun
+        $temuanStatusSelesai = Temuan::selectRaw('YEAR(tgl_lhp) as year, COUNT(*) as count')
+            ->where('status_id', 3)
+            ->groupBy('year')
+            ->get();
+
 
         return view('dashboard', compact(
             'temuans',
@@ -135,7 +142,13 @@ class DashboardController extends Controller
             'counts',
             'sisaBayar',
             'sisaPembayaranPerOpd',
-            'years', 'temuanPerDayInMonth', 'temuanPerMonthInYear', 'temuanPerMonth', 'temuanPerOPD', 'opds'
+            'years',
+            'temuanPerDayInMonth',
+            'temuanPerMonthInYear',
+            'temuanPerMonth',
+            'temuanPerOPD',
+            'opds',
+            'temuanStatusSelesai'
         ));
     }
 

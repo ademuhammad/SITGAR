@@ -176,34 +176,35 @@
                     </div>
                 </div>
 
-                <!-- Temuan Dalam Tahun -->
+                <!-- Temuan Per Bulan - Tahun -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Temuan Dalam Tahun {{ date('Y') }}</h5>
-                            <canvas id="yearChart" height="200"></canvas>
+                            <h5 class="card-title">Temuan Per Bulan - Tahun</h5>
+                            <label for="yearMonthlySelect">Pilih Tahun:</label>
+                            <select id="yearMonthlySelect" class="form-control" onchange="updateMonthlyFindingsChart()">
+                                @foreach ($years as $year)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endforeach
+                            </select>
+                            <canvas id="monthlyFindingsChart" height="200"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <!-- Temuan Per Bulan - Tahun -->
+                <!-- Temuan Status Selesai per Tahun -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">Temuan Per Bulan - Tahun</h5>
-                            <select id="yearMonthlySelect" class="form-control" onchange="updateMonthlyFindingsChart()">
-                                @for ($i = 2020; $i <= date('Y'); $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                            <canvas id="monthlyFindingsChart" height="200"></canvas>
+                            <h5 class="card-title">Temuan Selesai per Tahun</h5>
+                            <canvas id="statusSelesaiChart" height="200"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Jumlah nilai (Rp) berdasarkan OPD -->
+                <!-- Temuan berdasarkan OPD -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
@@ -213,8 +214,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <div class="row">
                 <div class="card">
@@ -265,7 +264,7 @@
                                                 ticks: {
                                                     callback: function(value, index, values) {
                                                         return formattedLabels[
-                                                        index]; // Menampilkan label dengan format baru
+                                                            index]; // Menampilkan label dengan format baru
                                                     }
                                                 }
                                             },
@@ -321,9 +320,9 @@
     </script>
     <script>
         let monthChart;
-        let yearChart;
         let monthlyFindingsChart;
         let opdValueChart;
+        let statusSelesaiChart;
 
         // Fungsi untuk memperbarui grafik Temuan Dalam Bulan
         function updateMonthChart() {
@@ -365,53 +364,17 @@
             });
         }
 
-        // Fungsi untuk memperbarui grafik Temuan Dalam Tahun
-        function updateYearChart() {
-            const data = @json($temuanPerMonthInYear);
-
-            const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
-                'Oktober', 'November', 'Desember'
-            ];
-            const counts = labels.map((_, index) => {
-                const found = data.find(item => item.month - 1 == index);
-                return found ? found.count : 0;
-            });
-
-            if (yearChart) yearChart.destroy();
-            const ctx = document.getElementById('yearChart').getContext('2d');
-            yearChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Jumlah Temuan',
-                        data: counts,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
 
         // Fungsi untuk memperbarui grafik Temuan Per Bulan - Tahun
         function updateMonthlyFindingsChart() {
             const selectedYear = document.getElementById('yearMonthlySelect').value;
             const data = @json($temuanPerMonth);
-            const filteredData = data.filter(item => item.year == selectedYear);
 
             const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
                 'Oktober', 'November', 'Desember'
             ];
             const counts = labels.map((_, index) => {
-                const found = filteredData.find(item => item.month - 1 == index);
+                const found = data.find(item => item.year == selectedYear && item.month - 1 == index);
                 return found ? found.count : 0;
             });
 
@@ -438,6 +401,7 @@
                 }
             });
         }
+
 
         // Inisialisasi grafik Temuan Per OPD
         function initializeOpdValueChart() {
@@ -492,12 +456,41 @@
             });
         }
 
+        // Inisialisasi grafik Temuan Status Selesai per Tahun
+        function initializeStatusSelesaiChart() {
+            const data = @json($temuanStatusSelesai);
+            const labels = data.map(item => item.year);
+            const counts = data.map(item => item.count);
+
+            const ctx = document.getElementById('statusSelesaiChart').getContext('2d');
+            status3YearChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Temuan',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
         // Inisialisasi semua grafik pada saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
             updateMonthChart();
-            updateYearChart();
             updateMonthlyFindingsChart();
             initializeOpdValueChart();
+            initializeStatusSelesaiChart();
         });
     </script>
 @endsection
