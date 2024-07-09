@@ -7,7 +7,7 @@ use App\Models\Status;
 use App\Models\Temuan;
 use App\Models\Pegawai;
 use App\Models\Penyedia;
-use Barryvdh\DomPDF\PDF;
+//use Barryvdh\DomPDF\PDF;
 use App\Models\Informasi;
 use App\Models\Statustgr;
 use App\Exports\DataExport;
@@ -18,7 +18,8 @@ use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Facades\Excel;
-// use Barryvdh\DomPDF\Facade as PDF;
+//use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class DataController extends Controller
 {
