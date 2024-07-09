@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Temuan extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'informasis_id',
         'opd_id',
@@ -16,12 +17,19 @@ class Temuan extends Model
         'pegawai_id',
         'penyedia_id',
         'no_lhp',
+        'no_sktjm',
+        'no_skp2ks',
+        'no_skp2k',
         'tgl_lhp',
         'obrik_pemeriksaan',
         'temuan',
         'rekomendasi',
         'nilai_rekomendasi',
         'bukti_surat',
+        'nilai_telah_dibayar',
+        'sisa_nilai_uang',
+        'jumlah_jaminan',
+        'jenis_jaminan'
     ];
 
     // Relasi ke tabel 'opds'

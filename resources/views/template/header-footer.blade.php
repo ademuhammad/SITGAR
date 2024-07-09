@@ -52,22 +52,21 @@
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                             data-bs-toggle="dropdown">
 
-                            @if ( Auth::user()->photo)
-                                <img src="{{ asset('photos/' . Auth::user()->photo) }}" alt="Profile" class="rounded-circle">
+                            @if (Auth::user()->photo)
+                                <img src="{{ asset('photos/' . Auth::user()->photo) }}" alt="Profile"
+                                    class="rounded-circle">
                             @else
-                            <img src="{{ asset('NiceAdmin/assets/img/profile-img.jpg') }}" alt="Profile"
-                                class="rounded-circle">
+                                <img src="{{ asset('NiceAdmin/assets/img/profile-img.jpg') }}" alt="Profile"
+                                    class="rounded-circle">
                             @endif
 
-
                             <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
-                        </a><!-- End Profile Iamge Icon -->
+                        </a><!-- End Profile Image Icon -->
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li class="dropdown-header">
                                 <h6>{{ Auth::user()->name }}</h6>
                                 <span>{{ Auth::user()->role }}</span>
-                                <!-- Ganti dengan cara mengambil role user jika perlu -->
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -86,7 +85,6 @@
                                 <span>Edit Profile</span>
                             </a>
 
-
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -97,10 +95,6 @@
                                     <span>Account Settings</span>
                                 </a>
                             </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -124,7 +118,6 @@
             </ul>
         </nav><!-- End Icons Navigation -->
     </header><!-- End Header -->
-
 
     <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
@@ -194,21 +187,11 @@
                             <i class="bi bi-circle"></i><span>Temuan</span>
                         </a>
                     </li>
-                    {{-- <li>
-                        <a href="{{ route('temuan.index') }}" class="{{ Request::is('temuan') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Temuan</span>
-                        </a>
-                    </li> --}}
+
                     <li>
                         <a href="{{ route('temuans.datasktjm') }}"
                             class="{{ Request::is('temuans/data-sktjm') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span> SKTJM</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('temuans.dataskp2ks') }}"
-                            class="{{ Request::is('temuans/data-skp2ks') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> SKP2KS</span>
                         </a>
                     </li>
                     <li>
@@ -218,9 +201,22 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('temuans.dataskp2ks') }}"
+                            class="{{ Request::is('temuans/data-skp2ks') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span> SKP2KS</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="{{ route('temuans.selesai') }}"
                             class="{{ Request::is('temuans/selesai') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span> Selesai</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('data.alldata') }}"
+                            class="{{ Request::is('data-keseluruhan') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span> Temuan Keseluruhan</span>
                         </a>
                     </li>
                 </ul>
@@ -250,6 +246,7 @@
     </aside><!-- End Sidebar-->
 
     @yield('content')
+
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">

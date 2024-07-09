@@ -30,8 +30,16 @@ class PembayaranTemuanController extends Controller
         $totalPaid = $pembayarans->sum('jumlah_pembayaran');
         $remainingAmount = $temuan->sisa_nilai_uang;
 
-        return view('pembayaran.history-pembayaran', compact('temuan', 'pembayarans', 'totalPaid', 'remainingAmount'));
+        // Group payments by month and year
+        $pembayaransByMonth = $pembayarans->groupBy(function($date) {
+            return \Carbon\Carbon::parse($date->tgl_pembayaran)->format('Y-m'); // grouping by year and month
+        });
+
+        $totalMonths = $pembayaransByMonth->count();
+
+        return view('pembayaran.history-pembayaran', compact('temuan', 'pembayarans', 'totalPaid', 'remainingAmount', 'totalMonths'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +47,8 @@ class PembayaranTemuanController extends Controller
 
     public function create(Temuan $temuan)
     {
-        return view('pembayaran.create-pembayaran', compact('temuan'));
+        $remainingAmount = $temuan->sisa_nilai_uang;
+        return view('pembayaran.create-pembayaran', compact('temuan','remainingAmount'));
     }
 
     public function store(Request $request, Temuan $temuan)
@@ -115,16 +124,24 @@ class PembayaranTemuanController extends Controller
         // Hitung total pembayaran
         $totalPembayaran = $pembayarans->sum('jumlah_pembayaran');
 
-        // Hitung total bayar dari temuan, jika temuan ada
-        $totalBayar = $temuan ? $temuan->total_bayar : 0;
+        // Hitung nilai rekomendasi dari temuan, jika temuan ada
+        $nilaiRekomendasi = $temuan ? $temuan->nilai_rekomendasi : 0;
 
         // Hitung sisa yang harus dibayar
-        $sisaYangHarusDibayar = $totalBayar - $totalPembayaran;
+        $sisaYangHarusDibayar = $nilaiRekomendasi - $totalPembayaran;
+
+        // Group payments by month and year
+        $pembayaransByMonth = $pembayarans->groupBy(function($date) {
+            return \Carbon\Carbon::parse($date->tgl_pembayaran)->format('Y-m'); // grouping by year and month
+        });
+
+        $totalMonths = $pembayaransByMonth->count();
 
         // Buat nama file dengan timestamp
         $filename = 'history_pembayaran_' . now()->format('Ymd_His') . '.pdf';
 
-        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan', 'totalPembayaran', 'sisaYangHarusDibayar'));
+        // Tambahkan $totalMonths ke dalam compact
+        $pdf = PDF::loadView('pembayaran.downloadpdf', compact('pembayarans', 'temuan', 'totalPembayaran', 'nilaiRekomendasi', 'sisaYangHarusDibayar', 'totalMonths'));
         return $pdf->download($filename);
     }
 

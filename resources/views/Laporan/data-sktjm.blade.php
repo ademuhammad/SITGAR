@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data SKTJM</h5>
-                    <a href="{{ route('sktjm.create') }}" class="btn btn-primary mb-3">Tambah Data SKTJM</a>
+                    <a href="{{ route('sktjm.create') }}" class="btn btn-success mb-3">Tambah Data SKTJM</a>
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -76,10 +76,10 @@
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
                                     },
-                                    {
-                                        data: 'obrik_pemeriksaan',
-                                        name: 'obrik_pemeriksaan'
-                                    },
+                                    // {
+                                    //     data: 'obrik_pemeriksaan',
+                                    //     name: 'obrik_pemeriksaan'
+                                    // },
                                     {
                                         data: 'temuan',
                                         name: 'temuan'
@@ -229,7 +229,7 @@
                                     <th>Nama OPD</th>
                                     <th>Status</th>
                                     <th>Tgl LHP</th>
-                                    <th>Obrik Pemeriksaan</th>
+                                    {{-- <th>Obrik Pemeriksaan</th> --}}
                                     <th>Temuan</th>
                                     <th>Rekomendasi</th>
                                     <th>Jumlah Kerugian</th>

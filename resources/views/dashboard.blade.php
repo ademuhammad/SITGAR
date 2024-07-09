@@ -221,76 +221,79 @@
                     <div class="card ">
                         <div class="card-body">
                             <h5 class="card-title text-center">Temuan Per Status TGR</h5>
-                            <canvas id="statusTGRChart" height="200"></canvas>
+                            <canvas id="statusTGRChart" style="height: 200px" height="200" width="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
+
+                            <!-- Bar Chart -->
+                            <canvas id="barChartopd" height="200"></canvas>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    const labels = @json($sisaPembayaranPerOpd->keys());
+                                    const data = @json($sisaPembayaranPerOpd->values());
+
+                                    // Fungsi untuk memecah nama panjang menjadi beberapa baris
+                                    function splitLabel(label) {
+                                        return label.split(" ");
+                                    }
+
+                                    const formattedLabels = labels.map(label => splitLabel(label));
+
+                                    new Chart(document.querySelector('#barChartopd'), {
+                                        type: 'bar',
+                                        data: {
+                                            labels: formattedLabels,
+                                            datasets: [{
+                                                data: data,
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderColor: 'rgb(75, 192, 192)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                legend: {
+                                                    display: false // Menghilangkan legend
+                                                },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        title: function(context) {
+                                                            const index = context[0].dataIndex;
+                                                            return labels[index]; // Menampilkan nama lengkap dalam tooltip
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            scales: {
+                                                x: {
+                                                    ticks: {
+                                                        callback: function(value, index, values) {
+                                                            return formattedLabels[
+                                                                index]; // Menampilkan label dengan format baru
+                                                        }
+                                                    }
+                                                },
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                            <!-- End Bar Chart -->
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
 
-                        <!-- Bar Chart -->
-                        <canvas id="barChartopd" style="max-height: 400px;"></canvas>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", () => {
-                                const labels = @json($sisaPembayaranPerOpd->keys());
-                                const data = @json($sisaPembayaranPerOpd->values());
-
-                                // Fungsi untuk memecah nama panjang menjadi beberapa baris
-                                function splitLabel(label) {
-                                    return label.split(" ");
-                                }
-
-                                const formattedLabels = labels.map(label => splitLabel(label));
-
-                                new Chart(document.querySelector('#barChartopd'), {
-                                    type: 'bar',
-                                    data: {
-                                        labels: formattedLabels,
-                                        datasets: [{
-                                            data: data,
-                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                            borderColor: 'rgb(75, 192, 192)',
-                                            borderWidth: 1
-                                        }]
-                                    },
-                                    options: {
-                                        plugins: {
-                                            legend: {
-                                                display: false // Menghilangkan legend
-                                            },
-                                            tooltip: {
-                                                callbacks: {
-                                                    title: function(context) {
-                                                        const index = context[0].dataIndex;
-                                                        return labels[index]; // Menampilkan nama lengkap dalam tooltip
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        scales: {
-                                            x: {
-                                                ticks: {
-                                                    callback: function(value, index, values) {
-                                                        return formattedLabels[
-                                                            index]; // Menampilkan label dengan format baru
-                                                    }
-                                                }
-                                            },
-                                            y: {
-                                                beginAtZero: true
-                                            }
-                                        }
-                                    }
-                                });
-                            });
-                        </script>
-                        <!-- End Bar Chart -->
-                    </div>
-                </div>
             </div>
 
         </section>

@@ -31,29 +31,30 @@
             <tr>
                 <th scope="col">Jumlah Pembayaran</th>
                 <th scope="col">Tanggal Pembayaran</th>
-                <th scope="col">Bukti Pembayaran</th>
+                {{-- <th scope="col">Bukti Pembayaran</th> --}}
             </tr>
         </thead>
         <tbody>
             @foreach ($pembayarans as $pembayaran)
                 <tr>
                     <td>Rp.{{ number_format($pembayaran->jumlah_pembayaran, 2, ',', '.') }}</td>
-                    <td>{{ $pembayaran->tgl_pembayaran }}</td>
-                    <td>
+                    <td>{{ \Carbon\Carbon::parse($pembayaran->tgl_pembayaran)->translatedFormat('d F Y') }}</td>
+                    {{-- <td>
                         @if ($pembayaran->bukti_pembayaran)
                             <a href="{{ asset($pembayaran->bukti_pembayaran) }}" target="_blank">View</a>
                         @else
                             Tidak Ada
                         @endif
-                    </td>
+                    </td> --}}
                 </tr>
             @endforeach
         </tbody>
     </table>
     <div>
         <h3>Total Pembayaran: Rp.{{ number_format($totalPembayaran, 2, ',', '.') }}</h3>
-        <h3>Total yang Harus Dibayar: Rp.{{ number_format($totalBayar, 2, ',', '.') }}</h3>
+        <h3>Total Nilai Rekomendasi: Rp.{{ number_format($nilaiRekomendasi, 2, ',', '.') }}</h3>
         <h3>Sisa yang Harus Dibayar: Rp.{{ number_format($sisaYangHarusDibayar, 2, ',', '.') }}</h3>
+        <h3>Jumlah Bulan Pembayaran: {{ $totalMonths }} bulan</h3>
     </div>
 </body>
 </html>

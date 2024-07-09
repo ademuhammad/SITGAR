@@ -74,12 +74,24 @@ Route::group(['middleware' => ['auth']], function () {
     // all data mentah
     Route::get('data', [DataController::class, 'index'])->name('data.index');
     Route::resource('data', DataController::class);
+    Route::get('/data-keseluruhan', [DataController::class, 'alldata'])->name('data.alldata');
+
+    // data ekspor
+    // routes/web.php
+    Route::get('/export-csv', [DataController::class, 'exportCSV'])->name('data.exportCSV');
+    Route::get('/export-excel', [DataController::class, 'exportExcel'])->name('data.exportExcel');
+    Route::get('/export-pdf', [DataController::class, 'exportPDF'])->name('data.exportPDF');
+
     // Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('user', UserController::class);
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('user.myprofile');
     Route::resource('profile', ProfileController::class);
     Route::resource('role', RoleController::class);
+
+    // input
+    Route::get('/pegawai/byopd', [DataController::class,'getPegawaiByOpd'])->name('pegawai.byopd');
+
 });
 // Route::get('data', [DataController::class,'data'])->name('laporan.data');
 // Route::get('data-mentah', [DataController::class,'getDataMentah'])->name('laporan.data-mentah');
