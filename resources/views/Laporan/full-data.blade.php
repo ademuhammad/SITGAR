@@ -135,15 +135,7 @@
                                             window.location = '{{ route('data.exportExcel') }}?' + params;
                                         }
                                     },
-                                    {
-                                        extend: 'pdf',
-                                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                                        className: 'btn btn-danger',
-                                        action: function(e, dt, button, config) {
-                                            var params = $.param(table.ajax.params());
-                                            window.location = '{{ route('data.exportPDF') }}?' + params;
-                                        }
-                                    }
+
 
                                 ],
                                 lengthMenu: [10, 25, 50, 75, 100], // menentukan pilihan jumlah entri per halaman

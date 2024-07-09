@@ -114,28 +114,23 @@
                                         orderable: false,
                                         searchable: false,
                                         render: function(data, type, row) {
-                                            var editButton = '<a href="/data/' + row.id +
-                                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
+                                            // Hapus atau komentar kode yang tidak diperlukan
+                                            // var editButton = '<a href="/data/' + row.id + '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
-                                            var deleteForm = '<form action="/data/' + row.id +
-                                                '" method="post" style="display:inline">';
-                                            deleteForm += '@csrf';
-                                            deleteForm += '@method('DELETE')';
-                                            deleteForm +=
-                                                '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
-                                            deleteForm += '</form>';
-                                            var pembayaranCreateButton = '<a href="' +
-                                                '{{ route('pembayaran.create', ':id') }}'.replace(':id', row.id) +
-                                                '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
+                                            // var deleteForm = '<form action="/data/' + row.id + '" method="post" style="display:inline">';
+                                            // deleteForm += '@csrf';
+                                            // deleteForm += '@method('DELETE')';
+                                            // deleteForm += '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
+                                            // deleteForm += '</form>';
+                                            // var pembayaranCreateButton = '<a href="' + '{{ route('pembayaran.create', ':id') }}'.replace(':id', row.id) + '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
                                             var pembayaranIndexButton = '<a href="' +
                                                 '{{ route('pembayaran.index', ':id') }}'.replace(':id', row.id) +
                                                 '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
 
-
-                                            return '<div class="d-flex" style="padding:5px">' + editButton +
-                                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
-                                                '</div>';
+                                            return '<div class="d-flex" style="padding:5px">' +
+                                                pembayaranIndexButton + '</div>';
                                         }
+
                                     }
 
                                 ],

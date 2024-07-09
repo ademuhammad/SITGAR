@@ -6,6 +6,7 @@ use PDF;
 use App\Models\Temuan;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class PembayaranTemuanController extends Controller
@@ -50,11 +51,20 @@ class PembayaranTemuanController extends Controller
         $remainingAmount = $temuan->sisa_nilai_uang;
         return view('pembayaran.create-pembayaran', compact('temuan','remainingAmount'));
     }
-
     public function store(Request $request, Temuan $temuan)
     {
+        $remainingAmount = $temuan->sisa_nilai_uang;
+
         $request->validate([
-            'jumlah_pembayaran' => 'required|numeric',
+            'jumlah_pembayaran' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) use ($remainingAmount) {
+                    if ($value > $remainingAmount) {
+                        $fail('Jumlah pembayaran tidak boleh melebihi sisa bayar.');
+                    }
+                },
+            ],
             'tgl_pembayaran' => 'required|date',
             'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif,svg|max:2048'
         ]);
@@ -76,10 +86,22 @@ class PembayaranTemuanController extends Controller
         // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
         $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
         $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
+
+        // Check if the remaining amount is zero and update status
+        if ($temuan->sisa_nilai_uang == 0) {
+            // Retrieve the ID of the "selesai" status from the statuses table
+            $selesaiStatus = DB::table('statuses')->where('status', 'selesai')->first();
+            if ($selesaiStatus) {
+                $temuan->status_id = $selesaiStatus->id;
+            }
+        }
+
         $temuan->save();
 
         return redirect()->route('data.index')->with('success', 'Pembayaran berhasil ditambahkan.');
     }
+
+
 
 
     /**

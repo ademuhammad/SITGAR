@@ -313,29 +313,33 @@ class DataController extends Controller
         return Excel::download(new DataExport($filters), 'data.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
+
     public function exportPDF(Request $request)
     {
-        $filters = $request->only(['opd_id', 'status_id', 'no_lhp', 'start_date', 'end_date']);
-        $query = Temuan::query()->with('status', 'pembayarans');
+        $filters = $request->all();
 
-        if ($filters['opd_id']) {
-            $query->where('opd_id', $filters['opd_id']);
-        }
+        $query = Temuan::query();
+
         if ($filters['status_id']) {
             $query->where('status_id', $filters['status_id']);
         }
+
         if ($filters['no_lhp']) {
             $query->where('no_lhp', 'like', '%' . $filters['no_lhp'] . '%');
         }
+
         if ($filters['start_date']) {
             $query->whereDate('tgl_lhp', '>=', $filters['start_date']);
         }
+
         if ($filters['end_date']) {
             $query->whereDate('tgl_lhp', '<=', $filters['end_date']);
         }
 
         $data = $query->get();
-        $pdf = PDF::loadView('pdf_view', compact('data'));
+
+        $pdf = PDF::loadView('keseluruhan-pdf', compact('data'))->setPaper('a4', 'landscape');
+
         return $pdf->download('data.pdf');
     }
     /**

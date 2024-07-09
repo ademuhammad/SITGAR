@@ -130,7 +130,7 @@
                                         orderable: false,
                                         searchable: false,
                                         render: function(data, type, row) {
-                                            var editButton = '<a href="/data/' + row.id +
+                                            var editButton = '<a href="/skp2ks/' + row.id +
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
                                             var deleteForm = '<form action="/data/' + row.id +

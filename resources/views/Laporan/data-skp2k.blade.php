@@ -121,10 +121,10 @@
                                         orderable: false,
                                         searchable: false,
                                         render: function(data, type, row) {
-                                            var editButton = '<a href="/data/' + row.id +
+                                            var editButton = '<a href="/skp2k/' + row.id +
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
-                                            var deleteForm = '<form action="/data/' + row.id +
+                                            var deleteForm = '<form action="/skp2k/' + row.id +
                                                 '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
 
                                             var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'

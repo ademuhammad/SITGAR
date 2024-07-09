@@ -20,8 +20,9 @@
                 <form action="{{ route('pembayaran.store', $temuan->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="jumlah_pembayaran">Jumlah Pembayaran</label>
-                        <input type="text" class="form-control" id="jumlah_pembayaran" name="jumlah_pembayaran" value="{{ old('jumlah_pembayaran') }}" oninput="formatRupiah(this)">
+                        <label for="jumlah_pembayaran_display">Jumlah Pembayaran</label>
+                        <input type="text" class="form-control" id="jumlah_pembayaran_display" oninput="formatRupiah(this)">
+                        <input type="hidden" id="jumlah_pembayaran" name="jumlah_pembayaran" value="{{ old('jumlah_pembayaran') }}">
                     </div>
                     <div class="form-group">
                         <label for="tgl_pembayaran">Tanggal Pembayaran</label>
@@ -43,25 +44,23 @@
 </main>
 
 <script>
-    function formatRupiah(input) {
-        var value = input.value.replace(/[^,\d]/g, '').toString();
-        var split = value.split(',');
-        var sisa = split[0].length % 3;
-        var rupiah = split[0].substr(0, sisa);
-        var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    function formatRupiah(element) {
+        let value = element.value.replace(/[^,\d]/g, '').toString();
+        let split = value.split(',');
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
         if (ribuan) {
-            var separator = sisa ? '.' : '';
+            let separator = sisa ? '.' : '';
             rupiah += separator + ribuan.join('.');
         }
 
         rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-        input.value = 'Rp. ' + rupiah;
-    }
+        element.value = 'Rp ' + rupiah;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var remainingAmountInput = document.getElementById('remainingAmount');
-        remainingAmountInput.value = 'Rp. ' + remainingAmountInput.value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    });
+        // Update the hidden input with the numerical value
+        document.getElementById('jumlah_pembayaran').value = value.replace(/[^,\d]/g, '');
+    }
 </script>
 @endsection

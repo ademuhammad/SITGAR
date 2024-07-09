@@ -80,7 +80,8 @@ Route::group(['middleware' => ['auth']], function () {
     // routes/web.php
     Route::get('/export-csv', [DataController::class, 'exportCSV'])->name('data.exportCSV');
     Route::get('/export-excel', [DataController::class, 'exportExcel'])->name('data.exportExcel');
-    Route::get('/export-pdf', [DataController::class, 'exportPDF'])->name('data.exportPDF');
+    // Route::get('/export-pdf', [DataController::class, 'exportPDF'])->name('data.exportPDF');
+    Route::get('/data/exportPDF', [DataController::class, 'exportPDF'])->name('data.exportPDF');
 
     // Route::get('/data/{id}', [DataController::class, 'show'])->name('data.show');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
