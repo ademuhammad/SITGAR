@@ -22,15 +22,15 @@
                                 @csrf
                                 <div class="mb-3">
                                     <label for="penyedia_name" class="form-label">Nama Penyedia</label>
-                                    <input type="text" class="form-control" id="penyedia_name" name="penyedia_name" required>
+                                    <input type="text" class="form-control" id="penyedia_name" name="penyedia_name" >
                                 </div>
                                 <div class="mb-3">
                                     <label for="penyedia_address" class="form-label">Alamat Penyedia</label>
-                                    <input type="text" class="form-control" id="penyedia_address" name="penyedia_address" required>
+                                    <input type="text" class="form-control" id="penyedia_address" name="penyedia_address" >
                                 </div>
                                 <div class="mb-3">
                                     <label for="penyedia_izin" class="form-label">Izin Penyedia</label>
-                                    <input type="text" class="form-control" id="penyedia_izin" name="penyedia_izin" required>
+                                    <input type="text" class="form-control" id="penyedia_izin" name="penyedia_izin" >
                                 </div>
                                 <div class="mb-3">
                                     <label for="penyedia_information" class="form-label">Informasi Lainnya</label>

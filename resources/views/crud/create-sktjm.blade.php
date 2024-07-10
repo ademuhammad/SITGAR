@@ -145,14 +145,16 @@
         </section>
     </main>
 
-    <!-- include libraries(jQuery, bootstrap) -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<!-- include libraries(jQuery, bootstrap) -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <!-- include summernote css/js -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<!-- include summernote css/js -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#sktjmForm').on('submit', function(e) {
@@ -167,52 +169,16 @@
             });
 
 
-            $('#opd_id').on('change', function() {
-                var opdId = $(this).val();
-                $.ajax({
-                    url: '{{ route('pegawai.byopd') }}', // Sesuaikan dengan route yang tepat
-                    type: 'GET',
-                    data: {
-                        opd_id: opdId
-                    },
-                    success: function(response) {
-                        var pegawaiDropdown = $('#pegawai_id');
-                        pegawaiDropdown.empty();
-                        $.each(response, function(key, value) {
-                            pegawaiDropdown.append($('<option></option>').attr('value',
-                                    value.id)
-                                .text(value.name));
-                        });
-                    },
-                    error: function(xhr) {
-                        console.log(xhr.responseText);
-                    }
-                });
+            $('#pegawai_id').select2({
+                placeholder: "Pilih PPK",
+                allowClear: true
+            });
+            $('#opd_id').select2({
+                placeholder: "Pilih OPD",
+                allowClear: true
             });
 
-            // Memastikan opsi pegawai diinisialisasi saat halaman dimuat pertama kali
-            var initialOpdId = $('#opd_id').val();
-            if (initialOpdId) {
-                $.ajax({
-                    url: '{{ route('pegawai.byopd') }}',
-                    type: 'GET',
-                    data: {
-                        opd_id: initialOpdId
-                    },
-                    success: function(response) {
-                        var pegawaiDropdown = $('#pegawai_id');
-                        pegawaiDropdown.empty();
-                        $.each(response, function(key, value) {
-                            pegawaiDropdown.append($('<option></option>').attr('value', value
-                                .id).text(value
-                                .name));
-                        });
-                    },
-                    error: function(xhr) {
-                        console.log(xhr.responseText);
-                    }
-                });
-            }
+
         });
     </script>
 @endsection

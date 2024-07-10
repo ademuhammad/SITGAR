@@ -99,8 +99,8 @@
                         </div> --}}
 
                         <div class="form-group">
-                            <label for="rekomendasi" class="form-label">Rekomendasi</label>
-                            <textarea id="summernote" name="rekomendasi"></textarea>
+                            <label for="rekomendasi">Rekomendasi</label>
+                            <textarea class="form-control" id="rekomendasi" name="rekomendasi"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="nilai_rekomendasi">Nilai Rekomendasi</label>
@@ -121,21 +121,16 @@
         <!-- include summernote css/js -->
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
-            $(document).ready(function() {
-                $('#summernote').summernote({
-                    height: 300,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'italic', 'underline', 'clear']],
-                        ['fontsize', ['fontsize']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video']],
-                        ['view', ['fullscreen', 'codeview']],
-                    ]
-                });
+            $('#pegawai_id').select2({
+                placeholder: "Pilih PPK",
+                allowClear: true
+            });
+            $('#opd_id').select2({
+                placeholder: "Pilih OPD",
+                allowClear: true
             });
         </script>
     @endsection

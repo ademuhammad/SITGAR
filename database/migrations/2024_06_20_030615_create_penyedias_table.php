@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('penyedias', function (Blueprint $table) {
             $table->id();
             $table->string('penyedia_name');
-            $table->string('penyedia_address');
+            $table->string('penyedia_address')->nullable();
             $table->string('penyedia_information')->nullable();
-            $table->string('penyedia_izin');
+            $table->string('penyedia_izin')->nullable();
             $table->timestamps();
         });
     }

@@ -155,7 +155,16 @@
                                     {
                                         extend: 'pdf',
                                         text: '<i class="fas fa-file-pdf"></i> PDF',
-                                        className: 'btn btn-danger'
+                                        className: 'btn btn-danger',
+                                        orientation: 'landscape', // Set landscape orientation
+                                        exportOptions: {
+                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                        },
+                                        customize: function(doc) {
+                                            doc.pageMargins = [20, 20, 20, 20]; // Set custom margins
+                                            doc.defaultStyle.fontSize = 8; // Set default font size
+                                            doc.styles.tableHeader.fontSize = 10; // Set table header font size
+                                        }
                                     },
                                     {
                                         extend: 'print',

@@ -147,24 +147,55 @@
                                 buttons: [{
                                         extend: 'csv',
                                         text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success'
+                                        className: 'btn btn-success',
+                                        exportOptions: {
+                                            modifier: {
+                                                page: 'all' // Export all data, not just the current page
+                                            },
+                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                        }
                                     },
                                     {
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
-                                        className: 'btn btn-success'
+                                        className: 'btn btn-success',
+                                        exportOptions: {
+                                            modifier: {
+                                                page: 'all' // Export all data, not just the current page
+                                            },
+                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                        }
                                     },
                                     {
                                         extend: 'pdf',
                                         text: '<i class="fas fa-file-pdf"></i> PDF',
-                                        className: 'btn btn-danger'
+                                        className: 'btn btn-danger',
+                                        orientation: 'landscape', // Set landscape orientation
+                                        exportOptions: {
+                                            modifier: {
+                                                page: 'all' // Export all data, not just the current page
+                                            },
+                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                        },
+                                        customize: function(doc) {
+                                            doc.pageMargins = [20, 20, 20, 20]; // Set custom margins
+                                            doc.defaultStyle.fontSize = 8; // Set default font size
+                                            doc.styles.tableHeader.fontSize = 10; // Set table header font size
+                                        }
                                     },
                                     {
                                         extend: 'print',
                                         text: '<i class="fas fa-print"></i> Print',
-                                        className: 'btn btn-primary'
+                                        className: 'btn btn-primary',
+                                        exportOptions: {
+                                            modifier: {
+                                                page: 'all' // Export all data, not just the current page
+                                            },
+                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                        }
                                     }
                                 ]
+
                             });
 
                             $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {

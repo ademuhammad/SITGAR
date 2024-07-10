@@ -35,12 +35,12 @@ class PenyediaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'penyedia_name' => 'required|string|max:255',
-            'penyedia_address' => 'required|string|max:255',
-            'penyedia_izin' => 'required|string|max:255',
-            'penyedia_information' => 'nullable|string',
-        ]);
+        // $request->validate([
+        //     'penyedia_name' => 'required|string|max:255',
+        //     'penyedia_address' => 'required|string|max:255',
+        //     'penyedia_izin' => 'required|string|max:255',
+        //     'penyedia_information' => 'nullable|string',
+        // ]);
 
         Penyedia::create($request->all());
 
