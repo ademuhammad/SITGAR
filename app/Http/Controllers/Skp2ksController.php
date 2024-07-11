@@ -224,8 +224,18 @@ class Skp2ksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $temuan = Temuan::findOrFail($id);
+
+        // Hapus file terkait jika ada
+        if ($temuan->bukti_surat && file_exists(public_path('bukti_temuan/' . $temuan->bukti_surat))) {
+            unlink(public_path('bukti_temuan/' . $temuan->bukti_surat));
+        }
+
+        // Hapus data dari database
+        $temuan->delete();
+
+        return redirect()->route('skp2k.index')->with('success', 'Data berhasil dihapus');
     }
 }

@@ -1,6 +1,15 @@
 @extends('template.header-footer')
 
 @section('content')
+    <style>
+        .dataTables_wrapper .table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer; /* Menambahkan cursor pointer untuk menunjukkan bahwa teks bisa diklik */
+        }
+    </style>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
@@ -19,7 +28,6 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data SKP2K</h5>
-                    {{-- <a href="{{ route('data.create') }}" class="btn btn-primary mb-3">Tambah Data</a> --}}
                     <a href="{{ route('skp2k.create') }}" class="btn btn-success mb-3">Tambah Data SKP2K</a>
 
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
@@ -31,178 +39,8 @@
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
                     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
                     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-                    <script>
-                        $(document).ready(function() {
-                            var table = $('#data-table').DataTable({
-                                processing: true,
-                                serverSide: true,
-                                ajax: {
-                                    url: '{{ route('temuans.getDataskp2k') }}',
-                                    data: function(d) {
-                                        d.status_id = $('#status_id').val();
-                                        d.no_lhp = $('#no_lhp').val();
-                                        d.start_date = $('#start_date').val();
-                                        d.end_date = $('#end_date').val();
-                                        d.opd_id = $('#opd_id').val(); // Added this line
-                                    }
-                                },
-                                columns: [{
-                                        data: 'no_lhp',
-                                        name: 'no_lhp',
-                                        render: function(data, type, row) {
-                                            return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
-                                        }
-                                    },
-                                    {
-                                        data: 'dinas_name',
-                                        name: 'dinas_name'
-                                    },
-                                    {
-                                        data: 'opd_name',
-                                        name: 'opd_name'
-                                    },
-                                    {
-                                        data: 'status',
-                                        name: 'status',
-                                        render: function(data, type, row) {
-                                            let badgeClass = 'badge bg-secondary';
-                                            if (data.toLowerCase() === 'selesai') {
-                                                badgeClass = 'badge bg-success';
-                                            } else if (data.toLowerCase() === 'dalam proses') {
-                                                badgeClass = 'badge bg-warning';
-                                            }
-                                            return '<span class="' + badgeClass + '">' + data + '</span>';
-                                        }
-                                    },
-                                    {
-                                        data: 'tgl_lhp',
-                                        name: 'tgl_lhp'
-                                    },
-                                    // {
-                                    //     data: 'obrik_pemeriksaan',
-                                    //     name: 'obrik_pemeriksaan'
-                                    // },
-                                    {
-                                        data: 'temuan',
-                                        name: 'temuan'
-                                    },
-                                    {
-                                        data: 'rekomendasi',
-                                        name: 'rekomendasi'
-                                    },
-                                    {
-                                        data: 'nilai_rekomendasi',
-                                        name: 'nilai_rekomendasi',
-                                        render: function(data, type, row) {
-                                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                                        }
-                                    },
-                                    {
-                                        data: 'nilai_telah_dibayar',
-                                        name: 'nilai_telah_dibayar',
-                                        render: function(data, type, row) {
-                                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                                        }
-                                    },
-                                    {
-                                        data: 'sisa_nilai_uang',
-                                        name: 'sisa_nilai_uang',
-                                        render: function(data, type, row) {
-                                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                                        }
-                                    },
-                                    {
-                                        data: 'action',
-                                        name: 'action',
-                                        orderable: false,
-                                        searchable: false,
-                                        render: function(data, type, row) {
-                                            var editButton = '<a href="/skp2k/' + row.id +
-                                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
-
-                                            var deleteForm = '<form action="/skp2k/' + row.id +
-                                                '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
-
-                                            var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
-                                                .replace(':id', row.id);
-                                            var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
-                                                '" class="btn btn-sm btn-light mr-1" title="Create Pembayaran"><i class="bi bi-currency-dollar"></i></a>';
-
-                                            var pembayaranIndexUrl = '{{ route('pembayaran.index', ':id') }}'
-                                                .replace(':id', row.id);
-                                            var pembayaranIndexButton = '<a href="' + pembayaranIndexUrl +
-                                                '" class="btn btn-sm btn-light" title="View Pembayaran"><i class="bi bi-hourglass-split"></i></a>';
-
-                                            return '<div class="d-flex" style="padding:5px">' + editButton +
-                                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
-                                                '</div>';
-                                        }
-                                    }
-                                ],
-                                dom: 'Bfrtip',
-                                buttons: [{
-                                        extend: 'csv',
-                                        text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success',
-                                        exportOptions: {
-                                            modifier: {
-                                                page: 'all' // Export all data, not just the current page
-                                            },
-                                            columns: ':not(:last-child)' // Exclude the last column (action)
-                                        }
-                                    },
-                                    {
-                                        extend: 'excel',
-                                        text: '<i class="fas fa-file-excel"></i> Excel',
-                                        className: 'btn btn-success',
-                                        exportOptions: {
-                                            modifier: {
-                                                page: 'all' // Export all data, not just the current page
-                                            },
-                                            columns: ':not(:last-child)' // Exclude the last column (action)
-                                        }
-                                    },
-                                    {
-                                        extend: 'pdf',
-                                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                                        className: 'btn btn-danger',
-                                        orientation: 'landscape', // Set landscape orientation
-                                        exportOptions: {
-                                            modifier: {
-                                                page: 'all' // Export all data, not just the current page
-                                            },
-                                            columns: ':not(:last-child)' // Exclude the last column (action)
-                                        },
-                                        customize: function(doc) {
-                                            doc.pageMargins = [20, 20, 20, 20]; // Set custom margins
-                                            doc.defaultStyle.fontSize = 8; // Set default font size
-                                            doc.styles.tableHeader.fontSize = 10; // Set table header font size
-                                        }
-                                    },
-                                    {
-                                        extend: 'print',
-                                        text: '<i class="fas fa-print"></i> Print',
-                                        className: 'btn btn-primary',
-                                        exportOptions: {
-                                            modifier: {
-                                                page: 'all' // Export all data, not just the current page
-                                            },
-                                            columns: ':not(:last-child)' // Exclude the last column (action)
-                                        }
-                                    }
-                                ]
-
-                            });
-
-                            $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
-                                table.draw();
-                            });
-                        });
-                    </script>
 
                     <div class="container">
                         <div class="card" style="padding: 10px; background: #c6dff6">
@@ -221,27 +59,23 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="no_lhp">Filter No LHP:</label>
-                                        <input type="text" id="no_lhp" class="form-control"
-                                            placeholder="Search No LHP">
+                                        <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="opd_id">Filter OPD:</label>
-                                            <select id="opd_id" class="form-control">
-                                                <option value="">All</option>
-                                                @foreach ($opds as $opd)
-                                                    <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="opd_id">Filter OPD:</label>
+                                        <select id="opd_id" class="form-control">
+                                            <option value="">All</option>
+                                            @foreach ($opds as $opd)
+                                                <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
@@ -266,7 +100,6 @@
                                     <th>Nama OPD</th>
                                     <th>Status</th>
                                     <th>Tgl LHP</th>
-                                    {{-- <th>Obrik Pemeriksaan</th> --}}
                                     <th>Temuan</th>
                                     <th>Rekomendasi</th>
                                     <th>Jumlah Kerugian</th>
@@ -281,4 +114,200 @@
             </div>
         </section>
     </main>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('temuans.getDataskp2k') }}',
+                    data: function(d) {
+                        d.status_id = $('#status_id').val();
+                        d.no_lhp = $('#no_lhp').val();
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.opd_id = $('#opd_id').val();
+                    }
+                },
+                columns: [
+                    {
+                        data: 'no_lhp',
+                        name: 'no_lhp',
+                        render: function(data, type, row) {
+                            return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
+                        }
+                    },
+                    {
+                        data: 'dinas_name',
+                        name: 'dinas_name'
+                    },
+                    {
+                        data: 'opd_name',
+                        name: 'opd_name'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        render: function(data, type, row) {
+                            let badgeClass = 'badge bg-secondary';
+                            if (data.toLowerCase() === 'selesai') {
+                                badgeClass = 'badge bg-success';
+                            } else if (data.toLowerCase() === 'dalam proses') {
+                                badgeClass = 'badge bg-warning';
+                            }
+                            return '<span class="' + badgeClass + '">' + data + '</span>';
+                        }
+                    },
+                    {
+                        data: 'tgl_lhp',
+                        name: 'tgl_lhp'
+                    },
+                    {
+                        data: 'temuan',
+                        name: 'temuan',
+                        render: function(data, type, row) {
+                            if (data.length > 70) {
+                                return '<span class="short-text" data-full-text="' + data + '">' + data.substring(0, 70) + '...</span>';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'rekomendasi',
+                        name: 'rekomendasi',
+                        render: function(data, type, row) {
+                            if (data.length > 100) {
+                                return '<span class="short-text" data-full-text="' + data + '">' + data.substring(0, 100) + '...</span>';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'nilai_rekomendasi',
+                        name: 'nilai_rekomendasi',
+                        render: function(data, type, row) {
+                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                    },
+                    {
+                        data: 'nilai_telah_dibayar',
+                        name: 'nilai_telah_dibayar',
+                        render: function(data, type, row) {
+                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                    },
+                    {
+                        data: 'sisa_nilai_uang',
+                        name: 'sisa_nilai_uang',
+                        render: function(data, type, row) {
+                            return 'Rp ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            var editButton = '<a href="/skp2k/' + row.id +
+                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
+
+                            var deleteForm = '<form action="/skp2k/' + row.id +
+                                '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
+
+                            var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
+                                .replace(':id', row.id);
+                            var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
+                                '" class="btn btn-sm btn-light mr-1" title="Create Pembayaran"><i class="bi bi-currency-dollar"></i></a>';
+
+                            var pembayaranIndexUrl = '{{ route('pembayaran.index', ':id') }}'
+                                .replace(':id', row.id);
+                            var pembayaranIndexButton = '<a href="' + pembayaranIndexUrl +
+                                '" class="btn btn-sm btn-light" title="View Pembayaran"><i class="bi bi-hourglass-split"></i></a>';
+
+                            return '<div class="d-flex" style="padding:5px">' + editButton +
+                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
+                                '</div>';
+                        }
+                    }
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        className: 'btn btn-success',
+                        exportOptions: {
+                            modifier: {
+                                page: 'all'
+                            },
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-success',
+                        exportOptions: {
+                            modifier: {
+                                page: 'all'
+                            },
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        className: 'btn btn-danger',
+                        orientation: 'landscape',
+                        exportOptions: {
+                            modifier: {
+                                page: 'all'
+                            },
+                            columns: ':not(:last-child)'
+                        },
+                        customize: function(doc) {
+                            doc.pageMargins = [20, 20, 20, 20];
+                            doc.defaultStyle.fontSize = 8;
+                            doc.styles.tableHeader.fontSize = 10;
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i> Print',
+                        className: 'btn btn-primary',
+                        exportOptions: {
+                            modifier: {
+                                page: 'all'
+                            },
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ]
+            });
+
+            $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
+                table.draw();
+            });
+
+            $('#data-table tbody').on('click', 'span.short-text', function() {
+                var $this = $(this);
+                var fullText = $this.data('full-text');
+                var isExpanded = $this.hasClass('expanded');
+
+                if (isExpanded) {
+                    if ($this.closest('td').data('col') === 'temuan') {
+                        $this.html(fullText.substring(0, 70) + '...');
+                    } else {
+                        $this.html(fullText.substring(0, 100) + '...');
+                    }
+                    $this.removeClass('expanded');
+                } else {
+                    $this.html(fullText);
+                    $this.addClass('expanded');
+                }
+            });
+        });
+    </script>
 @endsection

@@ -86,11 +86,25 @@
                                     // },
                                     {
                                         data: 'temuan',
-                                        name: 'temuan'
+                                        name: 'temuan',
+                                        render: function(data, type, row) {
+                                            if (data.length > 70) {
+                                                return '<span class="short-text" data-full-text="' + data + '">' +
+                                                    data.substring(0, 70) + '...</span>';
+                                            }
+                                            return data;
+                                        }
                                     },
                                     {
                                         data: 'rekomendasi',
-                                        name: 'rekomendasi'
+                                        name: 'rekomendasi',
+                                        render: function(data, type, row) {
+                                            if (data.length > 100) {
+                                                return '<span class="short-text" data-full-text="' + data + '">' +
+                                                    data.substring(0, 100) + '...</span>';
+                                            }
+                                            return data;
+                                        }
                                     },
                                     {
                                         data: 'nilai_rekomendasi',
@@ -176,6 +190,23 @@
 
                             $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
                                 table.draw();
+                            });
+                            $('#data-table tbody').on('click', 'span.short-text', function() {
+                                var $this = $(this);
+                                var fullText = $this.data('full-text');
+                                var isExpanded = $this.hasClass('expanded');
+
+                                if (isExpanded) {
+                                    if ($this.closest('td').data('col') === 'temuan') {
+                                        $this.html(fullText.substring(0, 70) + '...');
+                                    } else {
+                                        $this.html(fullText.substring(0, 100) + '...');
+                                    }
+                                    $this.removeClass('expanded');
+                                } else {
+                                    $this.html(fullText);
+                                    $this.addClass('expanded');
+                                }
                             });
                         });
                     </script>
