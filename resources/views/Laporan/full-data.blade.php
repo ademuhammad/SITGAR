@@ -84,7 +84,14 @@
                                     },
                                     {
                                         data: 'obrik_pemeriksaan',
-                                        name: 'obrik_pemeriksaan'
+                                        name: 'obrik_pemeriksaan',
+                                        render: function(data, type, row) {
+                                            if (data.length > 70) {
+                                                return '<span class="short-text" data-full-text="' + data + '">' +
+                                                    data.substring(0, 70) + '...</span>';
+                                            }
+                                            return data;
+                                        }
                                     },
                                     {
                                         data: 'temuan',
