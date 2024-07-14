@@ -62,7 +62,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="statustgr_id">Status TGR</label>
                         <select class="form-control" id="statustgr_id" name="statustgr_id">
                             @foreach ($statustgrs as $statustgr)
@@ -71,7 +71,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group">
                         <label for="pegwai_id">Pegawai</label>
