@@ -3,12 +3,12 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Data informasi</h1>
+            <h1>Data Informasi</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">SITGAR</a></li>
                     <li class="breadcrumb-item">Tables</li>
-                    <li class="breadcrumb-item active">informasi</li>
+                    <li class="breadcrumb-item active">Informasi</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -19,11 +19,11 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Data informasi</h5>
+                            <h5 class="card-title">Data Informasi</h5>
                             <a href="{{ route('informasi.create') }}">
-                                <button type="button" class="btn btn-info"><i class="bi bi-person-plus-fill"></i> Tambah informasi</button></a>
+                                <button type="button" class="btn btn-success mb-2"><i class="bi bi-person-plus-fill"></i> Tambah Informasi</button></a>
                             <!-- Table with stripped rows -->
-                            <table class="table datatable">
+                            <table id="informasiTable" >
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -60,4 +60,50 @@
         </section>
 
     </main><!-- End #main -->
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+
+
+<!-- Initialize DataTables with print and export buttons, excluding the Aksi column -->
+<script>
+$(document).ready(function() {
+    $('#informasiTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'excel',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'csv',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            }
+        ]
+    });
+});
+</script>
 @endsection
