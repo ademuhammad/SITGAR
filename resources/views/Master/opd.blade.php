@@ -21,9 +21,9 @@
                     <div class="card-body">
                         <h5 class="card-title">Data OPD</h5>
                         <a href="{{ route('opds.create') }}">
-                            <button type="button" class="btn btn-info"><i class="bi bi-person-plus-fill"></i> Tambah OPD</button></a>
+                            <button type="button" class="btn btn-success mb-2"><i class="bi bi-person-plus-fill"></i> Tambah OPD</button></a>
                         <!-- Table with stripped rows -->
-                        <table class="table datatable2">
+                        <table id="opdTable">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -60,4 +60,54 @@
     </section>
 
 </main><!-- End #main -->
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+
+<!-- Custom CSS to color each column -->
+
+
+<!-- Initialize DataTables with print button -->
+
+<!-- Initialize DataTables with print and export buttons, excluding the Aksi column -->
+<script>
+$(document).ready(function() {
+    $('#opdTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'excel',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'csv',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            }
+        ]
+    });
+});
+</script>
 @endsection

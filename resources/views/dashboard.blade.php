@@ -134,6 +134,23 @@
                             </div>
                         </div>
                         <!-- End Customers Card -->
+
+                        <div class="col-xxl-4 col-md-4 mb-3">
+                            <div class="card info-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Jumlah OPD dengan Temuan</h5>
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 >{{ $jumlahOPDTemuan }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Jumlah OPD dengan Temuan Card -->
+
                     </div>
                 </div><!-- End Left side columns -->
             </div>

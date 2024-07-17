@@ -130,6 +130,9 @@ class DashboardController extends Controller
         // Ambil nama status TGR berdasarkan status_tgr_id
         $statusTGRs = Statustgr::all()->pluck('tgr_name', 'id');
 
+        $jumlahOPDTemuan = Temuan::select('opd_id')
+        ->distinct()
+        ->count('opd_id');
 
         return view('dashboard', compact(
             'temuans',
@@ -151,8 +154,9 @@ class DashboardController extends Controller
             'temuanPerOPD',
             'opds',
             'temuanStatusSelesai',
-            'temuanPerStatusTGR', 
-            'statusTGRs'
+            'temuanPerStatusTGR',
+            'statusTGRs',
+            'jumlahOPDTemuan'
         ));
     }
 

@@ -20,8 +20,9 @@ class OpdController extends Controller
     public function index()
     {
         $data = Opd::all();
-        return view ('Master.opd', compact('data'));
+        return view('Master.opd', compact('data'));
     }
+
 
     /**
      * Show the form for creating a new resource.
