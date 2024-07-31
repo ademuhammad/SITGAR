@@ -5,7 +5,7 @@
         <section class="section">
             <div class="card">
                 <div class="card-body">
-                    <h1>Buat SKP2KS</h1>
+                    <h3>Buat SKP2KS</h3>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -32,7 +32,29 @@
                                         value="{{ old('tgl_lhp') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="pegawai_id">PPK</label>
+                                    <label for="informasis_id">Informasi</label>
+                                    <select class="form-control" id="informasis_id" name="informasis_id">
+                                        @foreach ($informasis as $informasi)
+                                            <option value="{{ $informasi->id }}"
+                                                {{ old('informasis_id') == $informasi->id ? 'selected' : '' }}>
+                                                {{ $informasi->dinas_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="opd_id">OPD</label>
+                                    <select class="form-control" id="opd_id" name="opd_id">
+                                        @foreach ($opds as $opd)
+                                            <option value="{{ $opd->id }}"
+                                                {{ old('opd_id') == $opd->id ? 'selected' : '' }}>
+                                                {{ $opd->opd_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pegawai_id">Nama PPK</label>
                                     <select class="form-control" id="pegawai_id" name="pegawai_id">
                                         @foreach ($pegawais as $pegawai)
                                             <option value="{{ $pegawai->id }}"
@@ -53,21 +75,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="opd_id">OPD</label>
-                                    <select class="form-control" id="opd_id" name="opd_id">
-                                        @foreach ($opds as $opd)
-                                            <option value="{{ $opd->id }}"
-                                                {{ old('opd_id') == $opd->id ? 'selected' : '' }}>
-                                                {{ $opd->opd_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="temuan">Temuan</label>
-                                    <textarea class="form-control" id="temuan" name="temuan">{{ old('temuan') }}</textarea>
-                                </div>
+
+
                                 <div class="form-group">
                                     <label for="penyedia_id">Penyedia</label>
                                     <select class="form-control" id="penyedia_id" name="penyedia_id">
@@ -79,6 +88,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="nilai_rekomendasi_display">Nilai Rekomendasi</label>
                                     <input type="text" class="form-control" id="nilai_rekomendasi_display"
@@ -86,41 +96,7 @@
                                     <input type="hidden" id="nilai_rekomendasi" name="nilai_rekomendasi"
                                         value="{{ old('nilai_rekomendasi') }}">
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="no_sktjm">No SKP2KS</label>
-                                    <input type="text" class="form-control" id="no_sktjm" name="no_sktjm"
-                                        value="{{ old('no_sktjm') }}">
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="statustgr_id">Status TGR</label>
-                                    <input type="hidden" id="statustgr_id" name="statustgr_id"
-                                        value="{{ $defaultStatustgr->id }}">
-                                    <input type="text" class="form-control" value="{{ $defaultStatustgr->tgr_name }}"
-                                        disabled>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="informasis_id">Informasi</label>
-                                    <select class="form-control" id="informasis_id" name="informasis_id">
-                                        @foreach ($informasis as $informasi)
-                                            <option value="{{ $informasi->id }}"
-                                                {{ old('informasis_id') == $informasi->id ? 'selected' : '' }}>
-                                                {{ $informasi->dinas_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
-                                    <textarea class="form-control" id="obrik_pemeriksaan" name="obrik_pemeriksaan" value="{{ old('obrik_pemeriksaan') }}"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="rekomendasi">Rekomendasi</label>
-                                    <textarea class="form-control" id="rekomendasi" name="rekomendasi"></textarea>
-                                </div>
                                 <div class="form-group">
                                     <label for="jenistemuan_id">Jenis Jaminan</label>
                                     <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
@@ -137,6 +113,37 @@
                                     <input type="text" class="form-control" id="jumlah_jaminan" name="jumlah_jaminan"
                                         value="{{ old('jumlah_jaminan') }}">
                                 </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="no_sktjm">No SKTJM</label>
+                                    <input type="text" class="form-control" id="no_sktjm" name="no_sktjm"
+                                        value="{{ old('no_sktjm') }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="statustgr_id">Status TGR</label>
+                                    <input type="hidden" id="statustgr_id" name="statustgr_id"
+                                        value="{{ $defaultStatustgr->id }}">
+                                    <input type="text" class="form-control" value="{{ $defaultStatustgr->tgr_name }}"
+                                        disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="temuan">Temuan</label>
+                                    <textarea class="form-control" style="width: 100%; height: 150px;" id="temuan" name="temuan">{{ old('temuan') }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
+                                    <textarea class="form-control" style="width: 100%; height: 150px;" id="obrik_pemeriksaan" name="obrik_pemeriksaan"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rekomendasi">Rekomendasi</label>
+                                    <textarea class="form-control" style="width: 100%; height: 150px;" id="rekomendasi" name="rekomendasi"></textarea>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="bukti_surat">Bukti Surat Lunas</label>
                                     <input type="file" class="form-control-file" id="bukti_surat" name="bukti_surat">
@@ -144,7 +151,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-success">Tambah</button>
                     </form>
                 </div>
             </div>

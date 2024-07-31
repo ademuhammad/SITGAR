@@ -169,5 +169,34 @@
             $('#informasis_id, #opd_id, #status_id, #pegawai_id, #penyedia_id, #statustgr_id, #jenistemuan_id').select2();
         });
     </script>
+      <script>
+        $(document).ready(function() {
+            $('#pegawai_id').select2({
+                placeholder: "Pilih PPK",
+                allowClear: true
+            });
+            $('#opd_id').select2({
+                placeholder: "Pilih OPD",
+                allowClear: true
+            });
+
+            $('#penyedia_id').select2({
+                placeholder: "Pilih Penyedia",
+                allowClear: true
+            });
+
+
+            $('#sktjmForm').on('submit', function(e) {
+                const statusId = $('#status_id').val();
+                const statusSelesaiId = 1; // Gantilah 1 dengan id status "selesai" yang sesuai
+                const buktiSurat = $('#bukti_surat').val();
+
+                if (statusId == statusSelesaiId && !buktiSurat) {
+                    e.preventDefault();
+                    alert('Bukti Surat Lunas wajib diunggah jika status adalah "selesai"');
+                }
+            });
+        });
+    </script>
 </main>
 @endsection

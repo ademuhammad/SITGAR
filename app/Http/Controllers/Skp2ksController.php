@@ -170,7 +170,8 @@ class Skp2ksController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
-        return view('crud.edit_skp2ks', compact('temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
+        $jenisTemuans = JenisTemuan::all();
+        return view('crud.edit_skp2ks', compact('jenisTemuans','temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
     }
 
     /**
