@@ -80,10 +80,6 @@
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
                                     },
-                                    // {
-                                    //     data: 'obrik_pemeriksaan',
-                                    //     name: 'obrik_pemeriksaan'
-                                    // },
                                     {
                                         data: 'temuan',
                                         name: 'temuan',
@@ -135,32 +131,24 @@
                                         render: function(data, type, row) {
                                             var editButton = '<a href="/sktjm/' + row.id +
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
-
                                             var deleteForm = '<form action="/sktjm/' + row.id +
                                                 '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
-
                                             var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
                                                 .replace(':id', row.id);
                                             var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
                                                 '" class="btn btn-sm btn-light mr-1" title="Create Pembayaran"><i class="bi bi-currency-dollar"></i></a>';
-
                                             var pembayaranIndexUrl = '{{ route('pembayaran.index', ':id') }}'
                                                 .replace(':id', row.id);
                                             var pembayaranIndexButton = '<a href="' + pembayaranIndexUrl +
                                                 '" class="btn btn-sm btn-light" title="View Pembayaran"><i class="bi bi-hourglass-split"></i></a>';
-
                                             return '<div class="d-flex" style="padding:5px">' + editButton +
                                                 deleteForm + pembayaranCreateButton + pembayaranIndexButton +
                                                 '</div>';
                                         }
                                     }
                                 ],
-                                dom: 'Bfrtip',
-                                buttons: [{
-                                        extend: 'csv',
-                                        text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success'
-                                    },
+                                dom: '<"top"lfB>rt<"bottom"ip><"clear">',
+                                buttons: [
                                     {
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
@@ -170,46 +158,36 @@
                                         extend: 'pdf',
                                         text: '<i class="fas fa-file-pdf"></i> PDF',
                                         className: 'btn btn-danger',
-                                        orientation: 'landscape', // Set landscape orientation
+                                        orientation: 'landscape',
                                         exportOptions: {
-                                            columns: ':not(:last-child)' // Exclude the last column (action)
+                                            columns: ':not(:last-child)'
                                         },
                                         customize: function(doc) {
-                                            doc.pageMargins = [20, 20, 20, 20]; // Set custom margins
-                                            doc.defaultStyle.fontSize = 8; // Set default font size
-                                            doc.styles.tableHeader.fontSize = 10; // Set table header font size
+                                            doc.pageMargins = [20, 20, 20, 20];
+                                            doc.defaultStyle.fontSize = 8;
+                                            doc.styles.tableHeader.fontSize = 10;
                                         }
-                                    },
-                                    {
-                                        extend: 'print',
-                                        text: '<i class="fas fa-print"></i> Print',
-                                        className: 'btn btn-primary'
                                     }
-                                ]
+                                ],
+                                lengthMenu: [
+                                    [10, 25, 50, -1],
+                                    ['10', '25', '50', 'Semua']
+                                ],
                             });
 
                             $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
                                 table.draw();
                             });
+
                             $('#data-table tbody').on('click', 'span.short-text', function() {
                                 var $this = $(this);
                                 var fullText = $this.data('full-text');
-                                var isExpanded = $this.hasClass('expanded');
-
-                                if (isExpanded) {
-                                    if ($this.closest('td').data('col') === 'temuan') {
-                                        $this.html(fullText.substring(0, 70) + '...');
-                                    } else {
-                                        $this.html(fullText.substring(0, 100) + '...');
-                                    }
-                                    $this.removeClass('expanded');
-                                } else {
-                                    $this.html(fullText);
-                                    $this.addClass('expanded');
-                                }
+                                $this.text(fullText);
                             });
                         });
                     </script>
+
+
 
 
                     <div class="container">
@@ -288,4 +266,40 @@
             </div>
         </section>
     </main>
+
+    <style>
+        .dataTables_wrapper .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .dataTables_length {
+            order: 1;
+            margin-right: auto;
+        }
+
+        .dt-buttons {
+            order: 2;
+            text-align: center;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dataTables_filter {
+            order: 3;
+            margin-left: auto;
+        }
+
+        .dataTables_length,
+        .dataTables_filter {
+            padding: 10px 0;
+        }
+
+        .dt-buttons .btn {
+            margin: 5px;
+        }
+    </style>
 @endsection

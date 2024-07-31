@@ -155,12 +155,8 @@
                                         }
                                     }
                                 ],
-                                dom: 'Bfrtip',
-                                buttons: [{
-                                        extend: 'csv',
-                                        text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success'
-                                    },
+                                dom: '<"top"lfB>rt<"bottom"ip><"clear">',
+                                buttons: [
                                     {
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
@@ -179,13 +175,12 @@
                                             doc.defaultStyle.fontSize = 8; // Set default font size
                                             doc.styles.tableHeader.fontSize = 10; // Set table header font size
                                         }
-                                    },
-                                    {
-                                        extend: 'print',
-                                        text: '<i class="fas fa-print"></i> Print',
-                                        className: 'btn btn-primary'
                                     }
-                                ]
+                                ],
+                                lengthMenu: [
+                                    [10, 25, 50, -1],
+                                    ['10', '25', '50', 'Semua']
+                                ],
                             });
 
                             $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
@@ -288,4 +283,39 @@
             </div>
         </section>
     </main>
+    <style>
+        .dataTables_wrapper .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .dataTables_length {
+            order: 1;
+            margin-right: auto;
+        }
+
+        .dt-buttons {
+            order: 2;
+            text-align: center;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dataTables_filter {
+            order: 3;
+            margin-left: auto;
+        }
+
+        .dataTables_length,
+        .dataTables_filter {
+            padding: 10px 0;
+        }
+
+        .dt-buttons .btn {
+            margin: 5px;
+        }
+    </style>
 @endsection

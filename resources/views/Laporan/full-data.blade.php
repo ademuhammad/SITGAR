@@ -135,16 +135,8 @@
                                         }
                                     }
                                 ],
-                                dom: 'Bfrtip',
-                                buttons: [{
-                                        extend: 'csv',
-                                        text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success',
-                                        action: function(e, dt, button, config) {
-                                            var params = $.param(table.ajax.params());
-                                            window.location = '{{ route('data.exportCSV') }}?' + params;
-                                        }
-                                    },
+                                dom: '<"top"lfB>rt<"bottom"ip><"clear">',
+                                buttons: [
                                     {
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
@@ -154,9 +146,25 @@
                                             window.location = '{{ route('data.exportExcel') }}?' + params;
                                         }
                                     },
+                                    {
+                                        extend: 'pdf',
+                                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                                        className: 'btn btn-danger',
+                                        orientation: 'landscape',
+                                        exportOptions: {
+                                            columns: ':not(:last-child)'
+                                        },
+                                        customize: function(doc) {
+                                            doc.pageMargins = [20, 20, 20, 20];
+                                            doc.defaultStyle.fontSize = 8;
+                                            doc.styles.tableHeader.fontSize = 10;
+                                        }
+                                    }
                                 ],
-                                lengthMenu: [10, 25, 50, 75, 100], // menentukan pilihan jumlah entri per halaman
-                                pageLength: 10, // jumlah entri per halaman default
+                                lengthMenu: [
+                                    [10, 25, 50, -1],
+                                    ['10', '25', '50', 'Semua']
+                                ],
                                 drawCallback: function(settings) {
                                     console.log(
                                         'DataTables has been redrawn'
@@ -281,4 +289,39 @@
             </div>
         </section>
     </main>
+    <style>
+        .dataTables_wrapper .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .dataTables_length {
+            order: 1;
+            margin-right: auto;
+        }
+
+        .dt-buttons {
+            order: 2;
+            text-align: center;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dataTables_filter {
+            order: 3;
+            margin-left: auto;
+        }
+
+        .dataTables_length,
+        .dataTables_filter {
+            padding: 10px 0;
+        }
+
+        .dt-buttons .btn {
+            margin: 5px;
+        }
+    </style>
 @endsection
