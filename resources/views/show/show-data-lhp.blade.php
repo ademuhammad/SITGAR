@@ -79,7 +79,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
                             <span class="info-box-icon"><i class="bi bi-person"></i></span>
-                            <span class="info-box-text">Nama Pegawai :</span>
+                            <span class="info-box-text">Nama PPK :</span>
                             <div class="info-box-content">
                                 <span class="info-box-number">{{ $data->pegawai->name }}</span>
                             </div>

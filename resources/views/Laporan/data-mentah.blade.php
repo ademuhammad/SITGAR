@@ -18,8 +18,8 @@
         <section class="section">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Data Temuan</h5>
-                    <a href="{{ route('data.create') }}" class="btn btn-success mb-3">Tambah Data</a>
+
+                    <a href="{{ route('data.create') }}" class="btn btn-success mt-3 mb-3">Tambah Data</a>
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -147,11 +147,6 @@
                                 ],
                                 dom: 'Bfrtip',
                                 buttons: [{
-                                        extend: 'csv',
-                                        text: '<i class="fas fa-file-csv"></i> CSV',
-                                        className: 'btn btn-success'
-                                    },
-                                    {
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
                                         className: 'btn btn-success'
@@ -161,11 +156,7 @@
                                         text: '<i class="fas fa-file-pdf"></i> PDF',
                                         className: 'btn btn-danger'
                                     },
-                                    {
-                                        extend: 'print',
-                                        text: '<i class="fas fa-print"></i> Print',
-                                        className: 'btn btn-primary'
-                                    }
+
                                 ]
                             });
 
@@ -213,7 +204,21 @@
                                             placeholder="Search No LHP">
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="opd_id">Filter OPD:</label>
+                                        <select id="opd_id" class="form-control">
+                                            <option value="">All</option>
+                                            @foreach ($opds as $opd)
+                                                <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
                             </div>
+
 
                             <div class="row">
                                 <div class="col">
@@ -227,8 +232,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="start_date">Filter Tanggal LHP Mulai:</label>
@@ -241,6 +244,9 @@
                                         <input type="date" id="end_date" class="form-control" placeholder="End Date">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+
                             </div>
 
                         </div>

@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Pembayaran extends Model
 {
     use HasFactory;
-    protected $fillable = ['temuan_id',
-    'jumlah_pembayaran',
-     'tgl_pembayaran',
-      'bukti_pembayaran'];
+    protected $fillable = [
+        'temuan_id',
+        'jumlah_pembayaran',
+        'tgl_pembayaran',
+        'bukti_pembayaran'
+    ];
 
     public function temuan()
     {

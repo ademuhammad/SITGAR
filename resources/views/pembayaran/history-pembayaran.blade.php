@@ -20,6 +20,7 @@
                             <th scope="col">Jumlah Pembayaran</th>
                             <th scope="col">Tanggal Pembayaran</th>
                             <th scope="col">Bukti Pembayaran</th>
+                            <th scope="col">Status</th> <!-- Tambahkan kolom status -->
                         </tr>
                     </thead>
                     <tbody>
@@ -34,6 +35,7 @@
                                        Tidak Ada
                                     @endif
                                 </td>
+                                <td>{{ ucfirst($pembayaran->status) }}</td> <!-- Tampilkan status -->
                             </tr>
                         @endforeach
                     </tbody>

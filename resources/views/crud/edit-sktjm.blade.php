@@ -133,11 +133,18 @@
                                 <label for="rekomendasi">Rekomendasi</label>
                                 <textarea class="form-control" id="rekomendasi" name="rekomendasi">{{ $temuan->rekomendasi }}</textarea>
                             </div>
-
                             <div class="form-group">
-                                <label for="jenis_jaminan">Jenis Jaminan</label>
-                                <input type="text" class="form-control" id="jenis_jaminan" name="jenis_jaminan" value="{{ $temuan->jenis_jaminan }}">
+                                <label for="jenistemuan_id">Jenis Jaminan</label>
+                                <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
+                                    @foreach ($jenisTemuans as $jenisTemuan)
+                                        <option value="{{ $jenisTemuan->id }}" {{ $temuan->jenistemuan_id == $jenisTemuan->id ? 'selected' : '' }}>
+                                            {{ $jenisTemuan->jenis_temuan }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
+
+
 
                             <div class="form-group">
                                 <label for="jumlah_jaminan">Jumlah Jaminan</label>

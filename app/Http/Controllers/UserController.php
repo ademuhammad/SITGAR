@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Hash;
+use App\Models\Opd;
 use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Support\Arr;
@@ -12,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -20,12 +22,33 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request): View
+    function __construct()
     {
-        $data = User::latest()->paginate(5);
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::select('*');
+            return Datatables::of($data)
+                    ->addIndexColumn() // Adds DT_RowIndex for numbering
+                    ->addColumn('action', function($row){
+                        $editUrl = route('user.edit', $row->id);
+                        $deleteUrl = route('user.destroy', $row->id);
 
-        return view('users.index',compact('data'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+                        $editBtn = '<a href="'.$editUrl.'" class="edit btn btn-primary btn-sm">Edit</a>';
+                        $deleteBtn = '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="deleteUser('.$row->id.')">Delete</a>';
+
+                        return $editBtn . ' ' . $deleteBtn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+
+        return view('users.index');
     }
 
     /**
@@ -35,8 +58,9 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $opds = Opd::all(); // Mengambil semua data OPD
+        $roles = Role::pluck('name', 'name')->all();
+        return view('users.create', compact('roles', 'opds'));
     }
 
     /**
@@ -51,7 +75,8 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            'opd_id' => 'nullable|exists:opds,id', // Validasi opd_id jika ada
         ]);
 
         $input = $request->all();
@@ -61,19 +86,14 @@ class UserController extends Controller
         $user->assignRole($request->input('roles'));
 
         return redirect()->route('user.index')
-                        ->with('success','User created successfully');
+            ->with('success', 'User created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id): View
     {
         $user = User::find($id);
-        return view('users.show',compact('user'));
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -85,44 +105,38 @@ class UserController extends Controller
     public function edit($id): View
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
+        $opds = Opd::all();
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit', compact('user', 'roles', 'userRole', 'opds'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id): RedirectResponse
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            'opd_id' => 'nullable|exists:opds,id',
         ]);
 
         $input = $request->all();
-        if(!empty($input['password'])){
+        if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));
+        } else {
+            $input = Arr::except($input, ['password']);
         }
 
         $user = User::find($id);
         $user->update($input);
 
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
         $user->assignRole($request->input('roles'));
 
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        return redirect()->route('user.index')
+            ->with('success', 'User updated successfully');
     }
 
     /**
@@ -133,11 +147,28 @@ class UserController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        User::find($id)->delete();
-        return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+        try {
+            // Begin a transaction
+            DB::beginTransaction();
+
+            $user = User::findOrFail($id); // Find the user or fail if not found
+
+            // Detach roles to avoid orphan records in the pivot table
+            $user->roles()->detach();
+
+            $user->delete(); // Delete the user
+
+            // Commit the transaction
+            DB::commit();
+
+            return redirect()->route('user.index')
+                ->with('success', 'User deleted successfully');
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollBack();
+
+            return redirect()->route('user.index')
+                ->with('error', 'Failed to delete user: ' . $e->getMessage());
+        }
     }
-
-
-
 }

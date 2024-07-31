@@ -28,11 +28,14 @@ class DataController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => ['index', 'show',
-        'alldata','exportPDF','exportCSV','exportPDF']]);
+        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => [
+            'index', 'show',
+            'alldata', 'exportPDF', 'exportCSV', 'exportPDF'
+        ]]);
         $this->middleware('permission:data-create', ['only' => ['create', 'store', '']]);
         $this->middleware('permission:data-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:data-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:show-lhp', ['only' => ['show']]);
     }
 
     public function index(Request $request, Builder $builder)
@@ -142,6 +145,7 @@ class DataController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+
         return view('crud.create-data', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
     }
 
@@ -151,30 +155,27 @@ class DataController extends Controller
             'informasis_id' => 'required|exists:informasis,id',
             'opd_id' => 'required|exists:opds,id',
             'status_id' => 'required|exists:statuses,id',
-
+            'statustgr_id' => 'nullable|exists:statustgrs,id',
             'pegawai_id' => 'required|exists:pegawais,id',
             'penyedia_id' => 'required|exists:penyedias,id',
             'no_lhp' => 'required|string|max:255',
             'tgl_lhp' => 'required|date',
-            'obrik_pemeriksaan' => 'required',
+            'obrik_pemeriksaan' => 'required|string',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_surat' => 'nullable|file|mimes:pdf|max:2048'
+            'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
 
-        $temuan = new Temuan($request->all());
+        $temuan = new Temuan($request->except('bukti_pembayaran')); // Exclude the file from mass assignment
 
-        // if ($request->hasFile('bukti_surat')) {
-        //     $path = $request->file('bukti_surat')->store('bukti_surat');
-        //     $temuan->bukti_surat = $path;
-        // }
         if ($request->hasFile('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('bukti_pembayaran', $filename);
             $temuan->bukti_pembayaran = $path;
         }
+
         // Initialize payment fields
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
@@ -183,6 +184,7 @@ class DataController extends Controller
 
         return redirect()->route('data.index')->with('success', 'Temuan created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -346,6 +348,21 @@ class DataController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    public function testall(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Temuan::with(['opd', 'status', 'pegawai', 'penyedia'])->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('Laporan.keseluruhan-data');
+    }
 
     public function getPegawaiByOpd(Request $request)
     {

@@ -28,11 +28,11 @@ class PembayaranTemuanController extends Controller
         $pembayarans = $temuan->pembayarans;
 
         // Calculate total paid and remaining amount
-        $totalPaid = $pembayarans->sum('jumlah_pembayaran');
+        $totalPaid = $pembayarans->where('status', 'diterima')->sum('jumlah_pembayaran');
         $remainingAmount = $temuan->sisa_nilai_uang;
 
         // Group payments by month and year
-        $pembayaransByMonth = $pembayarans->groupBy(function($date) {
+        $pembayaransByMonth = $pembayarans->groupBy(function ($date) {
             return \Carbon\Carbon::parse($date->tgl_pembayaran)->format('Y-m'); // grouping by year and month
         });
 
@@ -49,8 +49,60 @@ class PembayaranTemuanController extends Controller
     public function create(Temuan $temuan)
     {
         $remainingAmount = $temuan->sisa_nilai_uang;
-        return view('pembayaran.create-pembayaran', compact('temuan','remainingAmount'));
+        return view('pembayaran.create-pembayaran', compact('temuan', 'remainingAmount'));
     }
+
+    // public function store(Request $request, Temuan $temuan)
+    // {
+    //     $remainingAmount = $temuan->sisa_nilai_uang;
+
+    //     $request->validate([
+    //         'jumlah_pembayaran' => [
+    //             'required',
+    //             'numeric',
+    //             function ($attribute, $value, $fail) use ($remainingAmount) {
+    //                 if ($value > $remainingAmount) {
+    //                     $fail('Jumlah pembayaran tidak boleh melebihi sisa bayar.');
+    //                 }
+    //             },
+    //         ],
+    //         'tgl_pembayaran' => 'required|date',
+    //         'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif,svg|max:2048'
+    //     ]);
+
+    //     $pembayaran = new Pembayaran();
+    //     $pembayaran->temuan_id = $temuan->id;
+    //     $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
+    //     $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
+
+    //     if ($request->hasFile('bukti_pembayaran')) {
+    //         $file = $request->file('bukti_pembayaran');
+    //         $fileName = time() . '_bukti_pembayaran.' . $file->getClientOriginalExtension();
+    //         $file->move(public_path('bukti_pembayaran'), $fileName);
+    //         $pembayaran->bukti_pembayaran = $fileName;
+    //     }
+
+    //     $pembayaran->save();
+
+    //     // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
+    //     $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
+    //     $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
+
+    //     // Check if the remaining amount is zero and update status
+    //     if ($temuan->sisa_nilai_uang == 0) {
+    //         // Retrieve the ID of the "selesai" status from the statuses table
+    //         $selesaiStatus = DB::table('statuses')->where('status', 'selesai')->first();
+    //         if ($selesaiStatus) {
+    //             $temuan->status_id = $selesaiStatus->id;
+    //         }
+    //     }
+
+    //     $temuan->save();
+
+    //     return redirect()->route('data.index')->with('success', 'Pembayaran berhasil ditambahkan.');
+    // }
+
+
     public function store(Request $request, Temuan $temuan)
     {
         $remainingAmount = $temuan->sisa_nilai_uang;
@@ -73,6 +125,7 @@ class PembayaranTemuanController extends Controller
         $pembayaran->temuan_id = $temuan->id;
         $pembayaran->jumlah_pembayaran = $request->jumlah_pembayaran;
         $pembayaran->tgl_pembayaran = $request->tgl_pembayaran;
+        $pembayaran->status = 'pending'; // Set as pending
 
         if ($request->hasFile('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
@@ -82,31 +135,16 @@ class PembayaranTemuanController extends Controller
         }
 
         $pembayaran->save();
+        return redirect()->route('pembayaran.index', $temuan->id)
+        ->with('success', 'Pembayaran berhasil ditambahkan dan menunggu persetujuan.');
 
-        // Update the related Temuan's nilai_telah_dibayar and sisa_nilai_uang
-        $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
-        $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
-
-        // Check if the remaining amount is zero and update status
-        if ($temuan->sisa_nilai_uang == 0) {
-            // Retrieve the ID of the "selesai" status from the statuses table
-            $selesaiStatus = DB::table('statuses')->where('status', 'selesai')->first();
-            if ($selesaiStatus) {
-                $temuan->status_id = $selesaiStatus->id;
-            }
-        }
-
-        $temuan->save();
-
-        return redirect()->route('data.index')->with('success', 'Pembayaran berhasil ditambahkan.');
-    }
-
-
+   }
 
 
     /**
      * Display the specified resource.
      */
+
     public function show(string $id)
     {
         //
@@ -153,7 +191,7 @@ class PembayaranTemuanController extends Controller
         $sisaYangHarusDibayar = $nilaiRekomendasi - $totalPembayaran;
 
         // Group payments by month and year
-        $pembayaransByMonth = $pembayarans->groupBy(function($date) {
+        $pembayaransByMonth = $pembayarans->groupBy(function ($date) {
             return \Carbon\Carbon::parse($date->tgl_pembayaran)->format('Y-m'); // grouping by year and month
         });
 
@@ -180,4 +218,46 @@ class PembayaranTemuanController extends Controller
 
         return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
+    public function validateList()
+    {
+        // Ambil pembayaran yang statusnya masih pending dan muat relasi yang dibutuhkan
+        $pembayarans = Pembayaran::with(['temuan.opd']) // Assuming the 'temuan' relation has 'opd'
+                           ->where('status', 'pending') // Filter by status
+                           ->get(); // Retrieve the results
+
+        return view('validator.validasi-pembayaran', compact('pembayarans'));
+    }
+
+    public function validatePayment(Request $request, Pembayaran $pembayaran)
+    {
+        $this->authorize('validate-payment'); // Memeriksa izin
+
+        $request->validate([
+            'status' => 'required|in:diterima,ditolak',
+        ]);
+
+        $pembayaran->status = $request->status;
+        $pembayaran->save();
+
+        if ($pembayaran->status == 'diterima') {
+            $temuan = $pembayaran->temuan;
+
+            // Update nilai_telah_dibayar dan sisa_nilai_uang di temuan terkait
+            $temuan->nilai_telah_dibayar += $pembayaran->jumlah_pembayaran;
+            $temuan->sisa_nilai_uang -= $pembayaran->jumlah_pembayaran;
+
+            if ($temuan->sisa_nilai_uang == 0) {
+                // Jika sisa nilai uang adalah 0, update status temuan
+                $selesaiStatus = DB::table('statuses')->where('status', 'selesai')->first();
+                if ($selesaiStatus) {
+                    $temuan->status_id = $selesaiStatus->id;
+                }
+            }
+
+            $temuan->save();
+        }
+
+        return redirect()->route('pembayaran.validate.list')->with('success', 'Status pembayaran berhasil diperbarui.');
+    }
+
 }

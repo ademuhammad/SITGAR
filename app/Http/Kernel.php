@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         // ...
         'permission' => PermissionMiddleware::class,
         'role' => RoleMiddleware::class,
+        'check.opd.access' => \App\Http\Middleware\CheckOPDAccess::class,
     ];
 }

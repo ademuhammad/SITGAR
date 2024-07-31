@@ -11,6 +11,7 @@ use App\Models\Informasi;
 use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
+use App\Models\JenisTemuan;
 
 class SktjmController extends Controller
 {
@@ -61,20 +62,18 @@ class SktjmController extends Controller
      */
     public function create()
     {
-
         $informasis = Informasi::all();
         $opds = Opd::all();
         $statuses = Status::all();
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+        $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
         $defaultStatustgr = Statustgr::where('tgr_name', 'SKTJM')->first();
-        return view('crud.create-sktjm', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
+
+        return view('crud.create-sktjm', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'jenisTemuans', 'defaultStatustgr'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -84,6 +83,7 @@ class SktjmController extends Controller
             'statustgr_id' => 'required|exists:statustgrs,id',
             'pegawai_id' => 'required|exists:pegawais,id',
             'penyedia_id' => 'required|exists:penyedias,id',
+            'jenistemuan_id' => 'required|exists:jenis_temuans,id', // Add validation for jenistemuan_id
             'no_lhp' => 'required|string|max:255',
             'tgl_lhp' => 'required|date',
             'obrik_pemeriksaan' => 'required|string|max:255',
@@ -103,6 +103,7 @@ class SktjmController extends Controller
         $temuan->statustgr_id = $request->input('statustgr_id');
         $temuan->pegawai_id = $request->input('pegawai_id');
         $temuan->penyedia_id = $request->input('penyedia_id');
+        $temuan->jenistemuan_id = $request->input('jenistemuan_id'); // Set jenistemuan_id
         $temuan->no_lhp = $request->input('no_lhp');
         $temuan->tgl_lhp = $request->input('tgl_lhp');
         $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
@@ -121,13 +122,14 @@ class SktjmController extends Controller
             $temuan->bukti_surat = $file_temuan;
         }
 
-        // Initialize payment fields
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
 
         $temuan->save();
+
         return redirect()->route('sktjm.index')->with('success', 'Data berhasil disimpan');
     }
+
 
 
 
@@ -151,7 +153,8 @@ class SktjmController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
-        return view('crud.edit-sktjm', compact('temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
+        $jenisTemuans = JenisTemuan::all(); // Ensure this is available
+        return view('crud.edit-sktjm', compact('temuan', 'informasis', 'opds', 'jenisTemuans','statuses', 'statustgrs', 'pegawais', 'penyedias'));
     }
 
     /**
@@ -171,9 +174,9 @@ class SktjmController extends Controller
             'obrik_pemeriksaan' => 'required|string|max:255',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
-            'no_sktjm' => 'required|string|max:255', // Pastikan ini sesuai dengan struktur tabel Anda
+            'no_sktjm' => 'required|string|max:255',
             'jumlah_jaminan' => 'nullable|numeric',
-            'jenis_jaminan' => 'nullable|string|max:255',
+            'jenistemuan_id' => 'nullable|exists:jenis_temuans,id',
             'nilai_rekomendasi' => 'required|numeric',
             'bukti_surat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
@@ -190,13 +193,12 @@ class SktjmController extends Controller
         $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
         $temuan->temuan = $request->input('temuan');
         $temuan->rekomendasi = $request->input('rekomendasi');
-        $temuan->no_sktjm = $request->input('no_sktjm'); // Pastikan ini sesuai dengan nama kolom di tabel
+        $temuan->no_sktjm = $request->input('no_sktjm');
         $temuan->jumlah_jaminan = $request->input('jumlah_jaminan');
-        $temuan->jenis_jaminan = $request->input('jenis_jaminan');
+        $temuan->jenistemuan_id = $request->input('jenistemuan_id');
         $temuan->nilai_rekomendasi = $request->input('nilai_rekomendasi');
 
         if ($request->hasFile('bukti_surat')) {
-            // Hapus file lama jika ada
             if ($temuan->bukti_surat && file_exists(public_path('bukti_temuan/' . $temuan->bukti_surat))) {
                 unlink(public_path('bukti_temuan/' . $temuan->bukti_surat));
             }
@@ -211,6 +213,7 @@ class SktjmController extends Controller
         $temuan->save();
         return redirect()->route('sktjm.index')->with('success', 'Data berhasil diperbarui');
     }
+
 
     /**
      * Remove the specified resource from storage.

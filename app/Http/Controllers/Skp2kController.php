@@ -8,6 +8,7 @@ use App\Models\Temuan;
 use App\Models\Pegawai;
 use App\Models\Penyedia;
 use App\Models\Informasi;
+use App\Models\JenisTemuan;
 use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
@@ -68,8 +69,9 @@ class Skp2kController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+        $jenisTemuans = JenisTemuan::all();
         $defaultStatustgr = Statustgr::where('tgr_name', 'SKP2K')->first();
-        return view('crud.create-skp2k', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
+        return view('crud.create-skp2k', compact('informasis','jenisTemuans', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
     }
 
     /**

@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Temuan;
-use App\Models\Pembayaran;
 use App\Models\Opd;
+use App\Models\Temuan;
 use App\Models\Statustgr;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    function __construct()
-    {
-        $this->middleware('permission:dashboard-list', ['only' => ['index', 'show', 'getTemuanPerBulan']]);
-    }
+
     public function index(Request $request)
     {
+        $user = Auth::user(); // get authenticated user
         $year = $request->input('year', Carbon::now()->year); // default to current year
 
         $temuan = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
@@ -46,93 +45,226 @@ class DashboardController extends Controller
             ->whereYear('created_at', $year)
             ->get();
 
-        $jumlahTemuanTahun = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('count(*) as total'))
-            ->groupBy(DB::raw('YEAR(tgl_lhp)'))
-            ->pluck('total', 'year');
+        // jumlah temuan
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua temuan per tahun
+            $jumlahTemuanTahun = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('count(*) as total'))
+                ->groupBy(DB::raw('YEAR(tgl_lhp)'))
+                ->pluck('total', 'year');
+        } else {
+            // OPD Admin hanya melihat temuan berdasarkan opd_id mereka per tahun
+            $jumlahTemuanTahun = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('count(*) as total'))
+                ->where('opd_id', $user->opd_id)
+                ->groupBy(DB::raw('YEAR(tgl_lhp)'))
+                ->pluck('total', 'year');
+        }
 
-        $jumlahTemuan = Temuan::all()->count();
-        $jumlahRekomendasi = $temuans->sum('nilai_rekomendasi');
 
-        $jumlahTemuanStatus = Temuan::join('statuses', 'temuans.status_id', '=', 'statuses.id')
-            ->select('statuses.status as status', DB::raw('count(*) as total'))
-            ->groupBy('statuses.status')
-            ->pluck('total', 'status');
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua temuan
+            $jumlahTemuan = Temuan::count();
+        } else  {
+            // OPD Admin hanya melihat temuan berdasarkan opd_id mereka
+            $jumlahTemuan = Temuan::where('opd_id', $user->opd_id)->count();
+        }
 
-        $dibayar = Pembayaran::all();
-        $jumlahDibayar = $dibayar->sum('jumlah_pembayaran');
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua nilai rekomendasi
+            $jumlahRekomendasi = Temuan::sum('nilai_rekomendasi');
+        } else {
+            // OPD Admin hanya melihat nilai rekomendasi berdasarkan opd_id mereka
+            $jumlahRekomendasi = Temuan::where('opd_id', $user->opd_id)->sum('nilai_rekomendasi');
+        }
 
-        // Calculate the remaining amount to be paid
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua temuan berdasarkan status
+            $jumlahTemuanStatus = Temuan::join('statuses', 'temuans.status_id', '=', 'statuses.id')
+                ->select('statuses.status as status', DB::raw('count(*) as total'))
+                ->groupBy('statuses.status')
+                ->pluck('total', 'status');
+        } else {
+            // OPD Admin hanya melihat temuan berdasarkan opd_id mereka dan status
+            $jumlahTemuanStatus = Temuan::join('statuses', 'temuans.status_id', '=', 'statuses.id')
+                ->select('statuses.status as status', DB::raw('count(*) as total'))
+                ->where('temuans.opd_id', $user->opd_id)
+                ->groupBy('statuses.status')
+                ->pluck('total', 'status');
+        }
+
+        // Calculate the total payment and remaining amount
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin sees all payments
+            $dibayar = Pembayaran::where('status', 'diterima')->sum('jumlah_pembayaran');
+        } else {
+            // OPD Admin only sees payments based on their opd_id
+            $dibayar = Pembayaran::join('temuans', 'pembayarans.temuan_id', '=', 'temuans.id')
+                ->where('pembayarans.status', 'diterima')
+                ->where('temuans.opd_id', $user->opd_id)
+                ->sum('pembayarans.jumlah_pembayaran');
+        }
+
+        $jumlahDibayar = $dibayar;
         $sisaBayar = $jumlahRekomendasi - $jumlahDibayar;
 
-        $temuanPerYearMonth = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('MONTH(tgl_lhp) as month'), DB::raw('count(*) as total'))
-            ->groupBy(DB::raw('YEAR(tgl_lhp)'), DB::raw('MONTH(tgl_lhp)'))
-            ->get()
-            ->groupBy('year');
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua temuan per tahun dan bulan
+            $temuanPerYearMonth = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('MONTH(tgl_lhp) as month'), DB::raw('count(*) as total'))
+                ->groupBy(DB::raw('YEAR(tgl_lhp)'), DB::raw('MONTH(tgl_lhp)'))
+                ->get()
+                ->groupBy('year');
+        } else {
+            // OPD Admin melihat temuan mereka per tahun dan bulan
+            $temuanPerYearMonth = Temuan::select(DB::raw('YEAR(tgl_lhp) as year'), DB::raw('MONTH(tgl_lhp) as month'), DB::raw('count(*) as total'))
+                ->where('temuans.opd_id', $user->opd_id)
+                ->groupBy(DB::raw('YEAR(tgl_lhp)'), DB::raw('MONTH(tgl_lhp)'))
+                ->get()
+                ->groupBy('year');
+        }
 
-        // chart opd
-        $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
-            ->join('opds', 'temuans.opd_id', '=', 'opds.id')
-            ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
-            ->whereYear('tgl_lhp', $year)
-            ->groupBy('opds.opd_name')
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
-            });
+        // Chart for OPD: total recommendations and payments
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua data pembayaran per OPD
+            $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
+                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+                ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
+                ->whereYear('tgl_lhp', $year)
+                ->groupBy('opds.opd_name')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
+                });
+        } else {
+            // OPD Admin melihat data pembayaran hanya untuk OPD mereka
+            $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
+                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+                ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
+                ->where('temuans.opd_id', $user->opd_id)
+                ->whereYear('tgl_lhp', $year)
+                ->groupBy('opds.opd_name')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
+                });
+        }
 
-        $TemuanPerOpd = Temuan::select('opds.opd_name', DB::raw('COUNT(*) as total_temuan'))
-            ->join('opds', 'temuans.opd_id', '=', 'opds.id')
-            ->whereYear('tgl_lhp', $year)
-            ->groupBy('opds.opd_name')
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->opd_name => $item->total_temuan];
-            });
+        // Count of findings per OPD
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat jumlah temuan per OPD
+            $TemuanPerOpd = Temuan::select('opds.opd_name', DB::raw('COUNT(*) as total_temuan'))
+                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+                ->whereYear('tgl_lhp', $year)
+                ->groupBy('opds.opd_name')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->opd_name => $item->total_temuan];
+                });
+        } else {
+            // OPD Admin melihat jumlah temuan hanya untuk OPD mereka
+            $TemuanPerOpd = Temuan::select('opds.opd_name', DB::raw('COUNT(*) as total_temuan'))
+                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
+                ->where('temuans.opd_id', $user->opd_id)
+                ->whereYear('tgl_lhp', $year)
+                ->groupBy('opds.opd_name')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->opd_name => $item->total_temuan];
+                });
+        }
+
 
         $currentYear = date('Y');
 
-        // Ambil semua tahun yang ada dalam data temuan
-        $years = Temuan::selectRaw('YEAR(tgl_lhp) as year')
-            ->distinct()
-            ->pluck('year')
-            ->toArray();
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua tahun dalam data temuan
+            $years = Temuan::selectRaw('YEAR(tgl_lhp) as year')
+                ->distinct()
+                ->pluck('year')
+                ->toArray();
 
-        // Ambil data temuan per hari dalam bulan tertentu pada tahun ini
-        $temuanPerDayInMonth = Temuan::selectRaw('DATE(tgl_lhp) as date, COUNT(*) as count')
-            ->whereYear('tgl_lhp', $currentYear)
-            ->groupBy('date')
-            ->get();
+            // Ambil data temuan per hari dalam bulan tertentu pada tahun ini
+            $temuanPerDayInMonth = Temuan::selectRaw('DATE(tgl_lhp) as date, COUNT(*) as count')
+                ->whereYear('tgl_lhp', $currentYear)
+                ->groupBy('date')
+                ->get();
 
-        // Ambil data temuan per bulan dalam tahun tertentu
-        $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
-            ->groupBy('year', 'month')
-            ->get();
+            // Ambil data temuan per bulan dalam tahun tertentu
+            $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
+                ->groupBy('year', 'month')
+                ->get();
 
-        // Ambil data jumlah temuan per OPD
-        $temuanPerOPD = Temuan::selectRaw('opd_id, COUNT(*) as count')
-            ->groupBy('opd_id')
-            ->get();
+            // Ambil data jumlah temuan per OPD
+            $temuanPerOPD = Temuan::selectRaw('opd_id, COUNT(*) as count')
+                ->groupBy('opd_id')
+                ->get();
 
-        // Ambil nama OPD berdasarkan opd_id
-        $opds = OPD::all()->pluck('opd_name', 'id');
+            // Ambil nama OPD berdasarkan opd_id
+            $opds = OPD::all()->pluck('opd_name', 'id');
 
-        // Ambil data temuan dengan status_id = 3 per tahun
-        $temuanStatusSelesai = Temuan::selectRaw('YEAR(tgl_lhp) as year, COUNT(*) as count')
-            ->where('status_id', 3)
-            ->groupBy('year')
-            ->get();
+            // Data temuan per status
+            $temuanStatus = DB::table('temuans')
+                ->join('statuses', 'temuans.status_id', '=', 'statuses.id')
+                ->selectRaw('YEAR(temuans.tgl_lhp) as year, statuses.status as status_name, COUNT(*) as count')
+                ->groupBy('year', 'status_name')
+                ->get();
 
-        // Ambil data temuan per status_tgr_id
-        $temuanPerStatusTGR = Temuan::selectRaw('statustgr_id, COUNT(*) as count')
-            ->groupBy('statustgr_id')
-            ->get();
+            // Group data by year (based on tgl_lhp) and TGR status
+            $temuanPerStatusTGR = Temuan::selectRaw('YEAR(tgl_lhp) as year, statustgr_id, COUNT(*) as count')
+                ->groupBy('year', 'statustgr_id')
+                ->orderBy('year')
+                ->get();
 
-        // Ambil nama status TGR berdasarkan status_tgr_id
-        $statusTGRs = Statustgr::all()->pluck('tgr_name', 'id');
+            // Get the TGR status names
+            $statusTGRs = Statustgr::all()->pluck('tgr_name', 'id');
 
-        $jumlahOPDTemuan = Temuan::select('opd_id')
-        ->distinct()
-        ->count('opd_id');
+            // Jumlah OPD yang memiliki temuan
+            $jumlahOPDTemuan = Temuan::select('opd_id')
+                ->distinct()
+                ->count('opd_id');
+        } else {
+            // OPD Admin melihat data hanya untuk OPD mereka
+            $years = Temuan::selectRaw('YEAR(tgl_lhp) as year')
+                ->where('opd_id', $user->opd_id)
+                ->distinct()
+                ->pluck('year')
+                ->toArray();
+
+            $temuanPerDayInMonth = Temuan::selectRaw('DATE(tgl_lhp) as date, COUNT(*) as count')
+                ->where('opd_id', $user->opd_id)
+                ->whereYear('tgl_lhp', $currentYear)
+                ->groupBy('date')
+                ->get();
+
+            $temuanPerMonth = Temuan::selectRaw('YEAR(tgl_lhp) as year, MONTH(tgl_lhp) as month, COUNT(*) as count')
+                ->where('opd_id', $user->opd_id)
+                ->groupBy('year', 'month')
+                ->get();
+
+            $temuanPerOPD = Temuan::selectRaw('opd_id, COUNT(*) as count')
+                ->where('opd_id', $user->opd_id)
+                ->groupBy('opd_id')
+                ->get();
+
+            $opds = OPD::where('id', $user->opd_id)->pluck('opd_name', 'id');
+
+            $temuanStatus = DB::table('temuans')
+                ->join('statuses', 'temuans.status_id', '=', 'statuses.id')
+                ->selectRaw('YEAR(temuans.tgl_lhp) as year, statuses.status as status_name, COUNT(*) as count')
+                ->where('temuans.opd_id', $user->opd_id)
+                ->groupBy('year', 'status_name')
+                ->get();
+
+            $temuanPerStatusTGR = Temuan::selectRaw('YEAR(tgl_lhp) as year, statustgr_id, COUNT(*) as count')
+                ->where('opd_id', $user->opd_id)
+                ->groupBy('year', 'statustgr_id')
+                ->orderBy('year')
+                ->get();
+
+            $statusTGRs = Statustgr::all()->pluck('tgr_name', 'id');
+
+            $jumlahOPDTemuan = Temuan::where('opd_id', $user->opd_id)
+                ->distinct()
+                ->count('opd_id');
+        }
 
         return view('dashboard', compact(
             'temuans',
@@ -153,7 +285,7 @@ class DashboardController extends Controller
             'temuanPerMonth',
             'temuanPerOPD',
             'opds',
-            'temuanStatusSelesai',
+            'temuanStatus',
             'temuanPerStatusTGR',
             'statusTGRs',
             'jumlahOPDTemuan'
@@ -161,31 +293,43 @@ class DashboardController extends Controller
     }
 
 
-    public function getTemuanPerBulan(Request $request)
-    {
-        $year = $request->input('year', Carbon::now()->year);
+    // public function getTemuanPerBulan(Request $request)
+    // {
+    //     $year = $request->input('year', Carbon::now()->year);
+    //     $user = Auth::user(); // Mendapatkan pengguna yang terautentikasi
 
-        $temuan = Temuan::selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
-            ->whereYear('tgl_lhp', $year)
-            ->groupBy('month')
-            ->get();
+    //     // Inisialisasi query berdasarkan peran pengguna
+    //     if ($user->hasRole('Super Admin')) {
+    //         $temuanQuery = Temuan::query();
+    //     } else {
+    //         $temuanQuery = Temuan::where('opd_id', $user->opd_id);
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Unauthorized action.'
+    //         ], 403);
+    //     }
 
-        $months = [];
-        $counts = [];
+    //     // Mengambil data temuan per bulan untuk tahun yang dipilih
+    //     $temuan = $temuanQuery->selectRaw('MONTH(tgl_lhp) as month, COUNT(*) as count')
+    //         ->whereYear('tgl_lhp', $year)
+    //         ->groupBy('month')
+    //         ->get();
 
-        for ($i = 1; $i <= 12; $i++) {
-            $monthData = $temuan->firstWhere('month', $i);
-            $months[] = Carbon::create()->month($i)->format('F');
-            $counts[] = $monthData ? $monthData->count : 0;
-        }
+    //     $months = [];
+    //     $counts = [];
 
-        return response()->json([
-            'months' => $months,
-            'counts' => $counts,
-        ]);
-    }
+    //     // Mengisi data untuk setiap bulan
+    //     for ($i = 1; $i <= 12; $i++) {
+    //         $monthData = $temuan->firstWhere('month', $i);
+    //         $months[] = Carbon::create()->month($i)->format('F');
+    //         $counts[] = $monthData ? $monthData->count : 0;
+    //     }
 
-
+    //     return response()->json([
+    //         'months' => $months,
+    //         'counts' => $counts,
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.

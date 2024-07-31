@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        if (Auth::user()->hasRole('Payment Validator')) {
+            return redirect()->route('pembayaran.validate.list');
+        }
+
+        return view('dashboard'); // Default dashboard for other users
     }
 }

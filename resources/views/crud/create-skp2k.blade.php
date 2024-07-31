@@ -120,9 +120,15 @@
                                 <textarea class="form-control" id="rekomendasi" name="rekomendasi"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="jenis_jaminan">Jenis Jaminan</label>
-                                <input type="text-area" class="form-control" id="jenis_jaminan" name="jenis_jaminan"
-                                    value="{{ old('jenis_jaminan') }}">
+                                <label for="jenistemuan_id">Jenis Jaminan</label>
+                                <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
+                                    @foreach ($jenisTemuans as $jenisTemuan)
+                                        <option value="{{ $jenisTemuan->id }}"
+                                            {{ old('jenistemuan_id') == $jenisTemuan->id ? 'selected' : '' }}>
+                                            {{ $jenisTemuan->jenis_temuan }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="jumlah_jaminan">Jumlah Jaminan</label>
@@ -183,6 +189,12 @@
             placeholder: "Pilih OPD",
             allowClear: true
         });
+
+        $('#penyedia_id').select2({
+                placeholder: "Pilih Penyedia",
+                allowClear: true
+            });
+
 
         $('#sktjmForm').on('submit', function(e) {
             const statusId = $('#status_id').val();

@@ -16,6 +16,10 @@ class Opd extends Model
     {
         return $this->hasMany(Temuan::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
     public function pegawais()
     {
         return $this->hasMany(Pegawai::class);

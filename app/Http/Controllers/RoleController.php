@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Opd;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,25 +35,36 @@ class RoleController extends Controller
     public function create(): View
     {
         $permission = Permission::get();
-        return view('roles.create', compact('permission'));
+        $opds = Opd::all(); // Mengambil semua data OPD
+        return view('roles.create', compact('permission', 'opds'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
-        ]);
 
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+     public function store(Request $request)
+     {
+         $this->validate($request, [
+             'name' => 'required|unique:roles,name',
+             'permission' => 'required|array',
+             'role_type' => 'required|in:Super Admin,OPD Admin',
+             'opd_id' => 'required_if:role_type,OPD Admin|exists:opds,id',
+         ]);
 
-        return redirect()->route('role.index')
-            ->with('success', 'Role created successfully');
-    }
+         $role = Role::create([
+             'name' => $request->name,
+             'role_type' => $request->role_type,
+             'opd_id' => $request->role_type === 'OPD Admin' ? $request->opd_id : null,
+         ]);
+
+         $role->syncPermissions($request->input('permission'));
+
+         return redirect()->route('role.index')->with('success', 'Role created successfully');
+     }
+
+
+
 
     /**
      * Display the specified resource.
@@ -89,12 +101,21 @@ class RoleController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'permission' => 'required',
+            'role_type' => 'required',
+            'opd_id' => 'required_if:role_type,OPD Admin|exists:opds,id',
         ]);
 
         $role = Role::find($id);
         $role->name = $request->input('name');
-        $role->save();
+        $role->role_type = $request->input('role_type');
 
+        if ($request->input('role_type') === 'OPD Admin') {
+            $role->opd_id = $request->input('opd_id');
+        } else {
+            $role->opd_id = null; // Reset opd_id jika bukan OPD Admin
+        }
+
+        $role->save();
         $role->syncPermissions($request->input('permission'));
 
         return redirect()->route('role.index')

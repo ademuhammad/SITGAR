@@ -38,10 +38,18 @@
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center">
-                <img src="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" alt="">
-                <span class="d-none d-lg-block">SITEGAR</span>
-            </a>
+            <div class="logo d-flex flex-column align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" alt="logo">
+                    <span class="d-none d-lg-block">SITGAR</span>
+                    <img height="" src="{{ asset('NiceAdmin/assets/img/logokabupatenketapang.png') }}"
+                        alt="logo2">
+                </div>
+                <div class="logo-text">
+                    <h6>KABUPATEN KETAPANG</h6>
+                </div>
+            </div>
+
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->
 
@@ -171,6 +179,12 @@
                             <i class="bi bi-circle"></i><span> Penyedia</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('jenistemuan.index') }}"
+                            class="{{ Request::is('jenistemuan') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span> Jenis Jaminan</span>
+                        </a>
+                    </li>
                 </ul>
             </li><!-- End Components Nav -->
 
@@ -204,6 +218,12 @@
                         <a href="{{ route('temuans.dataskp2ks') }}"
                             class="{{ Request::is('temuans/data-skp2ks') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span> SKP2KS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('surat-dipersamakan.index') }}"
+                            class="{{ Request::is('surat-dipersamakan') ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span> Surat Dipersamakan</span>
                         </a>
                     </li>
 
@@ -250,7 +270,7 @@
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
-            &copy; Copyright <strong><span>SITEGAR</span></strong> Apps
+            &copy; Copyright <strong><span>SITGAR</span></strong> Apps
         </div>
 
     </footer><!-- End Footer -->

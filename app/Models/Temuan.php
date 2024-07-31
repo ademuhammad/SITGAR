@@ -67,6 +67,10 @@ class Temuan extends Model
     {
         return $this->belongsTo(Penyedia::class);
     }
+    public function jenis_temuan()
+    {
+        return $this->belongsTo(JenisTemuan::class);
+    }
 
     // Relasi ke tabel 'pembayaran'
     public function pembayarans()

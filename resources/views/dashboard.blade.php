@@ -17,86 +17,29 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
+                        {{-- temuan keseluruhan --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card buy-card h-100">
+                            <div class="card info-card buy-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Temuan Keseluruhan</h5>
                                     <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-building"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 id="tgl-lhp-number">{{ $jumlahTemuan }}</h6>
+                                            <h6 class="tes" style="font-size: 16px" id="tgl-lhp-number">
+                                                {{ $jumlahTemuan }}
+                                            </h6>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {{-- temuan berdasarkan status --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card sales-card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Jumlah Nilai Rekomendasi</h5>
-                                    <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-currency-dollar"></i>
-                                        </div>
-                                        <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px">
-                                                Rp.{{ number_format($jumlahRekomendasi, 2, ',', '.') }}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Sales Card -->
-                        <!-- Revenue Card -->
-                        <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card revenue-card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Jumlah Nilai Telah Dibayar </h5>
-
-                                    <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-check-all"></i>
-                                        </div>
-                                        <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px">
-                                                Rp.{{ number_format($jumlahDibayar, 2, ',', '.') }}
-                                            </h6>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div><!-- End Revenue Card -->
-
-                        <!-- New Card for Remaining Amount to be Paid -->
-                        <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card sales-card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Sisa Yang Belum Dibayar</h5>
-                                    <div class="d-flex align-items-center">
-                                        <div
-                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-currency-dollar"></i>
-                                        </div>
-                                        <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px">
-                                                Rp.{{ number_format($sisaBayar, 2, ',', '.') }}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Sisa Bayar Card -->
-
-                        <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card customers-card h-100">
+                            <div class="card info-card customers-card ">
                                 <div class="filter">
                                     <a class="icon" href="#" data-bs-toggle="dropdown"><i
                                             class="bi bi-three-dots"></i></a>
@@ -127,34 +70,94 @@
                                             <i class="bi bi-info-square-fill"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 id="status-number">{{ $firstCount }}</h6>
+                                            <h6 class="tes" style="font-size: 16px" id="status-number">
+                                                {{ $firstCount }}</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- End Customers Card -->
-
+                        {{-- jumlah opd  --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card h-100">
+                            <div class="card info-card ">
                                 <div class="card-body">
                                     <h5 class="card-title">Jumlah OPD dengan Temuan</h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-building"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 >{{ $jumlahOPDTemuan }}</h6>
+                                            <h6 class="tes" style="font-size: 16px">{{ $jumlahOPDTemuan }}</h6>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div><!-- End Jumlah OPD dengan Temuan Card -->
+                        </div>
+                        {{-- jumlah nilai yg sudah dibayar --}}
+                        <div class="col-xxl-4 col-md-4 mb-3">
+                            <div class="card info-card revenue-card ">
+                                <div class="card-body">
+                                    <h5 class="card-title">Jumlah Nilai Telah Dibayar </h5>
 
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-check-all"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="tes" style="font-size: 16px">
+                                                Rp.{{ number_format($jumlahDibayar, 2, ',', '.') }}
+                                            </h6>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{-- jumlah nilai rekomendasi --}}
+                        <div class="col-xxl-4 col-md-4 mb-3">
+                            <div class="card info-card sales-card ">
+                                <div class="card-body">
+                                    <h5 class="card-title">Jumlah Nilai Rekomendasi</h5>
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-wallet"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="tes" style="font-size: 16px">
+                                                Rp.{{ number_format($jumlahRekomendasi, 2, ',', '.') }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- sisa yang belum dibayar --}}
+                        <div class="col-xxl-4 col-md-4 mb-3">
+                            <div class="card info-card sales-card ">
+                                <div class="card-body">
+                                    <h5 class="card-title">Sisa Yang Belum Dibayar</h5>
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-credit-card"></i>
+
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 class="tes" style="font-size: 16px">
+                                                Rp.{{ number_format($sisaBayar, 2, ',', '.') }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div><!-- End Left side columns -->
+                </div>
             </div>
-
             <div class="row">
                 <!-- Temuan Dalam Bulan -->
                 <div class="col-lg-6">
@@ -211,34 +214,12 @@
             </div>
 
             <div class="row">
-                <!-- Temuan Status Selesai per Tahun -->
-                <div class="col-lg-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Temuan Selesai Per Tahun</h5>
-                            <canvas id="statusSelesaiChart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Temuan berdasarkan OPD -->
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="card-title text-center">Temuan Berdasarkan OPD</h5>
                             <canvas id="opdValueChart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Temuan per Jenis Status TGR -->
-                <div class="col-lg-6">
-                    <div class="card ">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Temuan Per Status TGR</h5>
-                            <canvas id="statusTGRChart" style="height: 200px" height="200" width="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -309,6 +290,31 @@
                 </div>
             </div>
 
+
+            <div class="row">
+                <!-- Temuan per Jenis Status TGR -->
+                <div class="col-lg-6">
+                    <div class="card"> <!-- Adjust card height here -->
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Temuan Per Status TGR</h5>
+                            <canvas id="statusTGRChart" height="200"></canvas> <!-- Adjust chart height here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temuan Status Selesai per Tahun -->
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Temuan Selesai Per Tahun</h5>
+                            <canvas id="statusSelesaiChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
             <div class="row">
 
             </div>
@@ -326,8 +332,7 @@
             document.getElementById('status-label').innerText = '| ' + status;
             document.getElementById('status-number').innerText = count;
         }
-    </script>
-    <script>
+
         function updateSales(year, jumlahTemuan, jumlahRekomendasi) {
             document.querySelector('#sales-status-label').textContent = '| ' + year;
             document.querySelector('.tes').textContent = jumlahTemuan;
@@ -337,19 +342,18 @@
         function formatRupiah(amount) {
             return 'Rp' + Number(amount).toLocaleString('id-ID');
         }
-    </script>
-    <script>
+
         function updateStatus(status, number) {
             document.getElementById('status-label').innerText = '| ' + status;
             document.getElementById('status-number').innerText = number;
         }
-    </script>
-    <script>
+
         function updateSales(status, number) {
             document.getElementById('sales-status-label').innerText = '| ' + status;
             document.getElementById('sales-status-number').innerText = number;
         }
     </script>
+
     <script>
         let monthChart;
         let monthlyFindingsChart;
@@ -491,22 +495,44 @@
 
         // Inisialisasi grafik Temuan Status Selesai per Tahun
         function initializeStatusSelesaiChart() {
-            const data = @json($temuanStatusSelesai);
-            const labels = data.map(item => item.year);
-            const counts = data.map(item => item.count);
+            const data = @json($temuanStatus);
+
+            // Extract unique years and sort them in ascending order
+            const labels = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            const statusNames = [...new Set(data.map(item => item.status_name))];
+
+            // Define a color palette (example colors, adjust as needed)
+            const colors = [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 206, 86, 1)'
+            ];
+
+            // Prepare datasets
+            const datasets = statusNames.map((statusName, index) => {
+                const statusData = data.filter(item => item.status_name === statusName);
+                const counts = labels.map(year => {
+                    const record = statusData.find(item => item.year == year);
+                    return record ? record.count : 0; // Default to 0 if no record for that year
+                });
+
+                return {
+                    label: statusName,
+                    data: counts,
+                    backgroundColor: colors[index % colors.length].replace('1)', '0.2)'),
+                    borderColor: colors[index % colors.length],
+                    borderWidth: 1
+                };
+            });
 
             const ctx = document.getElementById('statusSelesaiChart').getContext('2d');
-            status3YearChart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Jumlah Temuan',
-                        data: counts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     scales: {
@@ -518,60 +544,79 @@
             });
         }
 
-         // Inisialisasi grafik Temuan per Jenis Status TGR
-    function initializeStatusTGRChart() {
-        const data = @json($temuanPerStatusTGR);
-        const statusTGRNames = @json($statusTGRs);
-        const labels = data.map(item => statusTGRNames[item.statustgr_id] || 'Belum Ada Status');
-        const counts = data.map(item => item.count);
 
-        const ctx = document.getElementById('statusTGRChart').getContext('2d');
-        statusTGRChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Temuan',
-                    data: counts,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                const label = tooltipItem.label || '';
-                                const value = tooltipItem.raw || 0;
-                                return `${label}: ${value}`;
+
+        function initializeStatusTGRChart() {
+            const data = @json($temuanPerStatusTGR);
+            const statusTGRNames = @json($statusTGRs);
+
+            // Define an array of colors
+            const colors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(199, 199, 199, 1)',
+                'rgba(255, 99, 71, 1)',
+                'rgba(144, 238, 144, 1)',
+                'rgba(0, 191, 255, 1)'
+            ];
+
+            // Extract unique years and statusTGR IDs from the data
+            const years = [...new Set(data.map(item => item.year))];
+            const statusTGRIds = [...new Set(data.map(item => item.statustgr_id))];
+
+            // Create datasets for each TGR status
+            const datasets = statusTGRIds.map((statusTGRId, index) => {
+                return {
+                    label: statusTGRNames[statusTGRId] || 'Belum Ada Status',
+                    data: years.map(year => {
+                        const item = data.find(d => d.year === year && d.statustgr_id === statusTGRId);
+                        return item ? item.count : 0;
+                    }),
+                    backgroundColor: colors[index % colors.length],
+                    borderColor: colors[index % colors.length],
+                    borderWidth: 1,
+                    fill: false // Set to true if you want an area chart
+                };
+            });
+
+            const ctx = document.getElementById('statusTGRChart').getContext('2d');
+            statusTGRChart = new Chart(ctx, {
+                type: 'line', // Set to 'line' or 'area'
+                data: {
+                    labels: years,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const label = tooltipItem.dataset.label || '';
+                                    const value = tooltipItem.raw || 0;
+                                    return `${label}: ${value}`;
+                                }
                             }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
-            }
-        });
-    }
-
+            });
+        }
 
         // Inisialisasi semua grafik pada saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {

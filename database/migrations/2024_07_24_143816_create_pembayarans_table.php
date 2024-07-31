@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('jumlah_pembayaran', 15, 2); // Jumlah pembayaran (Rp)
             $table->date('tgl_pembayaran'); // Tanggal pembayaran
             $table->string('bukti_pembayaran')->nullable(); // Kolom bukti pembayaran untuk menyimpan file PDF jika diperlukan
+            $table->string('status')->default('pending');
 
             // Define foreign key
             $table->foreign('temuan_id')->references('id')->on('temuans')->onDelete('cascade');

@@ -73,6 +73,10 @@ class PermissionTableSeeder extends Seeder
             'penyedia-create',
             'penyedia-edit',
             'penyedia-delete',
+
+            'show-lhp',
+            'validate-payment',
+
          ];
 
          foreach ($permissions as $permission) {
