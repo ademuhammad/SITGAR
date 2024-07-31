@@ -42,6 +42,7 @@ class PembayaranTemuanController extends Controller
     }
 
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -182,7 +183,7 @@ class PembayaranTemuanController extends Controller
         $temuan = $pembayarans->first()->temuan ?? null;
 
         // Hitung total pembayaran
-        $totalPembayaran = $pembayarans->sum('jumlah_pembayaran');
+        $totalPembayaran = $pembayarans->where('status', 'diterima')->sum('jumlah_pembayaran');
 
         // Hitung nilai rekomendasi dari temuan, jika temuan ada
         $nilaiRekomendasi = $temuan ? $temuan->nilai_rekomendasi : 0;
@@ -234,9 +235,11 @@ class PembayaranTemuanController extends Controller
 
         $request->validate([
             'status' => 'required|in:diterima,ditolak',
+            'keterangan' => 'nullable|string|max:255', // Validasi untuk keterangan
         ]);
 
         $pembayaran->status = $request->status;
+        $pembayaran->keterangan = $request->keterangan; // Menyimpan keterangan
         $pembayaran->save();
 
         if ($pembayaran->status == 'diterima') {
@@ -259,5 +262,6 @@ class PembayaranTemuanController extends Controller
 
         return redirect()->route('pembayaran.validate.list')->with('success', 'Status pembayaran berhasil diperbarui.');
     }
+
 
 }

@@ -22,6 +22,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="no_lhp">No LHP</label>
+                                    <input type="text" class="form-control" id="no_lhp" name="no_lhp"
+                                        value="{{ old('no_lhp') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tgl_lhp">Tanggal LHP</label>
+                                    <input type="date" class="form-control" id="tgl_lhp" name="tgl_lhp"
+                                        value="{{ old('tgl_lhp') }}">
+                                </div>
+                                <div class="form-group">
                                     <label for="informasis_id">Informasi</label>
                                     <select class="form-control" id="informasis_id" name="informasis_id">
                                         @foreach ($informasis as $informasi)
@@ -76,44 +86,28 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="no_lhp">No LHP</label>
-                                    <input type="text" class="form-control" id="no_lhp" name="no_lhp"
-                                        value="{{ old('no_lhp') }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="tgl_lhp">Tanggal LHP</label>
-                                    <input type="date" class="form-control" id="tgl_lhp" name="tgl_lhp"
-                                        value="{{ old('tgl_lhp') }}">
-                                </div>
                                 <div class="form-group">
                                     <label for="statustgr_id">Status TGR</label>
                                     <select class="form-control" id="statustgr_id" name="statustgr_id">
                                         <option value="">Belum Ada Status</option>
                                         @foreach ($statustgrs as $statustgr)
                                             <option value="{{ $statustgr->id }}"
-                                                {{ $temuan->statustgr_id == $statustgr->id ? 'selected' : '' }}>
+                                                {{ old('statustgr_id') == $statustgr->id ? 'selected' : '' }}>
                                                 {{ $statustgr->tgr_name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-
-
                                 <div class="form-group">
-                                    <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
-
-                                    <textarea class="form-control" id="obrik_pemeriksaan" name="obrik_pemeriksaan">{{ old('obrik_pemeriksaan') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="temuan">Temuan</label>
-                                    <textarea class="form-control" id="temuan" name="temuan">{{ old('temuan') }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="rekomendasi">Rekomendasi</label>
-                                    <textarea class="form-control" id="rekomendasi" name="rekomendasi">{{ old('rekomendasi') }}</textarea>
+                                    <label for="jenistemuan_id">Jenis Jaminan</label>
+                                    <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
+                                        @foreach ($jenisTemuans as $jenisTemuan)
+                                            <option value="{{ $jenisTemuan->id }}"
+                                                {{ old('jenistemuan_id') == $jenisTemuan->id ? 'selected' : '' }}>
+                                                {{ $jenisTemuan->jenis_temuan }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="nilai_rekomendasi_display">Nilai Rekomendasi</label>
@@ -122,9 +116,34 @@
                                     <input type="hidden" id="nilai_rekomendasi" name="nilai_rekomendasi"
                                         value="{{ old('nilai_rekomendasi') }}">
                                 </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+
+
+                                <div class="form-group">
+                                    <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
+                                    <textarea class="form-control" id="obrik_pemeriksaan" name="obrik_pemeriksaan" style="width: 100%; height: 150px;">{{ old('obrik_pemeriksaan') }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="temuan">Temuan</label>
+                                    <textarea class="form-control" id="temuan" name="temuan" style="width: 100%; height: 150px;">{{ old('temuan') }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rekomendasi">Rekomendasi</label>
+                                    <textarea class="form-control" id="rekomendasi" name="rekomendasi" style="width: 100%; height: 150px;">{{ old('rekomendasi') }}</textarea>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="bukti_pembayaran">Bukti Pembayaran (Optional)</label>
+                                    <input type="file" class="form-control" id="bukti_pembayaran" name="bukti_pembayaran">
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
                     </form>
                 </div>
             </div>
@@ -158,20 +177,32 @@
                 // Update the hidden input with the numerical value
                 document.getElementById('nilai_rekomendasi').value = value.replace(/[^,\d]/g, '');
             }
-        </script>
 
-        <script>
-            $('#pegawai_id').select2({
-                placeholder: "Pilih PPK",
-                allowClear: true
-            });
-            $('#opd_id').select2({
-                placeholder: "Pilih OPD",
-                allowClear: true
-            });
-            $('#penyedia_id').select2({
-                placeholder: "Pilih Penyedia",
-                allowClear: true
+            $(document).ready(function() {
+                $('#pegawai_id').select2({
+                    placeholder: "Pilih PPK",
+                    allowClear: true
+                });
+                $('#opd_id').select2({
+                    placeholder: "Pilih OPD",
+                    allowClear: true
+                });
+                $('#penyedia_id').select2({
+                    placeholder: "Pilih Penyedia",
+                    allowClear: true
+                });
+                $('#status_id').select2({
+                    placeholder: "Pilih Status",
+                    allowClear: true
+                });
+                $('#statustgr_id').select2({
+                    placeholder: "Pilih Status TGR",
+                    allowClear: true
+                });
+                $('#informasis_id').select2({
+                    placeholder: "Pilih Informasi",
+                    allowClear: true
+                });
             });
         </script>
     @endsection

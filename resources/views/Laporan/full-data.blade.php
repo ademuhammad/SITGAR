@@ -205,58 +205,51 @@
                     </script>
 
                     <div class="container">
-                        <div class="card" style="padding: 10px; background: #c6dff6">
-                            <!-- Filter Form -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="status_id">Filter Status:</label>
-                                        <select id="status_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="no_lhp">Filter No LHP:</label>
-                                        <input type="text" id="no_lhp" class="form-control"
-                                            placeholder="Search No LHP">
-                                    </div>
+                        {{-- <div class="card" style="padding: 10px; background: #c6dff6"> --}}
+                        <!-- Filter Form -->
+                        <div class="row pb-3">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="status_id">Status:</label>
+                                    <select id="status_id" class="form-control">
+                                        <option value="">All</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="opd_id">Filter OPD:</label>
-                                            <select id="opd_id" class="form-control">
-                                                <option value="">All</option>
-                                                @foreach ($opds as $opd)
-                                                    <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="no_lhp">No LHP:</label>
+                                    <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="start_date">Filter Tanggal LHP Mulai:</label>
-                                        <input type="date" id="start_date" class="form-control" placeholder="Start Date">
-                                    </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="opd_id">OPD:</label>
+                                    <select id="opd_id" class="form-control">
+                                        <option value="">All</option>
+                                        @foreach ($opds as $opd)
+                                            <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="end_date">Filter Tanggal LHP Selesai:</label>
-                                        <input type="date" id="end_date" class="form-control" placeholder="End Date">
-                                    </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="start_date">Tanggal LHP Mulai:</label>
+                                    <input type="date" id="start_date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="end_date">Tanggal LHP Selesai:</label>
+                                    <input type="date" id="end_date" class="form-control">
                                 </div>
                             </div>
                         </div>
+
 
                         <table id="data-table" class="display" style="width:100%">
                             <thead>

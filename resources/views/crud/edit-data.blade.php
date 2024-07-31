@@ -1,5 +1,3 @@
-{{-- resources/views/crud/edit-temuan.blade.php --}}
-
 @extends('template.header-footer')
 
 @section('content')
@@ -7,7 +5,7 @@
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <h1>Edit Temuan</h1>
+                <h3>Edit Temuan</h3>
 
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -19,29 +17,29 @@
                     </div>
                 @endif
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
                 <form action="{{ route('data.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-
                     <div class="row">
                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="no_lhp">No LHP</label>
+                                <input type="text" class="form-control" id="no_lhp" name="no_lhp" value="{{ $data->no_lhp }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="tgl_lhp">Tanggal LHP</label>
+                                <input type="date" class="form-control" id="tgl_lhp" name="tgl_lhp" value="{{ $data->tgl_lhp }}">
+                            </div>
                             <div class="form-group">
                                 <label for="informasis_id">Informasi</label>
                                 <select class="form-control" id="informasis_id" name="informasis_id">
                                     @foreach ($informasis as $informasi)
                                         <option value="{{ $informasi->id }}" {{ $data->informasis_id == $informasi->id ? 'selected' : '' }}>
-                                            {{ $informasi->informations_name }}
+                                            {{ $informasi->dinas_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="opd_id">OPD</label>
                                 <select class="form-control" id="opd_id" name="opd_id">
@@ -52,7 +50,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="status_id">Status</label>
                                 <select class="form-control" id="status_id" name="status_id">
@@ -63,19 +60,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div class="form-group">
-                                <label for="statustgr_id">Status TGR</label>
-                                <select class="form-control" id="statustgr_id" name="statustgr_id">
-                                    <option value="" {{ is_null($data->statustgr_id) ? 'selected' : '' }}>Pilih Status TGR</option>
-                                    @foreach ($statustgrs as $statustgr)
-                                        <option value="{{ $statustgr->id }}" {{ $data->statustgr_id == $statustgr->id ? 'selected' : '' }}>
-                                            {{ $statustgr->tgr_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
                             <div class="form-group">
                                 <label for="pegawai_id">Nama PPK</label>
                                 <select class="form-control" id="pegawai_id" name="pegawai_id">
@@ -96,50 +80,57 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
-
-
                             <div class="form-group">
-                                <label for="no_lhp">No LHP</label>
-                                <input type="text" class="form-control" id="no_lhp" name="no_lhp" value="{{ $data->no_lhp }}">
+                                <label for="statustgr_id">Status TGR</label>
+                                <select class="form-control" id="statustgr_id" name="statustgr_id">
+                                    <option value="" {{ is_null($data->statustgr_id) ? 'selected' : '' }}>Pilih Status TGR</option>
+                                    @foreach ($statustgrs as $statustgr)
+                                        <option value="{{ $statustgr->id }}" {{ $data->statustgr_id == $statustgr->id ? 'selected' : '' }}>
+                                            {{ $statustgr->tgr_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-
                             <div class="form-group">
-                                <label for="tgl_lhp">Tanggal LHP</label>
-                                <input type="date" class="form-control" id="tgl_lhp" name="tgl_lhp" value="{{ $data->tgl_lhp }}">
+                                <label for="jenistemuan_id">Jenis Jaminan</label>
+                                <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
+                                    @foreach ($jenisTemuans as $jenisTemuan)
+                                        <option value="{{ $jenisTemuan->id }}" {{ $data->jenistemuan_id == $jenisTemuan->id ? 'selected' : '' }}>
+                                            {{ $jenisTemuan->jenis_temuan }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-
-                            <div class="form-group">
-                                <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
-                                <textarea class="form-control" id="obrik_pemeriksaan" name="obrik_pemeriksaan">{{ $data->obrik_pemeriksaan }}</textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="temuan">Temuan</label>
-                                <textarea class="form-control" id="temuan" name="temuan">{{ $data->temuan }}</textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="rekomendasi">Rekomendasi</label>
-                                <textarea class="form-control" id="rekomendasi" name="rekomendasi">{{ $data->rekomendasi }}</textarea>
-                            </div>
-
                             <div class="form-group">
                                 <label for="nilai_rekomendasi_display">Nilai Rekomendasi</label>
                                 <input type="text" class="form-control" id="nilai_rekomendasi_display" oninput="formatRupiah(this)" value="{{ number_format($data->nilai_rekomendasi, 0, ',', '.') }}">
                                 <input type="hidden" id="nilai_rekomendasi" name="nilai_rekomendasi" value="{{ $data->nilai_rekomendasi }}">
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="bukti_surat">Bukti Surat (PDF)</label>
-                        <input type="file" class="form-control-file" id="bukti_surat" name="bukti_surat">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="obrik_pemeriksaan">Objek Pemeriksaan</label>
+                                <textarea class="form-control" id="obrik_pemeriksaan" name="obrik_pemeriksaan" style="width: 100%; height: 150px;">{{ $data->obrik_pemeriksaan }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="temuan">Temuan</label>
+                                <textarea class="form-control" id="temuan" name="temuan" style="width: 100%; height: 150px;">{{ $data->temuan }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="rekomendasi">Rekomendasi</label>
+                                <textarea class="form-control" id="rekomendasi" name="rekomendasi" style="width: 100%; height: 150px;">{{ $data->rekomendasi }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="bukti_pembayaran">Bukti Pembayaran (Optional)</label>
+                                <input type="file" class="form-control" id="bukti_pembayaran" name="bukti_pembayaran">
+                                @if($data->bukti_pembayaran)
+                                    <a href="{{ Storage::url($data->bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
                 </form>
             </div>
         </div>
@@ -171,20 +162,12 @@
             element.value = 'Rp ' + rupiah;
 
             // Update the hidden input with the numerical value
-            document.getElementById('nilai_rekomendasi').value = value.replace(/[^,\d]/g, '');
+            document.getElementById('nilai_rekomendasi').value = value.replace(/\./g, '');
         }
 
-        $('#pegawai_id').select2({
-            placeholder: "Pilih PPK",
-            allowClear: true
-        });
-        $('#opd_id').select2({
-            placeholder: "Pilih OPD",
-            allowClear: true
-        });
-        $('#penyedia_id').select2({
-            placeholder: "Pilih Penyedia",
-            allowClear: true
+        $(document).ready(function() {
+            $('#informasis_id, #opd_id, #status_id, #pegawai_id, #penyedia_id, #statustgr_id, #jenistemuan_id').select2();
         });
     </script>
+</main>
 @endsection

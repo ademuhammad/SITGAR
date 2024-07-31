@@ -123,7 +123,7 @@
                             <th>Tanggal Pembayaran</th>
                             <th>Bukti Pembayaran</th>
                             <th>Status</th>
-                            <th>OPD Name</th>
+                            <th>OPD </th>
                             <th>No LHP</th>
                             <th>Aksi</th>
                         </tr>
@@ -152,10 +152,14 @@
                                                 <option value="diterima">Terima</option>
                                                 <option value="ditolak">Tolak</option>
                                             </select>
+                                            <textarea name="keterangan" class="form-control mb-2" placeholder="Tambah keterangan (opsional)"></textarea>
                                             <button type="submit" class="btn btn-success btn-sm">Simpan</button>
                                         </form>
                                     @else
                                         {{ ucfirst($pembayaran->status) }}
+                                        @if ($pembayaran->keterangan)
+                                            <p><strong>Keterangan:</strong> {{ $pembayaran->keterangan }}</p>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

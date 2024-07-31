@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h1>History Pembayaran</h1>
                 <h5>No LHP: {{ $temuan->no_lhp }}</h5>
-                <a href="{{ route('pembayaran-history.pdf') }}" class="btn btn-primary mb-3">Download PDF</a>
+                <a href="{{ route('pembayaran-history.pdf') }}" class="btn btn-success mb-3">Download PDF</a>
 
                 <table class="table table-bordered">
                     <thead>
@@ -20,7 +20,8 @@
                             <th scope="col">Jumlah Pembayaran</th>
                             <th scope="col">Tanggal Pembayaran</th>
                             <th scope="col">Bukti Pembayaran</th>
-                            <th scope="col">Status</th> <!-- Tambahkan kolom status -->
+                            <th scope="col">Status</th>
+                            <th scope="col">Keterangan</th> <!-- New column for keterangan -->
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +36,8 @@
                                        Tidak Ada
                                     @endif
                                 </td>
-                                <td>{{ ucfirst($pembayaran->status) }}</td> <!-- Tampilkan status -->
+                                <td>{{ ucfirst($pembayaran->status) }}</td>
+                                <td>{{ $pembayaran->keterangan ?? 'Tidak ada keterangan' }}</td> <!-- Display keterangan -->
                             </tr>
                         @endforeach
                     </tbody>

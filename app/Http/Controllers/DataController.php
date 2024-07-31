@@ -11,15 +11,16 @@ use App\Models\Penyedia;
 use App\Models\Informasi;
 use App\Models\Statustgr;
 use App\Exports\DataExport;
-use Illuminate\Http\Request;
+use App\Models\JenisTemuan;
 // use Maatwebsite\Excel\Excel;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Controllers\Controller;
-use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Facades\Excel;
 //use Barryvdh\DomPDF\Facade as PDF;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Yajra\DataTables\Facades\DataTables;
 
 class DataController extends Controller
 {
@@ -145,8 +146,9 @@ class DataController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+        $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
 
-        return view('crud.create-data', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
+        return view('crud.create-data', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias','jenisTemuans'));
     }
 
     public function store(Request $request)
@@ -164,10 +166,11 @@ class DataController extends Controller
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+            'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'jenis_jaminan' => 'nullable|string|max:255',
         ]);
 
-        $temuan = new Temuan($request->except('bukti_pembayaran')); // Exclude the file from mass assignment
+        $temuan = new Temuan($request->except('bukti_pembayaran'));
 
         if ($request->hasFile('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
@@ -176,7 +179,6 @@ class DataController extends Controller
             $temuan->bukti_pembayaran = $path;
         }
 
-        // Initialize payment fields
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
 
@@ -209,8 +211,9 @@ class DataController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+        $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
         // Tampilkan view edit atau form edit sesuai kebutuhan Anda
-        return view('crud.edit-data', compact('data', 'opds', 'statustgrs', 'pegawais', 'penyedias', 'informasis', 'statuses'));
+        return view('crud.edit-data', compact('jenisTemuans','data', 'opds', 'statustgrs', 'pegawais', 'penyedias', 'informasis', 'statuses'));
     }
 
     public function update(Request $request, $id)
