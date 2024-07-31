@@ -132,7 +132,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <a class="nav-link {{ Request::is('dashboard.index') ? 'active' : '' }}" href="{{ route('dashboard.index') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>

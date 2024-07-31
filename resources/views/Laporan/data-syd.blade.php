@@ -4,16 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>Data Surat Dipersamakan</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">SITGAR</a></li>
-                    <li class="breadcrumb-item">Tables</li>
-                    <li class="breadcrumb-item active">Surat Dipersamakan</li>
-                </ol>
-            </nav>
-        </div><!-- End Page Title -->
+
 
         <section class="section">
             <div class="card">
@@ -156,8 +147,7 @@
                                     }
                                 ],
                                 dom: '<"top"lfB>rt<"bottom"ip><"clear">',
-                                buttons: [
-                                    {
+                                buttons: [{
                                         extend: 'excel',
                                         text: '<i class="fas fa-file-excel"></i> Excel',
                                         className: 'btn btn-success'
@@ -208,78 +198,79 @@
 
 
                     <div class="container">
-                        <div class="card" style="padding: 10px; background: #c6dff6">
-                            <div class="row">
+                        {{-- <div class="card" style="padding: 10px; background: #c6dff6"> --}}
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="status_id">Filter Status:</label>
+                                    <select id="status_id" class="form-control">
+                                        <option value="">All</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="no_lhp">Filter No LHP:</label>
+                                    <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date">Filter Tanggal LHP Mulai:</label>
+                                    <input type="date" id="start_date" class="form-control" placeholder="Start Date">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date">Filter Tanggal LHP Selesai:</label>
+                                    <input type="date" id="end_date" class="form-control" placeholder="End Date">
+                                </div>
+                            </div>
+                            <div class="col">
                                 <div class="col">
                                     <div class="form-group">
-                                        <label for="status_id">Filter Status:</label>
-                                        <select id="status_id" class="form-control">
+                                        <label for="opd_id">Filter OPD:</label>
+                                        <select id="opd_id" class="form-control">
                                             <option value="">All</option>
-                                            @foreach ($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                            @foreach ($opds as $opd)
+                                                <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="no_lhp">Filter No LHP:</label>
-                                        <input type="text" id="no_lhp" class="form-control"
-                                            placeholder="Search No LHP">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="opd_id">Filter OPD:</label>
-                                            <select id="opd_id" class="form-control">
-                                                <option value="">All</option>
-                                                @foreach ($opds as $opd)
-                                                    <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="start_date">Filter Tanggal LHP Mulai:</label>
-                                        <input type="date" id="start_date" class="form-control" placeholder="Start Date">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="end_date">Filter Tanggal LHP Selesai:</label>
-                                        <input type="date" id="end_date" class="form-control" placeholder="End Date">
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                        <div class="row">
 
-                        <table id="data-table" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>No LHP</th>
-                                    <th>Sumber Informasi</th>
-                                    <th>Nama OPD</th>
-                                    <th>Status</th>
-                                    <th>Tgl LHP</th>
-                                    {{-- <th>Obrik Pemeriksaan</th> --}}
-                                    <th>Temuan</th>
-                                    <th>Rekomendasi</th>
-                                    <th>Jumlah Kerugian</th>
-                                    <th>Telah Dibayar</th>
-                                    <th>Sisa Kerugian</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        </div>
+                        <div class="row">
+
+                        </div>
                     </div>
+
+                    <table id="data-table" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No LHP</th>
+                                <th>Sumber Informasi</th>
+                                <th>Nama OPD</th>
+                                <th>Status</th>
+                                <th>Tgl LHP</th>
+                                {{-- <th>Obrik Pemeriksaan</th> --}}
+                                <th>Temuan</th>
+                                <th>Rekomendasi</th>
+                                <th>Jumlah Kerugian</th>
+                                <th>Telah Dibayar</th>
+                                <th>Sisa Kerugian</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
+            </div>
             </div>
         </section>
     </main>

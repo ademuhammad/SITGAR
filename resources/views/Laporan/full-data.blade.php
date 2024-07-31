@@ -4,16 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>Data Temuan</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">SITGAR</a></li>
-                    <li class="breadcrumb-item">Temuan</li>
-                    <li class="breadcrumb-item active">Keseluruhan</li>
-                </ol>
-            </nav>
-        </div><!-- End Page Title -->
+
 
         <section class="section">
             <div class="card">

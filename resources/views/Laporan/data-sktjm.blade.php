@@ -4,16 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>Data Temuan</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">SITGAR</a></li>
-                    <li class="breadcrumb-item">Temuan</li>
-                    <li class="breadcrumb-item active">SKTJM</li>
-                </ol>
-            </nav>
-        </div><!-- End Page Title -->
+
 
         <section class="section">
             <div class="card">
@@ -191,7 +182,7 @@
 
 
                     <div class="container">
-                        <div class="card" style="padding: 10px; background: #c6dff6">
+                        {{-- <div class="card" style="padding: 10px; background: #c6dff6"> --}}
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
@@ -211,8 +202,6 @@
                                             placeholder="Search No LHP">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col">
                                     <div class="col">
                                         <div class="form-group">
@@ -226,8 +215,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="start_date">Filter Tanggal LHP Mulai:</label>
@@ -240,6 +227,12 @@
                                         <input type="date" id="end_date" class="form-control" placeholder="End Date">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+
+                            </div>
+                            <div class="row">
+
                             </div>
                         </div>
 

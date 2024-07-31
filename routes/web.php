@@ -24,7 +24,8 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Http\Controllers\PembayaranTemuanController;
 
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::middleware(['auth', 'role:Payment Validator'])->group(function () {
     // Route::resource('user', UserController::class);
     Route::get('/validate-pembayaran', [PembayaranTemuanController::class, 'validateList'])->name('pembayaran.validate.list');
@@ -34,11 +35,11 @@ Route::middleware(['auth', 'role:Payment Validator'])->group(function () {
 // dashboard
 
 Route::group(['middleware' => ['auth', 'check.opd.access']], function () {
+
     Route::resource('dashboard', DashboardController::class);
     Route::get('/dashboard/get-temuan-data', [DashboardController::class, 'getTemuanData'])->name('dashboard.getTemuanData');
     Route::get('/temuan-per-bulan', [DashboardController::class, 'getTemuanPerBulan'])->name('temuan.perbulan');
 
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     // OPD
     Route::resource('opds', OpdController::class);
 

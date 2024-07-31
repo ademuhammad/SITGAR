@@ -28,6 +28,6 @@ class HomeController extends Controller
             return redirect()->route('pembayaran.validate.list');
         }
 
-        return view('dashboard'); // Default dashboard for other users
+        return redirect()->route('dashboard.index'); // Default dashboard for other users
     }
 }

@@ -4,16 +4,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <main id="main" class="main">
-        <div class="pagetitle">
-            <h1>Data Selesai</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">SITEGAR</a></li>
-                    <li class="breadcrumb-item">Tables</li>
-                    <li class="breadcrumb-item active">Selesai</li>
-                </ol>
-            </nav>
-        </div><!-- End Page Title -->
 
         <section class="section">
             <div class="card">
@@ -159,7 +149,7 @@
                         });
                     </script>
                     <div class="container">
-                        <div class="card" style="padding: 10px; background: #739c7e">
+                        {{-- <div class="card" style="padding: 10px; background: #739c7e"> --}}
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
@@ -179,9 +169,6 @@
                                             placeholder="Search No LHP">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="start_date">Filter Tanggal LHP Mulai:</label>
@@ -195,7 +182,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <table id="data-table2" class="display" style="width:100%">
