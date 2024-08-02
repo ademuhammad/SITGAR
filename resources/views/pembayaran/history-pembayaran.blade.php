@@ -5,6 +5,9 @@
     td, th {
         font-size: 14px;
     }
+    span {
+        font-weight: bold;
+    }
 </style>
 <main id="main" class="main">
     <section class="section">
@@ -44,9 +47,9 @@
                 </table>
 
                 <div class="mt-3">
-                    <h6>Total Sudah DiBayar: Rp.{{ number_format($totalPaid, 2, ',', '.') }}</h6>
-                    <h6>Sisa Yang Harus DiBayar: Rp.{{ number_format($remainingAmount, 2, ',', '.') }}</h6>
-                    <h6>Jumlah Bulan Pembayaran: {{ $totalMonths }} bulan</h6>
+                    <h6>Total Sudah DiBayar:  <span>Rp. {{ number_format($totalPaid, 2, ',', '.') }}</span></h6>
+                    <h6>Sisa Yang Harus DiBayar: <span>Rp.{{ number_format($remainingAmount, 2, ',', '.') }}</span></h6>
+                    <h6>Jumlah Bulan Pembayaran:<span> {{ $totalMonths }} bulan </span> </h6>
                 </div>
             </div>
         </div>

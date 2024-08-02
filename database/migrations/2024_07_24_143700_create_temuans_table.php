@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('no_sktjm')->nullable();
             $table->string('no_skp2ks')->nullable();
             $table->string('no_skp2k')->nullable();
+            $table->string('no_sdp')->nullable();
 
             $table->date('tgl_lhp');
             $table->text('obrik_pemeriksaan');

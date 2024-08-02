@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth', 'check.opd.access']], function () {
     Route::get('temuans/get-dataskp2ks', [TemuanController::class, 'getDataskp2ks'])->name('temuans.getDataskp2ks');
     Route::get('temuans/data-skp2k', [TemuanController::class, 'dataskp2k'])->name('temuans.dataskp2k');
     Route::get('temuans/get-dataskp2k', [TemuanController::class, 'getDataskp2k'])->name('temuans.getDataskp2k');
+    Route::get('temuans/get-syd', [TemuanController::class, 'getsyd'])->name('temuans.getsyd');
     // Rute khusus untuk download PDF
     Route::get('/temuan/pdf', [TemuanController::class, 'downloadPdf'])->name('temuan.downloadPdf');
     //

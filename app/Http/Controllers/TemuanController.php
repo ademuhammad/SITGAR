@@ -484,4 +484,48 @@ class TemuanController extends Controller
                 ->make(true);
         }
     }
+    public function getsyd(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia'])
+                ->whereHas('statustgr', function ($query) {
+                    $query->where('tgr_name', 'SURAT YANG DIPERSAMAKAN');
+                });
+
+            if ($request->has('opd_id') && $request->opd_id != '') {
+                $query->where('opd_id', $request->opd_id);
+            }
+
+            if ($request->has('status_id') && $request->status_id != '') {
+                $query->where('status_id', $request->status_id);
+            }
+            if ($request->has('no_lhp') && $request->no_lhp != '') {
+                $query->where('no_lhp', 'like', '%' . $request->no_lhp . '%');
+            }
+            if ($request->has('start_date') && $request->has('end_date') && $request->start_date != '' && $request->end_date != '') {
+                $query->whereBetween('tgl_lhp', [$request->start_date, $request->end_date]);
+            }
+
+            $data = $query->get();
+
+            return DataTables::of($data)
+                ->addColumn('status', function ($row) {
+                    return $row->status ? $row->status->status : '-';
+                })
+                ->addColumn('opd_name', function ($row) {
+                    return $row->opd ? $row->opd->opd_name : '-';
+                })
+                ->addColumn('dinas_name', function ($row) {
+                    return $row->informasi ? $row->informasi->dinas_name : '-';
+                })
+                ->addColumn('pegawai_name', function ($row) {
+                    return $row->pegawai ? $row->pegawai->name : '-';
+                })
+                ->addColumn('penyedia_name', function ($row) {
+                    return $row->penyedia ? $row->penyedia->penyedia_name : '-';
+                })
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
 }

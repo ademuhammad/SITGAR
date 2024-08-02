@@ -7,7 +7,7 @@
                     <h2>Users Management</h2>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" href="{{ route('user.create') }}"> Tambah User</a>
+                    <a class="btn btn-success mb-2" href="{{ route('user.create') }}"> Tambah User </a>
                 </div>
             </div>
         </div>

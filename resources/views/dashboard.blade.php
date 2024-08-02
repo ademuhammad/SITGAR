@@ -85,7 +85,7 @@
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-building"></i>
+                                            <i class="bi bi-bank2"></i>
                                         </div>
                                         <div class="ps-3">
                                             <h6 class="tes" style="font-size: 16px">{{ $jumlahOPDTemuan }}</h6>
@@ -227,7 +227,6 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title text-center">Jumlah Sisa Pembayaran per OPD (Rp)</h5>
-
                             <!-- Bar Chart -->
                             <canvas id="barChartopd" height="200"></canvas>
                             <script>
@@ -239,7 +238,6 @@
                                     function splitLabel(label) {
                                         return label.split(" ");
                                     }
-
                                     const formattedLabels = labels.map(label => splitLabel(label));
 
                                     new Chart(document.querySelector('#barChartopd'), {

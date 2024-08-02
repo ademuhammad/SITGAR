@@ -9,10 +9,11 @@ use App\Models\Pegawai;
 use App\Models\Penyedia;
 use App\Models\Informasi;
 use App\Models\Statustgr;
-use Illuminate\Http\Request;
+use App\Models\JenisTemuan;
 // use Illuminate\Database\Query\Builder;
-use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
+use Yajra\DataTables\Facades\DataTables;
 
 class SuratdpController extends Controller
 {
@@ -21,8 +22,10 @@ class SuratdpController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => ['index', 'show',
-        'alldata','exportPDF','exportCSV','exportPDF']]);
+        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => [
+            'index', 'show',
+            'alldata', 'exportPDF', 'exportCSV', 'exportPDF'
+        ]]);
         $this->middleware('permission:data-create', ['only' => ['create', 'store', '']]);
         $this->middleware('permission:data-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:data-delete', ['only' => ['destroy']]);
@@ -34,9 +37,9 @@ class SuratdpController extends Controller
     {
         if ($request->ajax()) {
             $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia'])
-            ->whereHas('statustgr', function ($query) {
-                $query->where('tgr_name', '	SURAT YANG DIPERSAMAKAN');
-            });
+                ->whereHas('statustgr', function ($query) {
+                    $query->where('tgr_name', '	SURAT YANG DIPERSAMAKAN');
+                });
             // Tambahkan filter di sini
             if ($request->has('opd_id') && $request->opd_id != '') {
                 $query->where('opd_id', $request->opd_id);
@@ -103,17 +106,19 @@ class SuratdpController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
-
+        //
         $informasis = Informasi::all();
         $opds = Opd::all();
         $statuses = Status::all();
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
+        $jenisTemuans = JenisTemuan::all();
         $defaultStatustgr = Statustgr::where('tgr_name', 'SURAT YANG DIPERSAMAKAN')->first();
-        return view('crud.create-syd', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
+        return view('crud.create-syd', compact('informasis', 'jenisTemuans', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
     }
 
     /**
@@ -121,7 +126,11 @@ class SuratdpController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Ambil status_id dan cek apakah status adalah "selesai"
+        $statusSelesaiId = 1; // Gantilah 1 dengan id status "selesai" yang sesuai
+
+        // Validasi umum
+        $rules = [
             'informasis_id' => 'required|exists:informasis,id',
             'opd_id' => 'required|exists:opds,id',
             'status_id' => 'required|exists:statuses,id',
@@ -133,13 +142,22 @@ class SuratdpController extends Controller
             'obrik_pemeriksaan' => 'required|string|max:255',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
-            'no_sktjm' => 'required|string|max:255',
+            'no_sdp' => 'required|string|max:255',
             'jumlah_jaminan' => 'nullable|numeric',
             'jenis_jaminan' => 'nullable|string|max:255',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_surat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
-        ]);
+        ];
 
+        // Tambahkan validasi untuk 'bukti_surat' jika status adalah "selesai"
+        if ($request->input('status_id') == $statusSelesaiId) {
+            $rules['bukti_surat'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        } else {
+            $rules['bukti_surat'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        }
+
+        $request->validate($rules);
+
+        // Buat instance dari model Temuan
         $temuan = new Temuan();
         $temuan->informasis_id = $request->input('informasis_id');
         $temuan->opd_id = $request->input('opd_id');
@@ -152,11 +170,12 @@ class SuratdpController extends Controller
         $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
         $temuan->temuan = $request->input('temuan');
         $temuan->rekomendasi = $request->input('rekomendasi');
-        $temuan->no_sktjm = $request->input('no_sktjm');
+        $temuan->no_sdp = $request->input('no_sdp');
         $temuan->jumlah_jaminan = $request->input('jumlah_jaminan');
         $temuan->jenis_jaminan = $request->input('jenis_jaminan');
         $temuan->nilai_rekomendasi = $request->input('nilai_rekomendasi');
 
+        // Proses upload file
         if ($request->hasFile('bukti_surat')) {
             $file = $request->file('bukti_surat');
             $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
@@ -165,14 +184,15 @@ class SuratdpController extends Controller
             $temuan->bukti_surat = $file_temuan;
         }
 
-        // Initialize payment fields
+        // Inisialisasi field pembayaran
         $temuan->nilai_telah_dibayar = 0;
         $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
 
+        // Simpan data
         $temuan->save();
+
         return redirect()->route('surat-dipersamakan.index')->with('success', 'Data berhasil disimpan');
     }
-
 
 
     /**
@@ -195,15 +215,16 @@ class SuratdpController extends Controller
         $statustgrs = Statustgr::all();
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
-        return view('crud.edit-syd', compact('temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
+        $jenisTemuans = JenisTemuan::all();
+        return view('crud.edit-syd', compact('temuan', 'informasis', 'jenisTemuans', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $statusSelesaiId = 1;
+
+        $rules = [
+            'jenistemuan_id' => 'nullable|exists:jenis_temuans,id',
             'informasis_id' => 'required|exists:informasis,id',
             'opd_id' => 'required|exists:opds,id',
             'status_id' => 'required|exists:statuses,id',
@@ -215,12 +236,19 @@ class SuratdpController extends Controller
             'obrik_pemeriksaan' => 'required|string|max:255',
             'temuan' => 'required|string',
             'rekomendasi' => 'required|string',
-            'no_sktjm' => 'required|string|max:255', // Pastikan ini sesuai dengan struktur tabel Anda
+            'no_sdp' => 'required|string|max:255',
             'jumlah_jaminan' => 'nullable|numeric',
             'jenis_jaminan' => 'nullable|string|max:255',
             'nilai_rekomendasi' => 'required|numeric',
-            'bukti_surat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
-        ]);
+        ];
+
+        if ($request->input('status_id') == $statusSelesaiId) {
+            $rules['bukti_surat'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        } else {
+            $rules['bukti_surat'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        }
+
+        $request->validate($rules);
 
         $temuan = Temuan::findOrFail($id);
         $temuan->informasis_id = $request->input('informasis_id');
@@ -234,17 +262,13 @@ class SuratdpController extends Controller
         $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
         $temuan->temuan = $request->input('temuan');
         $temuan->rekomendasi = $request->input('rekomendasi');
-        $temuan->no_sktjm = $request->input('no_sktjm'); // Pastikan ini sesuai dengan nama kolom di tabel
+        $temuan->no_sdp = $request->input('no_sdp');
         $temuan->jumlah_jaminan = $request->input('jumlah_jaminan');
         $temuan->jenis_jaminan = $request->input('jenis_jaminan');
+        $temuan->jenistemuan_id = $request->input('jenistemuan_id');
         $temuan->nilai_rekomendasi = $request->input('nilai_rekomendasi');
 
         if ($request->hasFile('bukti_surat')) {
-            // Hapus file lama jika ada
-            if ($temuan->bukti_surat && file_exists(public_path('bukti_temuan/' . $temuan->bukti_surat))) {
-                unlink(public_path('bukti_temuan/' . $temuan->bukti_surat));
-            }
-
             $file = $request->file('bukti_surat');
             $file_temuan = time() . '_temuan.' . $file->getClientOriginalExtension();
             $gambarPath = public_path('bukti_temuan');
@@ -252,9 +276,16 @@ class SuratdpController extends Controller
             $temuan->bukti_surat = $file_temuan;
         }
 
+        if ($temuan->nilai_rekomendasi != $request->input('nilai_rekomendasi')) {
+            $temuan->sisa_nilai_uang = $request->input('nilai_rekomendasi') - $temuan->nilai_telah_dibayar;
+        }
+
         $temuan->save();
+
         return redirect()->route('surat-dipersamakan.index')->with('success', 'Data berhasil diperbarui');
     }
+
+
 
     /**
      * Remove the specified resource from storage.

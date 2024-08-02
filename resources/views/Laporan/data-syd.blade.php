@@ -30,7 +30,7 @@
                                 processing: true,
                                 serverSide: true,
                                 ajax: {
-                                    url: '{{ route('surat-dipersamakan.index') }}',
+                                    url: '{{ route('temuans.getsyd') }}',
                                     data: function(d) {
                                         d.opd_id = $('#opd_id').val();
                                         d.status_id = $('#status_id').val();
@@ -124,10 +124,10 @@
                                         orderable: false,
                                         searchable: false,
                                         render: function(data, type, row) {
-                                            var editButton = '<a href="/sktjm/' + row.id +
+                                            var editButton = '<a href="/surat-dipersamakan/' + row.id +
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
-                                            var deleteForm = '<form action="/sktjm/' + row.id +
+                                            var deleteForm = '<form action="/surat-dipersamakan/' + row.id +
                                                 '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
 
                                             var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'

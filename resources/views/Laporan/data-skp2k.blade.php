@@ -77,12 +77,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
 
-                            </div>
-                            <div class="row">
-
-                            </div>
                         </div>
 
                         <table id="data-table" class="display" style="width:100%">

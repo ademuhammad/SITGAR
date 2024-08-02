@@ -100,6 +100,7 @@
                                 <div class="form-group">
                                     <label for="jenistemuan_id">Jenis Jaminan</label>
                                     <select class="form-control" id="jenistemuan_id" name="jenistemuan_id">
+                                        <option value="">Belum Ada Jenis Temuan</option>
                                         @foreach ($jenisTemuans as $jenisTemuan)
                                             <option value="{{ $jenisTemuan->id }}"
                                                 {{ old('jenistemuan_id') == $jenisTemuan->id ? 'selected' : '' }}>
