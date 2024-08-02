@@ -254,11 +254,11 @@
                             <i class="bi bi-circle"></i><span>User</span>
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('role.index') }}" class="{{ Request::is('role') ? 'active' : '' }}">
                             <i class="bi bi-circle"></i><span> Role</span>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
 
