@@ -17,7 +17,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('skp2ks.store') }}" method="POST" enctype="multipart/form-data" id="sktjmForm">
+                    <form action="{{ route('data.store') }}" method="POST" enctype="multipart/form-data" id="sktjmForm">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">

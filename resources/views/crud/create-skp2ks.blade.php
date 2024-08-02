@@ -118,7 +118,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="no_sktjm">No SKTJM</label>
+                                    <label for="no_sktjm">No SKP2KS</label>
                                     <input type="text" class="form-control" id="no_sktjm" name="no_sktjm"
                                         value="{{ old('no_sktjm') }}">
                                 </div>

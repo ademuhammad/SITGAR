@@ -64,7 +64,8 @@
                                             } else if (data.toLowerCase() === 'dalam proses') {
                                                 badgeClass = 'badge bg-warning';
                                             }
-                                            return '<span class="' + badgeClass + '">' + data + '</span>';
+                                            return '<span class="' + badgeClass + '" style="font-size: 1.2em;">' +
+                                                data + '</span>';
                                         }
                                     },
                                     {

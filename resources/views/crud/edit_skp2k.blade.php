@@ -25,7 +25,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('skp2k.update', $temuan->id) }}" method="POST" enctype="multipart/form-data" id="editTemuanForm">
+                <form action="{{ route('temuan.update', $temuan->id) }}" method="POST" enctype="multipart/form-data" id="editTemuanForm">
                     @csrf
                     @method('PUT')
 
