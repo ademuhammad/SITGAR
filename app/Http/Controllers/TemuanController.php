@@ -158,13 +158,13 @@ class TemuanController extends Controller
 
     public function store(Request $request)
     {
+        // Validate the main form
         $request->validate([
             'informasis_id' => 'required|exists:informasis,id',
             'opd_id' => 'required|exists:opds,id',
             'status_id' => 'required|exists:statuses,id',
             'statustgr_id' => 'required|exists:statustgrs,id',
             'pegawai_id' => 'required|exists:pegawais,id',
-            'penyedia_id' => 'required|exists:penyedias,id',
             'no_lhp' => 'required|string|max:255',
             'tgl_lhp' => 'required|date',
             'obrik_pemeriksaan' => 'required|string|max:255',
@@ -174,13 +174,35 @@ class TemuanController extends Controller
             'bukti_surat' => 'nullable|file'
         ]);
 
+        // Check if a new Penyedia needs to be created
+        if ($request->input('penyedia_id') === 'new') {
+            $request->validate([
+                'penyedia_name' => 'required|string|max:255',
+            ]);
+
+            // Create the new Penyedia
+            $penyedia = Penyedia::create([
+                'penyedia_name' => $request->input('penyedia_name'),
+                // add other penyedia fields here if needed
+            ]);
+
+            $penyedia_id = $penyedia->id;
+        } else {
+            $penyedia_id = $request->input('penyedia_id');
+        }
+
+        // Validate the Penyedia ID again
+        $request->validate([
+            'penyedia_id' => 'required|exists:penyedias,id',
+        ]);
+
         $temuan = new Temuan();
         $temuan->informasis_id = $request->input('informasis_id');
         $temuan->opd_id = $request->input('opd_id');
         $temuan->status_id = $request->input('status_id');
         $temuan->statustgr_id = $request->input('statustgr_id');
         $temuan->pegawai_id = $request->input('pegawai_id');
-        $temuan->penyedia_id = $request->input('penyedia_id');
+        $temuan->penyedia_id = $penyedia_id;
         $temuan->no_lhp = $request->input('no_lhp');
         $temuan->tgl_lhp = $request->input('tgl_lhp');
         $temuan->obrik_pemeriksaan = $request->input('obrik_pemeriksaan');
@@ -204,6 +226,7 @@ class TemuanController extends Controller
 
         return redirect()->route('temuan.index')->with('success', 'Temuan created successfully.');
     }
+
     public function show(Temuan $temuan)
     {
         return view('Laporan.show-temuan', compact('temuan'));

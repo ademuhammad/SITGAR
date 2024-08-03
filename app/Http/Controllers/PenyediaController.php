@@ -35,17 +35,19 @@ class PenyediaController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'penyedia_name' => 'required|string|max:255',
-        //     'penyedia_address' => 'required|string|max:255',
-        //     'penyedia_izin' => 'required|string|max:255',
-        //     'penyedia_information' => 'nullable|string',
-        // ]);
+        $request->validate([
+            'penyedia_name' => 'required|string|max:255',
+            // add other validations as necessary
+        ]);
 
-        Penyedia::create($request->all());
+        $penyedia = Penyedia::create([
+            'penyedia_name' => $request->input('penyedia_name'),
+            // add other penyedia fields here if needed
+        ]);
 
-        return redirect()->route('penyedia.index')->with('success', 'Penyedia created successfully.');
+        return response()->json(['id' => $penyedia->id, 'name' => $penyedia->penyedia_name]);
     }
+
 
     public function edit($id)
     {

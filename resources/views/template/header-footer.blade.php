@@ -132,61 +132,65 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard.index') ? 'active' : '' }}" href="{{ route('dashboard.index') }}">
+                <a class="nav-link {{ Request::is('dashboard.index') ? 'active' : '' }}"
+                    href="{{ route('dashboard.index') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-menu-button-wide"></i><span>Master Data</span><i
-                        class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav"
-                    class="nav-content collapse {{ Request::is('opds', 'informasi', 'pegawai', 'status', 'tgr', 'penyedia') ? 'show' : '' }}"
-                    data-bs-parent="#sidebar-nav">
+            @role('Super Admin')
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-menu-button-wide"></i><span>Master Data</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav"
+                        class="nav-content collapse {{ Request::is('opds', 'informasi', 'pegawai', 'status', 'tgr', 'penyedia') ? 'show' : '' }}"
+                        data-bs-parent="#sidebar-nav">
 
-                    <li>
-                        <a href="{{ route('opds.index') }}" class="{{ Request::is('opds') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span>Nama OPD</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('informasi.index') }}"
-                            class="{{ Request::is('informasi') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Sumber Informasi</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('pegawai.index') }}" class="{{ Request::is('pegawai') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Pegawai</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('status.index') }}" class="{{ Request::is('status') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Status Proses</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('tgr.index') }}" class="{{ Request::is('tgr') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Status TGR (Tuntutan Ganti Rugi)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('penyedia.index') }}"
-                            class="{{ Request::is('penyedia') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Penyedia</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('jenistemuan.index') }}"
-                            class="{{ Request::is('jenistemuan') ? 'active' : '' }}">
-                            <i class="bi bi-circle"></i><span> Jenis Jaminan</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Components Nav -->
+                        <li>
+                            <a href="{{ route('opds.index') }}" class="{{ Request::is('opds') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span>Nama OPD</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('informasi.index') }}"
+                                class="{{ Request::is('informasi') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Sumber Informasi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('pegawai.index') }}" class="{{ Request::is('pegawai') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Pegawai</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('status.index') }}" class="{{ Request::is('status') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Status Proses</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('tgr.index') }}" class="{{ Request::is('tgr') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Status TGR (Tuntutan Ganti Rugi)</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('penyedia.index') }}"
+                                class="{{ Request::is('penyedia') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Penyedia</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('jenistemuan.index') }}"
+                                class="{{ Request::is('jenistemuan') ? 'active' : '' }}">
+                                <i class="bi bi-circle"></i><span> Jenis Jaminan</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Components Nav -->
+            @endrole
+
 
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
@@ -242,6 +246,7 @@
                 </ul>
             </li><!-- End Tables Nav -->
 
+            @role('Super Admin')
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-menu-button-wide"></i><span>Management User</span><i
@@ -261,6 +266,8 @@
                     </li> --}}
                 </ul>
             </li>
+            @endrole
+
 
         </ul>
     </aside><!-- End Sidebar-->

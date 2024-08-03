@@ -75,17 +75,29 @@
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="penyedia_id">Penyedia</label>
-                                    <select class="form-control" id="penyedia_id" name="penyedia_id">
+                                    <select class="form-control" id="penyedia_id" name="penyedia_id" onchange="showNewPenyediaForm()">
+                                        <option value="new">Buat Penyedia Baru</option>
                                         @foreach ($penyedias as $penyedia)
-                                            <option value="{{ $penyedia->id }}"
-                                                {{ old('penyedia_id') == $penyedia->id ? 'selected' : '' }}>
+                                            <option value="{{ $penyedia->id }}" {{ old('penyedia_id') == $penyedia->id ? 'selected' : '' }}>
                                                 {{ $penyedia->penyedia_name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div id="newPenyediaForm" style="display: none;">
+                                    <div class="mb-3">
+                                        <label for="penyedia_name" class="form-label">Nama Penyedia</label>
+                                        <input type="text" class="form-control" id="penyedia_name" name="penyedia_name">
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="submitNewPenyedia()">Simpan</button>
+                                </div>
+
+                                <input type="hidden" id="new_penyedia_id" name="new_penyedia_id" value="">
+
                                 <div class="form-group">
                                     <label for="statustgr_id">Status TGR</label>
                                     <select class="form-control" id="statustgr_id" name="statustgr_id">
@@ -159,6 +171,42 @@
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            function showNewPenyediaForm() {
+                var penyediaSelect = document.getElementById('penyedia_id');
+                var newPenyediaForm = document.getElementById('newPenyediaForm');
+
+                if (penyediaSelect.value === 'new') {
+                    newPenyediaForm.style.display = 'block';
+                } else {
+                    newPenyediaForm.style.display = 'none';
+                }
+            }
+
+            function submitNewPenyedia() {
+                var penyediaName = document.getElementById('penyedia_name').value;
+                var newPenyediaIdInput = document.getElementById('new_penyedia_id');
+
+                $.ajax({
+                    url: '{{ route("penyedia.store") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        penyedia_name: penyediaName
+                    },
+                    success: function(response) {
+                        newPenyediaIdInput.value = response.id; // Set the new penyedia ID
+                        alert('Penyedia created successfully!');
+                        showNewPenyediaForm(); // Hide the form after successful creation
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert('An error occurred while creating Penyedia.');
+                    }
+                });
+            }
+        </script>
+
         <script>
             function formatRupiah(element) {
                 let value = element.value.replace(/[^,\d]/g, '').toString();
