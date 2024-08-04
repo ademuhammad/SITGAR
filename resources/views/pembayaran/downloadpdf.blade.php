@@ -21,16 +21,17 @@
     <h1>History Pembayaran</h1>
     @if($temuan)
         <h4>No LHP : {{ $temuan->no_lhp }}</h4>
-        <h4>Nama Dinas ODP : {{ $temuan->opd->opd_name }}</h4>
+        <h4>Nama Dinas OPD : {{ $temuan->opd->opd_name }}</h4>
     @else
         <h4>No LHP : Tidak Ditemukan</h4>
-        <h4>Nama Dinas ODP : Tidak Ditemukan</h4>
+        <h4>Nama Dinas OPD : Tidak Ditemukan</h4>
     @endif
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">Jumlah Pembayaran</th>
                 <th scope="col">Tanggal Pembayaran</th>
+                <th scope="col">Status Pembayaran</th>
                 {{-- <th scope="col">Bukti Pembayaran</th> --}}
             </tr>
         </thead>
@@ -39,6 +40,7 @@
                 <tr>
                     <td>Rp.{{ number_format($pembayaran->jumlah_pembayaran, 2, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($pembayaran->tgl_pembayaran)->translatedFormat('d F Y') }}</td>
+                    <td>{{$pembayaran->status}}</td>
                     {{-- <td>
                         @if ($pembayaran->bukti_pembayaran)
                             <a href="{{ asset($pembayaran->bukti_pembayaran) }}" target="_blank">View</a>

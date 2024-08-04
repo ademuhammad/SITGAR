@@ -27,7 +27,7 @@
                                             <i class="bi bi-building"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px" id="tgl-lhp-number">
+                                            <h6 class="tes" style="font-size: 22px" id="tgl-lhp-number">
                                                 {{ $jumlahTemuan }}
                                             </h6>
 
@@ -62,7 +62,7 @@
                                         $firstStatus = $jumlahTemuanStatus->keys()->first();
                                         $firstCount = $jumlahTemuanStatus->first();
                                     @endphp
-                                    <h5 class="card-title">Temuan Berdasarkan Status <span id="status-label">|
+                                    <h5 class="card-title">Temuan Status <span id="status-label">|
                                             {{ $firstStatus }}</span></h5>
                                     <div class="d-flex align-items-center">
                                         <div
@@ -70,7 +70,7 @@
                                             <i class="bi bi-info-square-fill"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px" id="status-number">
+                                            <h6 class="tes" style="font-size: 22px" id="status-number">
                                                 {{ $firstCount }}</h6>
                                         </div>
                                     </div>
@@ -88,7 +88,7 @@
                                             <i class="bi bi-bank2"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6 class="tes" style="font-size: 16px">{{ $jumlahOPDTemuan }}</h6>
+                                            <h6 class="tes" style="font-size: 22px">{{ $jumlahOPDTemuan }}</h6>
                                         </div>
                                     </div>
                                 </div>

@@ -14,185 +14,203 @@
     </div><!-- End Page Title -->
 
     <section class="section">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Detail Temuan</h5>
+        <div class="container-fluid">
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-file-earmark-text"></i></span>
-                            <span class="info-box-text">No LHP :</span>
-                            <div class="info-box-content">
 
-                                <span class="info-box-number">{{ $data->no_lhp }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-building"></i></span>
-                            <span class="info-box-text">Sumber Informasi :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->informasi->dinas_name }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-people"></i></span>
-                            <span class="info-box-text">Nama OPD :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->opd->opd_name }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-clipboard-check"></i></span>
-                            <span class="info-box-text">Status :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->status->status }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    @if ($data->statustgr)
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-clipboard"></i></span>
-                            <span class="info-box-text">Status TGR :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->statustgr->status_tgr }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-person"></i></span>
-                            <span class="info-box-text">Nama PPK :</span>
-                            <div class="info-box-content">
-                                <span class="info-box-number">{{ $data->pegawai->name }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-truck"></i></span>
-                            <span class="info-box-text">Nama Penyedia : </span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->penyedia->penyedia_name }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-calendar"></i></span>
-                            <span class="info-box-text">Tgl LHP :</span>
-                            <div class="info-box-content">
-                                <span class="info-box-number">{{ $data->tgl_lhp }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-briefcase"></i></span>
-                            <span class="info-box-text">Obrik Pemeriksaan :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->obrik_pemeriksaan }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-file-earmark-text"></i></span>
-                            <span class="info-box-text">Temuan :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">{{ $data->temuan }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-file-earmark-check"></i></span>
-                            <span class="info-box-text">Rekomendasi :</span>
-                            <div class="info-box-content">
-                                <span class="info-box-number">    {!! str_replace('pola_pencarian', 'pengganti', $data->rekomendasi) !!}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon "><i class="bi bi-currency-dollar"></i></span>
-                            <span class="info-box-text">Nilai Rekomendasi : </span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">Rp.{{ number_format($data->nilai_rekomendasi, 2, ',', '.') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-currency-dollar"></i></span>
-                            <span class="info-box-text">Nilai Telah Dibayar :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">Rp.{{ number_format($data->nilai_telah_dibayar, 2, ',', '.') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-currency-dollar"></i></span>
-                            <span class="info-box-text">Sisa Nilai Uang :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">Rp.{{ number_format($data->sisa_nilai_uang, 2, ',', '.') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="info-box shadow-sm p-3 mb-5 bg-body rounded">
-                            <span class="info-box-icon"><i class="bi bi-envelope"></i></span>
-                            <span class="info-box-text">Bukti Surat :</span>
-                            <div class="info-box-content">
-
-                                <span class="info-box-number">
-                                    @if ($data->bukti_surat)
-                                        <a href="{{ asset('storage/' . $data->bukti_surat) }}" target="_blank" class="btn btn-sm btn-primary">Lihat Bukti Surat</a>
-                                    @else
-                                        <span class="text-danger">Tidak ada bukti surat</span>
-                                    @endif
-                                </span>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-text display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">No LHP :</h6>
+                                <p class="mb-0">{{ $data->no_lhp }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <a href="{{ route('data.index') }}" class="btn btn-primary mt-3">Kembali</a>
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-building display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Sumber Informasi :</h6>
+                                <p class="mb-0">{{ $data->informasi->dinas_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-people display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Nama OPD :</h6>
+                                <p class="mb-0">{{ $data->opd->opd_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-clipboard-check display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Status :</h6>
+                                <p class="mb-0">{{ $data->status->status }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if ($data->statustgr)
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-clipboard display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Status TGR :</h6>
+                                <p class="mb-0">{{ $data->statustgr->status_tgr }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Nama PPK :</h6>
+                                <p class="mb-0">{{ $data->pegawai->name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-truck display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Nama Penyedia :</h6>
+                                <p class="mb-0">{{ $data->penyedia->penyedia_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Tgl LHP :</h6>
+                                <p class="mb-0">{{ $data->tgl_lhp }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-currency-dollar display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Nilai Rekomendasi :</h6>
+                                <p class="mb-0">Rp.{{ number_format($data->nilai_rekomendasi, 2, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-currency-dollar display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Nilai Telah Dibayar :</h6>
+                                <p class="mb-0">Rp.{{ number_format($data->nilai_telah_dibayar, 2, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-currency-dollar display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Sisa Nilai Uang :</h6>
+                                <p class="mb-0">Rp.{{ number_format($data->sisa_nilai_uang, 2, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-envelope display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Bukti Surat :</h6>
+                                <p class="mb-0">
+                                    @if ($data->bukti_surat)
+                                        <a href="{{ asset('storage/' . $data->bukti_surat) }}" target="_blank" class="btn btn-sm btn-primary">Lihat Bukti Surat</a>
+                                    @else
+                                        <span class="text-danger">Tidak ada bukti surat</span>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-text display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Temuan :</h6>
+                                <p class="mb-0">{{ $data->temuan }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-check display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Rekomendasi :</h6>
+                                <p class="mb-0">{!! str_replace('pola_pencarian', 'pengganti', $data->rekomendasi) !!}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="shadow-sm p-3 mb-3 bg-body rounded">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-briefcase display-6 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Obrik Pemeriksaan :</h6>
+                                <p class="mb-0">{{ $data->obrik_pemeriksaan }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
+
+            <a href="{{ route('data.index') }}" class="btn btn-primary mt-3">Kembali</a>
         </div>
     </section>
 </main>

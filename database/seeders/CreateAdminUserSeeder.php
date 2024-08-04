@@ -69,6 +69,8 @@ class CreateAdminUserSeeder extends Seeder
             'data-edit',
             'data-delete',
 
+            'user-edit',
+
             // Tambahkan izin lain yang diperlukan
         ];
 

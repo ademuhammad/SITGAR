@@ -10,8 +10,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" rel="icon">
-    <link href="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('NiceAdmin/assets/img/sitgar no bg.png') }}" rel="icon">
+    <link href="{{ asset('NiceAdmin/assets/img/sitgar no bg.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -40,7 +40,7 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="logo d-flex flex-column align-items-center">
                 <div class="d-flex align-items-center">
-                    <img src="{{ asset('NiceAdmin/assets/img/sitegarapss.png') }}" alt="logo">
+                    <img src="{{ asset('NiceAdmin/assets/img/sitgar no bg.png') }}" alt="logo">
                     <span class="d-none d-lg-block">SITGAR</span>
                     <img height="" src="{{ asset('NiceAdmin/assets/img/logokabupatenketapang.png') }}"
                         alt="logo2">
