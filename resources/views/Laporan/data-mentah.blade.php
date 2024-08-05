@@ -24,6 +24,10 @@
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
                     <script>
+                        var userRole = "{{ $userRole }}";
+                    </script>
+
+                    <script>
                         $(document).ready(function() {
                             var table = $('#data-table').DataTable({
                                 processing: true,
@@ -42,11 +46,9 @@
                                         data: 'no_lhp',
                                         name: 'no_lhp',
                                         render: function(data, type, row) {
-                                            return '<a class="a-none" href="/data/' + row.id + '">' + data +
-                                                '</a>';
+                                            return '<a class="a-none" href="/data/' + row.id + '">' + data + '</a>';
                                         }
                                     },
-
                                     {
                                         data: 'dinas_name',
                                         name: 'dinas_name'
@@ -55,10 +57,6 @@
                                         data: 'opd_name',
                                         name: 'opd_name'
                                     },
-                                    // {
-                                    //     data: 'status',
-                                    //     name: 'status'
-                                    // },
                                     {
                                         data: 'status',
                                         name: 'status',
@@ -73,8 +71,6 @@
                                                 data + '</span>';
                                         }
                                     },
-
-
                                     {
                                         data: 'tgl_lhp',
                                         name: 'tgl_lhp'
@@ -127,28 +123,26 @@
                                         render: function(data, type, row) {
                                             var editButton = '<a href="/data/' + row.id +
                                                 '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
-
-                                            var deleteForm = '<form action="/data/' + row.id +
-                                                '" method="post" style="display:inline">';
-                                            deleteForm += '@csrf';
-                                            deleteForm += '@method('DELETE')';
-                                            deleteForm +=
-                                                '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>';
-                                            deleteForm += '</form>';
+                                            var deleteButton = '';
+                                            if (userRole === 'Super Admin') {
+                                                deleteButton = '<form action="/data/' + row.id +
+                                                    '" method="post" style="display:inline">' +
+                                                    '@csrf' +
+                                                    '@method('DELETE')' +
+                                                    '<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button>' +
+                                                    '</form>';
+                                            }
                                             var pembayaranCreateButton = '<a href="' +
                                                 '{{ route('pembayaran.create', ':id') }}'.replace(':id', row.id) +
                                                 '" class="btn btn-sm btn-light"><i class="bi bi-currency-dollar"></i></a>';
                                             var pembayaranIndexButton = '<a href="' +
                                                 '{{ route('pembayaran.index', ':id') }}'.replace(':id', row.id) +
                                                 '" class="btn btn-sm btn-light"><i class="bi bi-hourglass-split"></i></a>';
-
-
                                             return '<div class="d-flex" style="padding:5px">' + editButton +
-                                                deleteForm + pembayaranCreateButton + pembayaranIndexButton +
+                                                deleteButton + pembayaranCreateButton + pembayaranIndexButton +
                                                 '</div>';
                                         }
                                     }
-
                                 ],
                                 dom: '<"top"lfB>rt<"bottom"ip><"clear">',
                                 buttons: [{
@@ -160,8 +154,7 @@
                                         extend: 'pdf',
                                         text: '<i class="fas fa-file-pdf"></i> PDF',
                                         className: 'btn btn-danger'
-                                    },
-
+                                    }
                                 ],
                                 lengthMenu: [
                                     [10, 25, 50, -1],
@@ -259,8 +252,6 @@
                                 <th>Sumber Informasi</th>
                                 <th>Nama OPD</th>
                                 <th>Status</th>
-                                {{-- <th>Nama Pegawai</th> --}}
-                                {{-- <th>Nama Penyedia</th> --}}
                                 <th>Tgl LHP</th>
                                 <th>Obrik Pemeriksaan</th>
                                 <th>Temuan</th>

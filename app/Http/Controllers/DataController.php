@@ -16,9 +16,10 @@ use App\Models\JenisTemuan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 // use Maatwebsite\Excel\Facades\Excel;
 //use Barryvdh\DomPDF\Facade as PDF;
+use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -104,8 +105,9 @@ class DataController extends Controller
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
+            $userRole = Auth::user()->getRoleNames()->first();
 
-        return view('Laporan.data-mentah', compact('html', 'statuses', 'opds'));
+        return view('Laporan.data-mentah', compact('html', 'statuses', 'opds', 'userRole'));
     }
 
 
@@ -148,7 +150,7 @@ class DataController extends Controller
         $penyedias = Penyedia::all();
         $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
 
-        return view('crud.create-data', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias','jenisTemuans'));
+        return view('crud.create-data', compact('informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'jenisTemuans'));
     }
 
     public function store(Request $request)
@@ -213,7 +215,7 @@ class DataController extends Controller
         $penyedias = Penyedia::all();
         $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
         // Tampilkan view edit atau form edit sesuai kebutuhan Anda
-        return view('crud.edit-data', compact('jenisTemuans','data', 'opds', 'statustgrs', 'pegawais', 'penyedias', 'informasis', 'statuses'));
+        return view('crud.edit-data', compact('jenisTemuans', 'data', 'opds', 'statustgrs', 'pegawais', 'penyedias', 'informasis', 'statuses'));
     }
 
     public function update(Request $request, $id)
