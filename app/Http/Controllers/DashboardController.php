@@ -63,18 +63,11 @@ class DashboardController extends Controller
         if ($user->hasRole('Super Admin')) {
             // Super Admin melihat semua temuan
             $jumlahTemuan = Temuan::count();
-        } else  {
+        } else {
             // OPD Admin hanya melihat temuan berdasarkan opd_id mereka
             $jumlahTemuan = Temuan::where('opd_id', $user->opd_id)->count();
         }
 
-        if ($user->hasRole('Super Admin')) {
-            // Super Admin melihat semua nilai rekomendasi
-            $jumlahRekomendasi = Temuan::sum('nilai_rekomendasi');
-        } else {
-            // OPD Admin hanya melihat nilai rekomendasi berdasarkan opd_id mereka
-            $jumlahRekomendasi = Temuan::where('opd_id', $user->opd_id)->sum('nilai_rekomendasi');
-        }
 
         if ($user->hasRole('Super Admin')) {
             // Super Admin melihat semua temuan berdasarkan status
@@ -92,19 +85,66 @@ class DashboardController extends Controller
         }
 
         // Calculate the total payment and remaining amount
+        // if ($user->hasRole('Super Admin')) {
+        //     // Super Admin melihat semua pembayaran
+        //     $dibayar = DB::table('pembayarans')
+        //         ->join('temuans', 'pembayarans.temuan_id', '=', 'temuans.id')
+        //         ->where('pembayarans.status', 'diterima')
+        //         ->where('temuans.status_id', function ($query) {
+        //             $query->select('id')
+        //                   ->from('statuses')
+        //                   ->where('status', 'selesai')
+        //                   ->limit(1);
+        //         })
+        //         ->sum('pembayarans.jumlah_pembayaran');
+        // } else {
+        //     // OPD Admin hanya melihat pembayaran berdasarkan opd_id mereka
+        //     $dibayar = DB::table('pembayarans')
+        //         ->join('temuans', 'pembayarans.temuan_id', '=', 'temuans.id')
+        //         ->where('pembayarans.status', 'diterima')
+        //         ->where('temuans.status_id', function ($query) {
+        //             $query->select('id')
+        //                   ->from('statuses')
+        //                   ->where('status', 'selesai')
+        //                   ->limit(1);
+        //         })
+        //         ->where('temuans.opd_id', $user->opd_id)
+        //         ->sum('pembayarans.jumlah_pembayaran');
+        // }
+
+
+        // $jumlahDibayar = $dibayar;
+        // $sisaBayar = $jumlahRekomendasi - $jumlahDibayar;
+
+        // $jumlahRekomendasi = Temuan::sum('nilai_rekomendasi');
+
+
         if ($user->hasRole('Super Admin')) {
-            // Super Admin sees all payments
-            $dibayar = Pembayaran::where('status', 'diterima')->sum('jumlah_pembayaran');
+            // Super Admin melihat semua nilai rekomendasi
+            $jumlahRekomendasi = Temuan::sum('nilai_rekomendasi');
         } else {
-            // OPD Admin only sees payments based on their opd_id
-            $dibayar = Pembayaran::join('temuans', 'pembayarans.temuan_id', '=', 'temuans.id')
-                ->where('pembayarans.status', 'diterima')
-                ->where('temuans.opd_id', $user->opd_id)
-                ->sum('pembayarans.jumlah_pembayaran');
+            // OPD Admin hanya melihat nilai rekomendasi berdasarkan opd_id mereka
+            $jumlahRekomendasi = Temuan::where('opd_id', $user->opd_id)->sum('nilai_rekomendasi');
         }
 
-        $jumlahDibayar = $dibayar;
-        $sisaBayar = $jumlahRekomendasi - $jumlahDibayar;
+        if ($user->hasRole('Super Admin')) {
+            // Super Admin melihat semua nilai rekomendasi
+            $nilaidibayar = Temuan::sum('nilai_rekomendasi') - Temuan::sum('sisa_nilai_uang');
+            $sisaBayar = Temuan::sum('sisa_nilai_uang');
+        } else {
+            // OPD Admin hanya melihat nilai rekomendasi berdasarkan opd_id mereka
+            // $jumlahRekomendasi = Temuan::where('opd_id', $user->opd_id)->sum('nilai_rekomendasi');
+            $sisaBayar = Temuan::where('opd_id', $user->opd_id)->sum('sisa_nilai_uang');
+            $nilaidibayar = Temuan::where('opd_id', $user->opd_id)->sum('nilai_rekomendasi') - Temuan::where('opd_id', $user->opd_id)->sum('sisa_nilai_uang');
+        }
+        // Get the total amount paid from both the temuans and pembayarans tables
+
+        $totalDibayarTemuan = Temuan::sum('nilai_telah_dibayar');
+        $totalDibayarPembayaran = Pembayaran::sum('jumlah_pembayaran');
+        $jumlahDibayar = $nilaidibayar;
+
+        // Get the remaining amount to be paid
+
 
         if ($user->hasRole('Super Admin')) {
             // Super Admin melihat semua temuan per tahun dan bulan

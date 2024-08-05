@@ -23,7 +23,8 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Temuan Keseluruhan</h5>
                                     <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-building"></i>
                                         </div>
                                         <div class="ps-3">
@@ -96,10 +97,9 @@
                         </div>
                         {{-- jumlah nilai yg sudah dibayar --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card revenue-card ">
+                            <div class="card info-card revenue-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Jumlah Nilai Telah Dibayar </h5>
-
+                                    <h5 class="card-title">Jumlah Nilai Telah Dibayar</h5>
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -109,16 +109,15 @@
                                             <h6 class="tes" style="font-size: 16px">
                                                 Rp.{{ number_format($jumlahDibayar, 2, ',', '.') }}
                                             </h6>
-
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
                         {{-- jumlah nilai rekomendasi --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card sales-card ">
+                            <div class="card info-card sales-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Jumlah Nilai Rekomendasi</h5>
                                     <div class="d-flex align-items-center">
@@ -135,16 +134,16 @@
                                 </div>
                             </div>
                         </div>
+
                         {{-- sisa yang belum dibayar --}}
                         <div class="col-xxl-4 col-md-4 mb-3">
-                            <div class="card info-card sales-card ">
+                            <div class="card info-card sales-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Sisa Yang Belum Dibayar</h5>
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                             <i class="bi bi-credit-card"></i>
-
                                         </div>
                                         <div class="ps-3">
                                             <h6 class="tes" style="font-size: 16px">
@@ -155,6 +154,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
