@@ -105,7 +105,7 @@ class DataController extends Controller
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
-            $userRole = Auth::user()->getRoleNames()->first();
+        $userRole = Auth::user()->getRoleNames()->first();
 
         return view('Laporan.data-mentah', compact('html', 'statuses', 'opds', 'userRole'));
     }
@@ -235,6 +235,10 @@ class DataController extends Controller
 
     public function alldata(Request $request, Builder $builder)
     {
+        $totalNilaiRekomendasi = 0;
+        $totalNilaiTelahDibayar = 0;
+        $totalSisaNilaiUang = 0;
+
         if ($request->ajax()) {
             $query = Temuan::with(['status', 'opd', 'informasi', 'pegawai', 'penyedia']);
 
@@ -306,8 +310,9 @@ class DataController extends Controller
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
 
-        return view('Laporan.full-data', compact('html', 'statuses', 'opds'));
+        return view('Laporan.full-data', compact('html', 'statuses', 'opds', 'totalNilaiRekomendasi', 'totalNilaiTelahDibayar', 'totalSisaNilaiUang'));
     }
+
 
     public function exportCSV(Request $request)
     {
