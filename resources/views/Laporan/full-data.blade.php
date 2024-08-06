@@ -270,10 +270,11 @@
                             <tfoot>
                                 <tr>
                                     <th colspan="8" style="text-align: right;">Total:</th>
-                                    <th id="total-nilai-rekomendasi">{{ $totalNilaiRekomendasi ?? '0' }}</th>
-                                    <th id="total-nilai-telah-dibayar">{{ $totalNilaiTelahDibayar ?? '0' }}</th>
-                                    <th id="total-sisa-nilai-uang">{{ $totalSisaNilaiUang ?? '0' }}</th>
+                                    <th id="total-nilai-rekomendasi">{{ number_format($totalNilaiRekomendasi ?? 0, 2) }}</th>
+                                    <th id="total-nilai-telah-dibayar">{{ number_format($totalNilaiTelahDibayar ?? 0, 2) }}</th>
+                                    <th id="total-sisa-nilai-uang">{{ number_format($totalSisaNilaiUang ?? 0, 2) }}</th>
                                 </tr>
+
                             </tfoot>
                         </table>
                     </div>
