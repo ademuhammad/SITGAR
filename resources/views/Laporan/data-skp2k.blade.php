@@ -6,7 +6,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            cursor: pointer; /* Menambahkan cursor pointer untuk menunjukkan bahwa teks bisa diklik */
+            cursor: pointer;
+            /* Menambahkan cursor pointer untuk menunjukkan bahwa teks bisa diklik */
         }
     </style>
 
@@ -19,7 +20,10 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data SKP2K</h5>
-                    <a href="{{ route('skp2k.create') }}" class="btn btn-success mb-3">Tambah Data SKP2K</a>
+                    @if ($userRole === 'Super Admin')
+                        <a href="{{ route('skp2k.create') }}" class="btn btn-success mb-3">Tambah Data SKP2K</a>
+                    @endif
+
 
                     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
@@ -35,73 +39,76 @@
 
                     <div class="container">
                         {{-- <div class="card" style="padding: 10px; background: #c6dff6"> --}}
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="status_id">Filter Status:</label>
-                                        <select id="status_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="no_lhp">Filter No LHP:</label>
-                                        <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="opd_id">Filter OPD:</label>
-                                        <select id="opd_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($opds as $opd)
-                                                <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="start_date">Filter Tanggal LHP Mulai:</label>
-                                        <input type="date" id="start_date" class="form-control" placeholder="Start Date">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="end_date">Filter Tanggal LHP Selesai:</label>
-                                        <input type="date" id="end_date" class="form-control" placeholder="End Date">
-                                    </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="status_id">Filter Status:</label>
+                                    <select id="status_id" class="form-control">
+                                        <option value="">All</option>
+                                        @foreach ($statuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->status }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="no_lhp">Filter No LHP:</label>
+                                    <input type="text" id="no_lhp" class="form-control" placeholder="Search No LHP">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="opd_id">Filter OPD:</label>
+                                    <select id="opd_id" class="form-control">
+                                        <option value="">All</option>
+                                        @foreach ($opds as $opd)
+                                            <option value="{{ $opd->id }}">{{ $opd->opd_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="start_date">Filter Tanggal LHP Mulai:</label>
+                                    <input type="date" id="start_date" class="form-control" placeholder="Start Date">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="end_date">Filter Tanggal LHP Selesai:</label>
+                                    <input type="date" id="end_date" class="form-control" placeholder="End Date">
+                                </div>
+                            </div>
                         </div>
 
-                        <table id="data-table" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>No LHP</th>
-                                    <th>Sumber Informasi</th>
-                                    <th>Nama OPD</th>
-                                    <th>Status</th>
-                                    <th>Tgl LHP</th>
-                                    <th>Temuan</th>
-                                    <th>Rekomendasi</th>
-                                    <th>Jumlah Kerugian</th>
-                                    <th>Telah Dibayar</th>
-                                    <th>Sisa Kerugian</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
                     </div>
+
+                    <table id="data-table" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No LHP</th>
+                                <th>Sumber Informasi</th>
+                                <th>Nama OPD</th>
+                                <th>Status</th>
+                                <th>Tgl LHP</th>
+                                <th>Temuan</th>
+                                <th>Rekomendasi</th>
+                                <th>Jumlah Kerugian</th>
+                                <th>Telah Dibayar</th>
+                                <th>Sisa Kerugian</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
+            </div>
             </div>
         </section>
     </main>
+    <script>
+        var userRole = '{{ Auth::user()->getRoleNames()->first() }}';
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -118,8 +125,7 @@
                         d.opd_id = $('#opd_id').val();
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'no_lhp',
                         name: 'no_lhp',
                         render: function(data, type, row) {
@@ -157,7 +163,8 @@
                         name: 'temuan',
                         render: function(data, type, row) {
                             if (data.length > 70) {
-                                return '<span class="short-text" data-full-text="' + data + '">' + data.substring(0, 70) + '...</span>';
+                                return '<span class="short-text" data-full-text="' + data + '">' +
+                                    data.substring(0, 70) + '...</span>';
                             }
                             return data;
                         }
@@ -167,7 +174,8 @@
                         name: 'rekomendasi',
                         render: function(data, type, row) {
                             if (data.length > 100) {
-                                return '<span class="short-text" data-full-text="' + data + '">' + data.substring(0, 100) + '...</span>';
+                                return '<span class="short-text" data-full-text="' + data + '">' +
+                                    data.substring(0, 100) + '...</span>';
                             }
                             return data;
                         }
@@ -199,12 +207,16 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            var editButton = '<a href="/skp2k/' + row.id +
-                                '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
+                            var editButton = '';
+                            var deleteForm = '';
+                            if (userRole === 'Super Admin') {
+                                var editButton = '<a href="/skp2k/' + row.id +
+                                    '/edit" class="btn btn-sm btn-light mr-1" title="Edit"><i class="bi bi-pencil-square"></i></a>';
 
-                            var deleteForm = '<form action="/skp2k/' + row.id +
-                                '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
+                                var deleteForm = '<form action="/skp2k/' + row.id +
+                                    '" method="post" style="display:inline">@csrf @method('DELETE')<button type="submit" class="btn btn-sm btn-light" title="Delete" onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash3"></i></button></form>';
 
+                            }
                             var pembayaranCreateUrl = '{{ route('pembayaran.create', ':id') }}'
                                 .replace(':id', row.id);
                             var pembayaranCreateButton = '<a href="' + pembayaranCreateUrl +
@@ -222,8 +234,7 @@
                     }
                 ],
                 dom: '<"top"lfB>rt<"bottom"ip><"clear">',
-                buttons: [
-                    {
+                buttons: [{
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         className: 'btn btn-success',
@@ -253,9 +264,9 @@
                     },
                 ],
                 lengthMenu: [
-                                    [10, 25, 50, -1],
-                                    ['10', '25', '50', 'Semua']
-                                ],
+                    [10, 25, 50, -1],
+                    ['10', '25', '50', 'Semua']
+                ],
             });
 
             $('#status_id, #no_lhp, #start_date, #end_date, #opd_id').on('change keyup', function() {
@@ -282,39 +293,39 @@
         });
     </script>
 
-<style>
-    .dataTables_wrapper .top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-    }
+    <style>
+        .dataTables_wrapper .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-    .dataTables_length {
-        order: 1;
-        margin-right: auto;
-    }
+        .dataTables_length {
+            order: 1;
+            margin-right: auto;
+        }
 
-    .dt-buttons {
-        order: 2;
-        text-align: center;
-        flex: 1 1 auto;
-        display: flex;
-        justify-content: center;
-    }
+        .dt-buttons {
+            order: 2;
+            text-align: center;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
 
-    .dataTables_filter {
-        order: 3;
-        margin-left: auto;
-    }
+        .dataTables_filter {
+            order: 3;
+            margin-left: auto;
+        }
 
-    .dataTables_length,
-    .dataTables_filter {
-        padding: 10px 0;
-    }
+        .dataTables_length,
+        .dataTables_filter {
+            padding: 10px 0;
+        }
 
-    .dt-buttons .btn {
-        margin: 5px;
-    }
-</style>
+        .dt-buttons .btn {
+            margin: 5px;
+        }
+    </style>
 @endsection

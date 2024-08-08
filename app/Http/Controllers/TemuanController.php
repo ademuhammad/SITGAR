@@ -13,6 +13,7 @@ use App\Models\Statustgr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -459,8 +460,10 @@ class TemuanController extends Controller
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
+              $userRole = Auth::user()->getRoleNames()->first();
 
-        return view('Laporan.data-skp2k', compact('html', 'statuses', 'opds'));
+
+        return view('Laporan.data-skp2k', compact('html', 'statuses', 'opds','userRole'));
     }
 
     public function getDataskp2k(Request $request)

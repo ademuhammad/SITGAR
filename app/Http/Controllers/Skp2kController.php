@@ -8,17 +8,21 @@ use App\Models\Temuan;
 use App\Models\Pegawai;
 use App\Models\Penyedia;
 use App\Models\Informasi;
-use App\Models\JenisTemuan;
 use App\Models\Statustgr;
+use App\Models\JenisTemuan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Html\Builder;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class Skp2kController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => ['index', 'show',
-        'alldata','exportPDF','exportCSV','exportPDF']]);
+        $this->middleware('permission:data-list|data-create|data-edit|data-delete', ['only' => [
+            'index', 'show',
+            'alldata', 'exportPDF', 'exportCSV', 'exportPDF'
+        ]]);
         $this->middleware('permission:data-create', ['only' => ['create', 'store', '']]);
         $this->middleware('permission:data-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:data-delete', ['only' => ['destroy']]);
@@ -53,8 +57,9 @@ class Skp2kController extends Controller
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
             ]);
 
-        return view('Laporan.data-skp2k', compact('html', 'statuses', 'opds'));
+            $userRole = Auth::user()->getRoleNames()->first();
 
+        return view('Laporan.data-skp2k', compact('html', 'statuses', 'opds','userRole'));
     }
 
     /**
@@ -71,7 +76,7 @@ class Skp2kController extends Controller
         $penyedias = Penyedia::all();
         $jenisTemuans = JenisTemuan::all();
         $defaultStatustgr = Statustgr::where('tgr_name', 'SKP2K')->first();
-        return view('crud.create-skp2k', compact('informasis','jenisTemuans', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
+        return view('crud.create-skp2k', compact('informasis', 'jenisTemuans', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias', 'defaultStatustgr'));
     }
 
     /**
@@ -168,7 +173,7 @@ class Skp2kController extends Controller
         $pegawais = Pegawai::all();
         $penyedias = Penyedia::all();
         $jenisTemuans = JenisTemuan::all(); // Fetch JenisTemuan data
-        return view('crud.edit_skp2k', compact('jenisTemuans','temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
+        return view('crud.edit_skp2k', compact('jenisTemuans', 'temuan', 'informasis', 'opds', 'statuses', 'statustgrs', 'pegawais', 'penyedias'));
     }
 
     /**

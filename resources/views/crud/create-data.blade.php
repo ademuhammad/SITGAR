@@ -78,10 +78,12 @@
 
                                 <div class="form-group">
                                     <label for="penyedia_id">Penyedia</label>
-                                    <select class="form-control" id="penyedia_id" name="penyedia_id" onchange="showNewPenyediaForm()">
+                                    <select class="form-control" id="penyedia_id" name="penyedia_id"
+                                        onchange="showNewPenyediaForm()">
                                         <option value="new">Buat Penyedia Baru</option>
                                         @foreach ($penyedias as $penyedia)
-                                            <option value="{{ $penyedia->id }}" {{ old('penyedia_id') == $penyedia->id ? 'selected' : '' }}>
+                                            <option value="{{ $penyedia->id }}"
+                                                {{ old('penyedia_id') == $penyedia->id ? 'selected' : '' }}>
                                                 {{ $penyedia->penyedia_name }}
                                             </option>
                                         @endforeach
@@ -93,7 +95,8 @@
                                         <label for="penyedia_name" class="form-label">Nama Penyedia</label>
                                         <input type="text" class="form-control" id="penyedia_name" name="penyedia_name">
                                     </div>
-                                    <button type="button" class="btn btn-primary" onclick="submitNewPenyedia()">Simpan</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="submitNewPenyedia()">Simpan</button>
                                 </div>
 
                                 <input type="hidden" id="new_penyedia_id" name="new_penyedia_id" value="">
@@ -152,7 +155,8 @@
 
                                 <div class="form-group">
                                     <label for="bukti_pembayaran">Bukti Pembayaran (Optional)</label>
-                                    <input type="file" class="form-control" id="bukti_pembayaran" name="bukti_pembayaran">
+                                    <input type="file" class="form-control" id="bukti_pembayaran"
+                                        name="bukti_pembayaran">
                                 </div>
                             </div>
                         </div>
@@ -172,6 +176,17 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
+            function formatRupiah(input) {
+                let value = input.value.replace(/\D/g, '');
+                let formattedValue = new Intl.NumberFormat('id-ID').format(value / 100);
+                input.value = formattedValue;
+
+                let hiddenInput = document.getElementById('nilai_rekomendasi');
+                let numericValue = formattedValue.replace(/\./g, '').replace(',', '.');
+                hiddenInput.value = numericValue;
+            }
+        </script>
+        <script>
             function showNewPenyediaForm() {
                 var penyediaSelect = document.getElementById('penyedia_id');
                 var newPenyediaForm = document.getElementById('newPenyediaForm');
@@ -188,7 +203,7 @@
                 var newPenyediaIdInput = document.getElementById('new_penyedia_id');
 
                 $.ajax({
-                    url: '{{ route("penyedia.store") }}',
+                    url: '{{ route('penyedia.store') }}',
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
