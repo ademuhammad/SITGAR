@@ -161,31 +161,18 @@ class DashboardController extends Controller
                 ->groupBy('year');
         }
 
-        // Chart for OPD: total recommendations and payments
         if ($user->hasRole('Super Admin')) {
-            // Super Admin melihat semua data pembayaran per OPD
-            $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
-                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
-                ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
-                ->whereYear('tgl_lhp', $year)
-                ->groupBy('opds.opd_name')
-                ->get()
-                ->mapWithKeys(function ($item) {
-                    return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
-                });
+            // Super Admin melihat semua data sisa pembayaran per OPD
+            $sisaPembayaranPerOpd = Temuan::selectRaw('opd_id, SUM(sisa_nilai_uang) as total_sisa')
+                ->groupBy('opd_id')
+                ->pluck('total_sisa', 'opd_id');
         } else {
-            // OPD Admin melihat data pembayaran hanya untuk OPD mereka
-            $sisaPembayaranPerOpd = Temuan::select('opds.opd_name', DB::raw('SUM(nilai_rekomendasi) as total_rekomendasi'), DB::raw('SUM(pembayarans.jumlah_pembayaran) as total_pembayaran'))
-                ->join('opds', 'temuans.opd_id', '=', 'opds.id')
-                ->leftJoin('pembayarans', 'temuans.id', '=', 'pembayarans.temuan_id')
-                ->where('temuans.opd_id', $user->opd_id)
-                ->whereYear('tgl_lhp', $year)
-                ->groupBy('opds.opd_name')
-                ->get()
-                ->mapWithKeys(function ($item) {
-                    return [$item->opd_name => $item->total_rekomendasi - $item->total_pembayaran];
-                });
+            // OPD Admin melihat data sisa pembayaran hanya untuk OPD mereka
+            $sisaPembayaranPerOpd = Temuan::selectRaw('opd_id, SUM(sisa_nilai_uang) as total_sisa')
+                ->where('opd_id', $user->opd_id)
+                ->pluck('total_sisa', 'opd_id');
         }
+
 
         // Count of findings per OPD
         if ($user->hasRole('Super Admin')) {
@@ -210,6 +197,7 @@ class DashboardController extends Controller
                     return [$item->opd_name => $item->total_temuan];
                 });
         }
+
 
 
         $currentYear = date('Y');
