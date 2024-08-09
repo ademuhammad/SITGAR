@@ -227,11 +227,54 @@ class DataController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = Temuan::findOrFail($id);
-        // Lakukan validasi data jika diperlukan
-        $data->update($request->all());
-        return redirect()->route('data.index')->with('success', 'Data updated successfully');
+        // Temukan data Temuan berdasarkan ID
+        $temuan = Temuan::findOrFail($id);
+
+        // Validasi data
+        $request->validate([
+            'informasis_id' => 'required|exists:informasis,id',
+            'opd_id' => 'required|exists:opds,id',
+            'status_id' => 'required|exists:statuses,id',
+            'statustgr_id' => 'nullable|exists:statustgrs,id',
+            'pegawai_id' => 'required|exists:pegawais,id',
+            'penyedia_id' => 'required|exists:penyedias,id',
+            'no_lhp' => 'required|string|max:255',
+            'tgl_lhp' => 'required|date',
+            'obrik_pemeriksaan' => 'required|string',
+            'temuan' => 'required|string',
+            'rekomendasi' => 'required|string',
+            'nilai_rekomendasi' => 'required|numeric',
+            'bukti_pembayaran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'jenis_jaminan' => 'nullable|string|max:255',
+        ]);
+
+        // Update semua data kecuali bukti pembayaran
+        $temuan->fill($request->except('bukti_pembayaran'));
+
+        // Proses file bukti pembayaran jika ada file baru yang di-upload
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('bukti_pembayaran', $filename);
+            $temuan->bukti_pembayaran = $path;
+        }
+
+        // Kondisi untuk status "Selesai"
+        if ($request->status_id == 1) { // Gantilah '1' sesuai dengan ID status "Selesai" yang benar
+            $temuan->nilai_telah_dibayar = $request->nilai_rekomendasi;
+            $temuan->sisa_nilai_uang = 0;
+        } else {
+            $temuan->nilai_telah_dibayar = 0;
+            $temuan->sisa_nilai_uang = $request->nilai_rekomendasi;
+        }
+
+        // Simpan perubahan
+        $temuan->save();
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('data.index')->with('success', 'Data updated successfully.');
     }
+
 
     public function destroy($id)
     {
