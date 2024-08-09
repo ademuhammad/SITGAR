@@ -182,7 +182,7 @@ class DataController extends Controller
         }
 
         // Condition for "Selesai" status
-        if ($request->status == "Selesai") { // Assuming '4' is the ID for the "Selesai" status
+        if ($temuan->status->status == "Selesai") {
             $temuan->nilai_telah_dibayar = $request->nilai_rekomendasi;
             $temuan->sisa_nilai_uang = 0;
         } else {
@@ -260,7 +260,7 @@ class DataController extends Controller
         }
 
         // Kondisi untuk status "Selesai"
-        if ($request->status == "Selesai") { // Gantilah '1' sesuai dengan ID status "Selesai" yang benar
+        if ($temuan->status->status == "Selesai") {
             $temuan->nilai_telah_dibayar = $request->nilai_rekomendasi;
             $temuan->sisa_nilai_uang = 0;
         } else {
