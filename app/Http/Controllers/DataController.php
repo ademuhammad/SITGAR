@@ -181,13 +181,20 @@ class DataController extends Controller
             $temuan->bukti_pembayaran = $path;
         }
 
-        $temuan->nilai_telah_dibayar = 0;
-        $temuan->sisa_nilai_uang = $temuan->nilai_rekomendasi;
+        // Condition for "Selesai" status
+        if ($request->status_id == 1) { // Assuming '4' is the ID for the "Selesai" status
+            $temuan->nilai_telah_dibayar = $request->nilai_rekomendasi;
+            $temuan->sisa_nilai_uang = 0;
+        } else {
+            $temuan->nilai_telah_dibayar = 0;
+            $temuan->sisa_nilai_uang = $request->nilai_rekomendasi;
+        }
 
         $temuan->save();
 
         return redirect()->route('data.index')->with('success', 'Temuan created successfully.');
     }
+
 
 
     /**

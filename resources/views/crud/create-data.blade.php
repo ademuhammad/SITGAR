@@ -127,11 +127,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="nilai_rekomendasi_display">Nilai Rekomendasi</label>
-                                    <input type="text" class="form-control" id="nilai_rekomendasi_display"
-                                        oninput="formatRupiah(this)">
-                                    <input type="hidden" id="nilai_rekomendasi" name="nilai_rekomendasi"
-                                        value="{{ old('nilai_rekomendasi') }}">
+                                    <input type="text" class="form-control" id="nilai_rekomendasi_display" oninput="formatRupiah(this)" value="{{ old('nilai_rekomendasi_display') }}">
+                                    <input type="hidden" id="nilai_rekomendasi" name="nilai_rekomendasi" value="{{ old('nilai_rekomendasi') }}">
                                 </div>
+
 
                             </div>
 
@@ -235,12 +234,17 @@
                     rupiah += separator + ribuan.join('.');
                 }
 
-                rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+                rupiah = split[1] !== undefined ? rupiah + ',' + split[1].substr(0, 2) : rupiah; // Keep only two decimal places
                 element.value = 'Rp ' + rupiah;
 
-                // Update the hidden input with the numerical value
-                document.getElementById('nilai_rekomendasi').value = value.replace(/[^,\d]/g, '');
+                // Update the hidden input with the correct numerical value
+                document.getElementById('nilai_rekomendasi').value = value.replace(/\./g, '').replace(',', '.');
             }
+
+            document.getElementById('nilai_rekomendasi_display').addEventListener('input', function() {
+                formatRupiah(this);
+            });
+
 
             $(document).ready(function() {
                 $('#pegawai_id').select2({
